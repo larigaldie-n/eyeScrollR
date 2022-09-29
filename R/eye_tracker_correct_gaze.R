@@ -216,6 +216,8 @@ shift_scroll <- function(event, data_line, scroll, min_scroll, max_scroll)
 #' @export
 eye_tracker_gaze_scroll <- function (file_name = "mouse events and fixation coordinates.csv", time_shift=388, timestamp_start=53753, timestamp_stop=113579, screen_width=1920, screen_height=1080, shift_top=88, shift_left=0, shift_bottom=50, shift_right=0, image_height = 6655, image_width=1920, starting_scroll = 0, output_file = "eye_tracker_gaze_corrected.csv", anchors = list(), rules = list(), outside_image_is_na = TRUE, drop_na=TRUE)
 {
+  #TODO: Smooth scrolling? Apparently it's 135ms to scroll
+  #TODO: column names as parameters?
   event <- "WM_MOUSEWHEEL"
   eyes_data <- read.csv(file = file_name, header = FALSE, colClasses = c("NULL", rep(NA, 14)), col.names = c("", "timestamp", "U1", "U2", "U3", "U4", "U5", "U6", "U7", "event_controller", "event", "U8", "U9", "x", "y"))
   eyes_data$timestamp <- eyes_data$timestamp - time_shift
@@ -257,6 +259,7 @@ eye_tracker_gaze_scroll <- function (file_name = "mouse events and fixation coor
   return(eyes_data)
 }
 
+#TODO: working heatmap
 generate_heatmap <- function(data, img)
 {
   # ggplot(data, aes(corrected_x,corrected_y))  +
