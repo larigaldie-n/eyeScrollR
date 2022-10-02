@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="html2canvas.js"></script>
+    <style>
+        h1 {
+            color: green;
+        }
+        #my-div {
+            text-align: center;
+            position: fixed;
+            top: 0;
+            width: 100%;
+        }
+        #test {
+            height:10000px;
+        }
+       
+    </style>
+</head>
+ 
+<body>
+    <div id="my-div">
+      <h1>Calibration for eyeScrollR</h1>
+      <b id="result">Please scroll down to calibrate</b>
+    </div>
+
+    <div id="test">
+
+    </div>
+    
+    <script type="text/javascript">
+        window.addEventListener("wheel", handleWheel);
+        window.addEventListener("scroll", handleScroll);
+        window.addEventListener('beforeunload', forceTop);
+
+        scrolls = [];
+
+        function forceTop(e) {
+            window.scrollTo(0, 0);
+        }
+ 
+        function handleWheel(e) {
+            if (e.deltaY>0)
+            {   
+                scrolls.push(e.deltaY);
+                scrolls.sort(function(a, b){return a - b});
+                if (scrolls[0] < scrolls[scrolls.length -1])
+                {
+                    deltaY = scrolls.pop();
+                    for (i=0; i<deltaY/scrolls[0]; i++)
+                    {
+                        scrolls.push(scrolls[0]);
+                    }
+                }
+            }
+            else
+            {
+                scrolls = [];
+                document.getElementById('result').innerText = "Please scroll down to calibrate"
+                window.forceTop(0)
+            }
+        }
+
+        function handleScroll(e) {
+
+                if(scrolls.length>0)
+                {
+                    if (window.screenX)
+                    {
+                        shift_left = window.screenX;
+                        shift_right = screen.width - (window.screenX + window.outerWidth);
+                        shift_top = window.screenY + (window.outerHeight - window.innerHeight);
+                        shift_bottom = screen.height - (window.outerHeight + window.screenY);
+                    }
+                    else
+                    {
+                        shift_left = window.screenLeft;
+                        shift_right = screen.width - (window.screenLeft + window.outerWidth);
+                        shift_top = window.screenTop + (window.outerHeight - window.innerHeight);
+                        shift_bottom = screen.height - (window.outerHeight + window.screenTop);
+                    }
+                    document.getElementById('result').innerText = "eye_tracker_gaze_scroll(" + "screen_width = " + screen.width +  ", screen_height = " + screen.height + ", shift_top = " + shift_top + ", shift_left = " + shift_left + ", shift_bottom = " + shift_bottom + ", shift_right = " + shift_right + ", scroll_pixels = " + Math.round(window.scrollY/scrolls.length) + ", ...)";
+                    
+                    
+                }
+
+        }
+    </script>
+</body>
+ 
+</html>
