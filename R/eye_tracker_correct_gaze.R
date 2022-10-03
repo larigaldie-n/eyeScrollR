@@ -267,7 +267,10 @@ eye_tracker_gaze_scroll <- function (file_name = "mouse events and fixation coor
   {
     eyes_data <- eyes_data[complete.cases(eyes_data[, 'corrected_y']),]
   }
-  write.csv(eyes_data, file = output_file, row.names = FALSE, na="")
+  if (output_file != "")
+  {
+    write.csv(eyes_data, file = output_file, row.names = FALSE, na="")
+  }
   return(eyes_data)
 }
 
