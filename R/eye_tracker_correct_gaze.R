@@ -137,18 +137,18 @@ enforce_rules <- function(flags, anchors, data_line)
   return(y)
 }
 
-shift_scroll <- function(event, data_line, scroll, min_scroll, max_scroll)
+shift_scroll <- function(event, data_line, scroll, min_scroll, max_scroll, scroll_pixels)
 {
   if (grepl(event, data_line$event, fixed=TRUE))
   {
     scroll_delta = strtoi(unlist(strsplit(unlist(strsplit(data_line$event, ";", fixed=TRUE))[5], ":", fixed = TRUE))[2])
     if (scroll_delta<0)
     {
-      scroll <- min(c(scroll - scroll_delta, max_scroll))
+      scroll <- min(c(scroll - scroll_pixels, max_scroll))
     }
     else if (scroll_delta>0)
     {
-      scroll <- max(c(scroll - scroll_delta, min_scroll))
+      scroll <- max(c(scroll - scroll_pixels, min_scroll))
     }
   }
   return (scroll)
@@ -224,7 +224,7 @@ shift_scroll <- function(event, data_line, scroll, min_scroll, max_scroll)
 #' data(toydata)
 #' output_table <- overview_tab(dat = toydata, id = ccode, time = year)
 #' @export
-eye_tracker_gaze_scroll <- function (file_name = "mouse events and fixation coordinates.csv", time_shift=388, smooth_scroll=135, timestamp_start=53753, timestamp_stop=113579, screen_width=1920, screen_height=1080, shift_top=88, shift_left=0, shift_bottom=50, shift_right=0, image_height = 6655, image_width=1920, starting_scroll = 0, output_file = "eye_tracker_gaze_corrected.csv", anchors = list(array(c(c(0,0,1902,95), c(0,0,1902,95), c(1607,96,1902,905), c(1607,96,1902,905)), dim = c(4,2,2)), array(c(c(0,0,1902,63), c(0,32,1902,95), c(1607,63,1902,900), c(1607,63,1902,900)), dim = c(4,2,2)), array(c(c(1607,906,1920,1080), c(1607,6481,1920,6655)), dim = c(4,2,1))), rules = list(rule_before_scrolling, rule_after_scrolling, rule_true), outside_image_is_na = TRUE, drop_na=TRUE)
+eye_tracker_gaze_scroll <- function (file_name = "mouse events and fixation coordinates.csv", time_shift=388, smooth_scroll=135, timestamp_start=53753, timestamp_stop=113579, screen_width=1920, screen_height=1080, shift_top=88, shift_left=0, shift_bottom=50, shift_right=0, image_height = 6655, image_width=1920, starting_scroll = 0, output_file = "eye_tracker_gaze_corrected.csv", anchors = list(array(c(c(0,0,1902,95), c(0,0,1902,95), c(1607,96,1902,905), c(1607,96,1902,905)), dim = c(4,2,2)), array(c(c(0,0,1902,63), c(0,32,1902,95), c(1607,63,1902,900), c(1607,63,1902,900)), dim = c(4,2,2)), array(c(c(1607,906,1920,1080), c(1607,6481,1920,6655)), dim = c(4,2,1))), rules = list(rule_before_scrolling, rule_after_scrolling, rule_true), outside_image_is_na = TRUE, drop_na=TRUE, scroll_pixels=100)
 {
   #TODO: Smooth scrolling? Apparently it's 135ms to scroll
   #TODO: column names as parameters?
