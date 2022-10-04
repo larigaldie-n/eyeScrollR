@@ -5,7 +5,7 @@
 \title{eye_tracker_gaze_scroll}
 \usage{
 eye_tracker_gaze_scroll(
-  file_name = "mouse events and fixation coordinates.csv",
+  file_name = "mouse_events_and_fixation_coordinates.csv",
   time_shift = 388,
   timestamp_start = 53753,
   image_height = 6655,
@@ -58,6 +58,17 @@ corrects the eye-tracking coordinate data to fit in a webpage
     scrolled vertically by the participant
 }
 \examples{
-data(toydata)
-output_table <- overview_tab(dat = toydata, id = ccode, time = year)
+\dontrun{
+test_anchors <- list(array(c(c(0,0,1902,95), c(0,0,1902,95),
+    c(1607,96,1902,905), c(1607,96,1902,905)), dim = c(4,2,2)),
+    array(c(c(0,0,1902,63), c(0,32,1902,95), c(1607,63,1902,900),
+    c(1607,63,1902,900)), dim = c(4,2,2)), array(c(c(1607,906,1920,1080),
+    c(1607,6481,1920,6655)), dim = c(4,2,1)))
+test_rules = list(rule_before_scrolling, rule_after_scrolling, rule_true)
+test_calibration <- scroll_calibration(1920, 1080, 88, 0, 40, 0, 100)
+test_data <- eye_tracker_gaze_scroll(anchors = test_anchors,
+    rules = test_rules, calibration = test_calibration)
+test_img <- readPNG("test.png")
+generate_heatmap(test_data, test_img)
+}
 }

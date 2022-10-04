@@ -74,12 +74,53 @@ check_anchors_rules <- function(anchors, rules)
   return(rules)
 }
 
+#' @title rule_true
+#'
+#' @description Helper function to enforce anchor rules (this one is always
+#'     true, meaning that this rule should always be enforced). NB: you should
+#'     never have to call this function yourself, but you can use it as a basis
+#'     to create your own rule. All arguments are automatically passed to any
+#'     rule function by eye_tracker_gaze_scroll
+#'
+#' @param timestamp The timestamp of the current line in the .csv file
+#' @param event The event column from this line
+#' @param x The x parameter (eye gaze) from this line
+#' @param y The y parameter (eye gaze) from this line
+#' @param array_anchors The array of anchors linked to this rule
+#' @param flag A boolean that says if this rule is TRUE or FALSE at the moment
+#' @param scroll The total amount of pixels that have been scrolled down from
+#'     the top of the website at the moment
+#'
+#' @return A boolean saying if this rule should now be enforced or not
+#' @examples
+#' rules <- list(rule_before_scrolling, rule_after_scrolling, rule_true)
 #' @export
 rule_true <- function (timestamp, event, x, y, array_anchors, flag, scroll)
 {
   return (TRUE)
 }
 
+#' @title rule_before_scrolling
+#'
+#' @description Helper function to enforce anchor rules (this one checks
+#'     if the total amount of pixels that have been scrolled down from the top
+#'     of the website is inferior to 30). NB: you should never
+#'     have to call this function yourself, but you can use it as a basis to
+#'     create your own rule. All arguments are automatically passed to any
+#'     rule function by eye_tracker_gaze_scroll
+#'
+#' @param timestamp The timestamp of the current line in the .csv file
+#' @param event The event column from this line
+#' @param x The x parameter (eye gaze) from this line
+#' @param y The y parameter (eye gaze) from this line
+#' @param array_anchors The array of anchors linked to this rule
+#' @param flag A boolean that says if this rule is TRUE or FALSE at the moment
+#' @param scroll The total amount of pixels that have been scrolled down from
+#'     the top of the website at the moment
+#'
+#' @return A boolean saying if this rule should now be enforced or not
+#' @examples
+#' rules <- list(rule_before_scrolling, rule_after_scrolling, rule_true)
 #' @export
 rule_before_scrolling <- function (timestamp, event, x, y, array_anchors, flag, scroll)
 {
@@ -93,6 +134,27 @@ rule_before_scrolling <- function (timestamp, event, x, y, array_anchors, flag, 
   }
 }
 
+#' @title rule_after_scrolling
+#'
+#' @description Helper function to enforce anchor rules (this one checks
+#'     if the total amount of pixels that have been scrolled down from the top
+#'     of the website is superior to 30). NB: you should never
+#'     have to call this function yourself, but you can use it as a basis to
+#'     create your own rule. All arguments are automatically passed to any
+#'     rule function by eye_tracker_gaze_scroll
+#'
+#' @param timestamp The timestamp of the current line in the .csv file
+#' @param event The event column from this line
+#' @param x The x parameter (eye gaze) from this line
+#' @param y The y parameter (eye gaze) from this line
+#' @param array_anchors The array of anchors linked to this rule
+#' @param flag A boolean that says if this rule is TRUE or FALSE at the moment
+#' @param scroll The total amount of pixels that have been scrolled down from
+#'     the top of the website at the moment
+#'
+#' @return A boolean saying if this rule should now be enforced or not
+#' @examples
+#' rules <- list(rule_before_scrolling, rule_after_scrolling, rule_true)
 #' @export
 rule_after_scrolling <- function (timestamp, event, x, y, array_anchors, flag, scroll)
 {
@@ -149,18 +211,39 @@ shift_scroll <- function(event, data_line, scroll, min_scroll, max_scroll, scrol
   return (scroll)
 }
 
+#' @title scroll_calibration
+#'
+#' @description Creates a calibration list for use in the eye_tracker_gaze_scroll
+#'     function. Can be filled in by taking measurements by hand, or using the
+#'     calibration tool.
+#'
+#' @param screen_width Resolution width of the screen on which the experiment is conducted (in pixels). E.g. 1920
+#' @param screen_height Resolution height of the screen on which the experiment is conducted (in pixels). E.g. 1080
+#' @param shift_top The number of pixels above the area of interest on the screen (and therefore, outside of the image)
+#' @param shift_left Same, but on the left of the AOI
+#' @param shift_bottom Same, but below the AOI
+#' @param shift_right Same, but on the right of the AOI
+#' @param scroll_pixels The amount of pixels being scrolled by each mouse scroll
+#'     (depends on the browser)
+#'
+#' @return A list representing the calibration to the screen & browser used for the experiment
+#' @examples
+#' calibration <- scroll_calibration(1920, 1080, 88, 0, 40, 0, 100)
 #' @export
-scroll_calibration <- function(screen_width = 2560, screen_height = 1440, shift_top = 103, shift_left = 0, shift_bottom = 40, shift_right = 0, scroll_pixels = 100)
+scroll_calibration <- function(screen_width, screen_height, shift_top, shift_left, shift_bottom, shift_right, scroll_pixels)
 {
-  return(as.list(environment()))
+  l <- list(screen_width = screen_width, screen_height = screen_height, shift_top = shift_top, shift_left = shift_left, shift_bottom = shift_bottom, shift_right = shift_right, scroll_pixels = scroll_pixels)
+  return(l)
 }
 
 # columns ?
 
 # test_anchors <- list(array(c(c(0,0,1902,95), c(0,0,1902,95), c(1607,96,1902,905), c(1607,96,1902,905)), dim = c(4,2,2)), array(c(c(0,0,1902,63), c(0,32,1902,95), c(1607,63,1902,900), c(1607,63,1902,900)), dim = c(4,2,2)), array(c(c(1607,906,1920,1080), c(1607,6481,1920,6655)), dim = c(4,2,1)))
 # test_rules = list(rule_before_scrolling, rule_after_scrolling, rule_true)
-# img <- readPNG()
-# data <- eye_tracker_gaze_scroll(anchors = test_anchors, rules = test_rules)
+# test_calibration <- scroll_calibration(1920, 1080, 88, 0, 40, 0, 100)
+# test_data <- eye_tracker_gaze_scroll(anchors = test_anchors, rules = test_rules, calibration = test_calibration)
+# test_img <- readPNG("test.png")
+# generate_heatmap(test_data, test_img)
 
 #' @title eye_tracker_gaze_scroll
 #'
@@ -168,26 +251,35 @@ scroll_calibration <- function(screen_width = 2560, screen_height = 1440, shift_
 #'     scrolled vertically by the participant
 #'
 #' @param file_name The name of the .csv file with the coordinates & input events
-#' @param time_shift A time shift parameter to synchronize the .csv file with a video recording (e.g. if the recording started after the start of the .csv)
 #' @param timestamp_start The starting timestamp from the .csv file at which the participant was watching the scrollable (AFTER time_shift applied)
 #' @param timestamp_stop The final timestamp from the .csv file at which the participant was watching the scrollable (AFTER time_shift applied)
 #' @param image_height The total height of the image (in pixels)
 #' @param image_width The total width of the image (in pixels)
-#' @param starting_scroll [Optional] If the participant did not start watching the webpage from the top, you can indicate the y coordinate at which he started here (in pixels)
-#' @param output_file The name of the output .csv file. If empty, will just return the data without creating a new file
-#' @param anchors A list of potentially immovable areas inside the scrollable (e.g. anchored menus in a website) - see manual for a correct usage
-#' @param rules A list of functions that can act as rules to activate/deactivate immovables areas in the scrollable (e.g. a menu that disappears after X pixels have been scrolled) - See manual for a correct
-#' @param outside_image_is_na Indicates if values outside the AOI (e.g. the windows bar) should be set to NA or kept in the file/dataset. If set to False, coordinates above/before the AOI will become negative.
-#' @param na.rm Indicates if lines with NA y values should be dropped in the final file/dataset
 #' @param calibration A calibration list (see the scroll_calibration function)
+#' @param anchors [Optional] A list of potentially immovable areas inside the scrollable (e.g. anchored menus in a website) - see manual for a correct usage
+#' @param rules [Optional] A list of functions that can act as rules to activate/deactivate immovables areas in the scrollable (e.g. a menu that disappears after X pixels have been scrolled) - See manual for a correct
+#' @param time_shift [Optional] A time shift parameter to synchronize the .csv file with a video recording (e.g. if the recording started after the start of the .csv). Default: 0
+#' @param starting_scroll [Optional] If the participant did not start watching the webpage from the top, you can indicate the y coordinate at which he started here (in pixels). Default: 0
+#' @param output_file [Optional] The name of the output .csv file. If empty, will just return the data without creating a new file. Default: empty
+#' @param outside_image_is_na [Optional] Indicates if values outside the AOI (e.g. the windows bar) should be set to NA or kept in the file/dataset. If set to FALSE, coordinates above/before the AOI will become negative. Default: TRUE
+#' @param na.rm [Optional] Indicates if lines with NA y values should be dropped in the final file/dataset. Default: TRUE
 #'
 #' @return The Dataset with corrected x and y's
 #' @examples
-#' data(toydata)
-#' output_table <- overview_tab(dat = toydata, id = ccode, time = year)
+#' \dontrun{
+#' test_anchors <- list(array(c(c(0,0,1902,95), c(0,0,1902,95),
+#'     c(1607,96,1902,905), c(1607,96,1902,905)), dim = c(4,2,2)),
+#'     array(c(c(0,0,1902,63), c(0,32,1902,95), c(1607,63,1902,900),
+#'     c(1607,63,1902,900)), dim = c(4,2,2)), array(c(c(1607,906,1920,1080),
+#'     c(1607,6481,1920,6655)), dim = c(4,2,1)))
+#' test_rules = list(rule_before_scrolling, rule_after_scrolling, rule_true)
+#' test_calibration <- scroll_calibration(1920, 1080, 88, 0, 40, 0, 100)
+#' test_data <- eye_tracker_gaze_scroll(anchors = test_anchors,
+#'     rules = test_rules, calibration = test_calibration)
+#' }
 #' @export
-eye_tracker_gaze_scroll <- function (file_name = "mouse events and fixation coordinates.csv", time_shift=388, timestamp_start=53753, image_height=6655, image_width=1920, timestamp_stop=113579, starting_scroll = 0, output_file = "eye_tracker_gaze_corrected.csv", anchors = list(array(c(c(0,0,1902,95), c(0,0,1902,95), c(1607,96,1902,905), c(1607,96,1902,905)), dim = c(4,2,2)), array(c(c(0,0,1902,63), c(0,32,1902,95), c(1607,63,1902,900), c(1607,63,1902,900)), dim = c(4,2,2)), array(c(c(1607,906,1920,1080), c(1607,6481,1920,6655)), dim = c(4,2,1))), rules = list(rule_before_scrolling, rule_after_scrolling, rule_true), outside_image_is_na = TRUE, na.rm=TRUE, calibration)
-{
+#' @importFrom rlang .data
+eye_tracker_gaze_scroll <- function (file_name = "mouse_events_and_fixation_coordinates.csv", time_shift=388, timestamp_start=53753, image_height=6655, image_width=1920, timestamp_stop=113579, starting_scroll = 0, output_file = "eye_tracker_gaze_corrected.csv", anchors = list(array(c(c(0,0,1902,95), c(0,0,1902,95), c(1607,96,1902,905), c(1607,96,1902,905)), dim = c(4,2,2)), array(c(c(0,0,1902,63), c(0,32,1902,95), c(1607,63,1902,900), c(1607,63,1902,900)), dim = c(4,2,2)), array(c(c(1607,906,1920,1080), c(1607,6481,1920,6655)), dim = c(4,2,1))), rules = list(rule_before_scrolling, rule_after_scrolling, rule_true), outside_image_is_na = TRUE, na.rm=TRUE, calibration){
   #TODO: column names as parameters?
   scroll_pixels <- calibration$scroll_pixels
   screen_width <- calibration$screen_width
@@ -199,15 +291,15 @@ eye_tracker_gaze_scroll <- function (file_name = "mouse events and fixation coor
   event <- "WM_MOUSEWHEEL"
   eyes_data <- utils::read.csv(file = file_name, header = FALSE, colClasses = c("NULL", rep(NA, 14)), col.names = c("", "timestamps", "U1", "U2", "U3", "U4", "U5", "U6", "U7", "event_controller", "event", "U8", "U9", "x", "y"))
   eyes_data$timestamps <- eyes_data$timestamps - time_shift
-  eyes_data <- dplyr::filter(eyes_data, timestamps > timestamp_start, timestamps < timestamp_stop)
+  eyes_data <- dplyr::filter(eyes_data, .data$timestamps > timestamp_start, .data$timestamps < timestamp_stop)
   scroll <- starting_scroll
   corrected_y <- c()
   min_scroll <- 0
   rules <- check_anchors_rules(anchors, rules)
   flags <- c(rep(TRUE, length(rules)))
   max_scroll <- image_height - screen_height - shift_top - shift_bottom
-  eyes_data$corrected_y <- vapply(eyes_data$y, shift_image_by_dimension, shift_before = shift_top, shift_after = shift_bottom, screen_dimension = screen_height, outside_image_is_na)
-  eyes_data$corrected_x <- vapply(eyes_data$x, shift_image_by_dimension, shift_before = shift_left, shift_after = shift_right, screen_dimension = screen_width, outside_image_is_na)
+  eyes_data$corrected_y <- vapply(eyes_data$y, shift_image_by_dimension, shift_before = shift_top, shift_after = shift_bottom, screen_dimension = screen_height, outside_image_is_na = outside_image_is_na, FUN.VALUE = 1.0)
+  eyes_data$corrected_x <- vapply(eyes_data$x, shift_image_by_dimension, shift_before = shift_left, shift_after = shift_right, screen_dimension = screen_width, outside_image_is_na = outside_image_is_na, FUN.VALUE = 1.0)
 
   for (line in 1:dim(eyes_data)[1])
   {
@@ -246,9 +338,9 @@ generate_heatmap <- function(data, img)
 {
 
   data$corrected_y <- dim(img)[1] + data$corrected_y
-  ggplot2::ggplot(data, ggplot2::aes(corrected_x, corrected_y))  +
+  ggplot2::ggplot(data, ggplot2::aes(.data$corrected_x, .data$corrected_y))  +
     ggplot2::annotation_raster(img, xmin=-Inf, xmax=Inf, ymin=-Inf, ymax=Inf)+
-    ggplot2::stat_density2d(geom = "polygon", ggplot2::aes(fill=..level.., alpha = 0.2)) +
+    ggplot2::stat_density2d(geom = "polygon", ggplot2::aes(fill=.data$..level.., alpha = 0.2)) +
     ggplot2::geom_point(size=0.5)+
     ggplot2::scale_fill_gradient(low="green", high="red") +
     ggplot2::scale_x_continuous(limits=c(0,dim(img)[2]),expand=c(0,0))+
