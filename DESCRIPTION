@@ -11,8 +11,8 @@ Description: Eye-tracking software usually outputs fixation coordinates from
     participants on the screen, but scrollable settings often require manual
     coordinate corrections from experimenters. This package allows for easier
     and mostly automatic corrections to use eye-tracking on scrollable websites,
-    and generate fixation heatmaps on complete images taken from them, and
-    manages potential immovable and/or retractable areas (e.g. navbars).
+    and generate fixation heatmaps on complete images taken from them, while
+    managing potential immovable and/or retractable areas (e.g. navbars).
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
