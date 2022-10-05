@@ -7,10 +7,19 @@
     <loc>https://larigaldie-n.github.io/eyeScrollR/authors.html</loc>
   </url>
   <url>
+    <loc>https://larigaldie-n.github.io/eyeScrollR/calibration.html</loc>
+  </url>
+  <url>
     <loc>https://larigaldie-n.github.io/eyeScrollR/index.html</loc>
   </url>
   <url>
+    <loc>https://larigaldie-n.github.io/eyeScrollR/reference/eye_tracker_fixation_scroll.html</loc>
+  </url>
+  <url>
     <loc>https://larigaldie-n.github.io/eyeScrollR/reference/eye_tracker_gaze_scroll.html</loc>
+  </url>
+  <url>
+    <loc>https://larigaldie-n.github.io/eyeScrollR/reference/generate_heatmap.html</loc>
   </url>
   <url>
     <loc>https://larigaldie-n.github.io/eyeScrollR/reference/index.html</loc>

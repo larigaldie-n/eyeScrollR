@@ -1,4 +1,31 @@
 url: https://larigaldie-n.github.io/eyeScrollR/
 template:
   bootstrap: 5
+home:
+  sidebar:
+    structure:
+    - links
+    - citation
+    - authors
+  links:
+  - text: Calibration tool
+    href: calibration.html
+reference:
+- title: Core functions
+  desc: |
+    Functions to correct the gaze coordinates on the image, and to create the heatmap
+  contents:
+  - eye_tracker_fixation_scroll
+  - generate_heatmap
+- title: Preparation functions
+  desc: |
+    Functions to prepare the settings and the dataset for the core functions
+  contents: scroll_calibration
+- title: Helper anchor rule functions
+  desc: |
+    Functions to check which set(s) of immovable areas should be used or not
+  contents:
+  - rule_after_scrolling
+  - rule_before_scrolling
+  - rule_true
 

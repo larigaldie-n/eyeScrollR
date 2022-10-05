@@ -80,7 +80,7 @@ check_anchors_rules <- function(anchors, rules)
 #'     true, meaning that this rule should always be enforced). NB: you should
 #'     never have to call this function yourself, but you can use it as a basis
 #'     to create your own rule. All arguments are automatically passed to any
-#'     rule function by eye_tracker_gaze_scroll
+#'     rule function by eye_tracker_fixation_scroll
 #'
 #' @param timestamp The timestamp of the current line in the .csv file
 #' @param event The event column from this line
@@ -107,7 +107,7 @@ rule_true <- function (timestamp, event, x, y, array_anchors, flag, scroll)
 #'     of the website is inferior to 30). NB: you should never
 #'     have to call this function yourself, but you can use it as a basis to
 #'     create your own rule. All arguments are automatically passed to any
-#'     rule function by eye_tracker_gaze_scroll
+#'     rule function by eye_tracker_fixation_scroll
 #'
 #' @param timestamp The timestamp of the current line in the .csv file
 #' @param event The event column from this line
@@ -141,7 +141,7 @@ rule_before_scrolling <- function (timestamp, event, x, y, array_anchors, flag, 
 #'     of the website is superior to 30). NB: you should never
 #'     have to call this function yourself, but you can use it as a basis to
 #'     create your own rule. All arguments are automatically passed to any
-#'     rule function by eye_tracker_gaze_scroll
+#'     rule function by eye_tracker_fixation_scroll
 #'
 #' @param timestamp The timestamp of the current line in the .csv file
 #' @param event The event column from this line
@@ -172,7 +172,7 @@ check_rules_true <- function(rules, data_line, flags, anchors, scroll)
 {
   for (rule_num in seq_len(length(rules)))
   {
-    flags[rule_num] <- rules[[rule_num]](data_line$timestamps, data_line$event, data_line$corrected_x, data_line$corrected_y, anchors[[rule_num]], flags[rule_num], scroll)
+    flags[rule_num] <- rules[[rule_num]](data_line$Timestamp, data_line$Data, data_line$Corrected.X, data_line$Corrected.Y, anchors[[rule_num]], flags[rule_num], scroll)
   }
   return(flags)
 }
@@ -184,7 +184,7 @@ enforce_rules <- function(flags, anchors, data_line)
   {
     if (flags[flag_num])
     {
-      y <- resolve_anchor_box(anchors[[flag_num]], data_line$corrected_x, data_line$corrected_y)
+      y <- resolve_anchor_box(anchors[[flag_num]], data_line$Corrected.X, data_line$Corrected.Y)
       if (!is.na(y))
       {
         break
@@ -196,9 +196,9 @@ enforce_rules <- function(flags, anchors, data_line)
 
 shift_scroll <- function(event, data_line, scroll, min_scroll, max_scroll, scroll_pixels)
 {
-  if (grepl(event, data_line$event, fixed=TRUE))
+  if (grepl(event, data_line$Data, fixed=TRUE))
   {
-    scroll_delta <- strtoi(unlist(strsplit(unlist(strsplit(data_line$event, ";", fixed=TRUE))[5], ":", fixed = TRUE))[2])
+    scroll_delta <- strtoi(unlist(strsplit(unlist(strsplit(data_line$Data, ";", fixed=TRUE))[5], ":", fixed = TRUE))[2])
     if (scroll_delta<0)
     {
       scroll <- min(c(scroll + scroll_pixels, max_scroll))
@@ -213,7 +213,7 @@ shift_scroll <- function(event, data_line, scroll, min_scroll, max_scroll, scrol
 
 #' @title scroll_calibration
 #'
-#' @description Creates a calibration list for use in the eye_tracker_gaze_scroll
+#' @description Creates a calibration list for use in the eye_tracker_fixation_scroll
 #'     function. Can be filled in by taking measurements by hand, or using the
 #'     calibration tool.
 #'
@@ -241,11 +241,11 @@ scroll_calibration <- function(screen_width, screen_height, shift_top, shift_lef
 # test_anchors <- list(array(c(c(0,0,1902,95), c(0,0,1902,95), c(1607,96,1902,905), c(1607,96,1902,905)), dim = c(4,2,2)), array(c(c(0,0,1902,63), c(0,32,1902,95), c(1607,63,1902,900), c(1607,63,1902,900)), dim = c(4,2,2)), array(c(c(1607,906,1920,1080), c(1607,6481,1920,6655)), dim = c(4,2,1)))
 # test_rules = list(rule_before_scrolling, rule_after_scrolling, rule_true)
 # test_calibration <- scroll_calibration(1920, 1080, 88, 0, 40, 0, 100)
-# test_data <- eye_tracker_gaze_scroll(anchors = test_anchors, rules = test_rules, calibration = test_calibration)
+# test_data <- eye_tracker_fixation_scroll(anchors = test_anchors, rules = test_rules, calibration = test_calibration)
 # test_img <- readPNG("test.png")
 # generate_heatmap(test_data, test_img)
 
-#' @title eye_tracker_gaze_scroll
+#' @title eye_tracker_fixation_scroll
 #'
 #' @description corrects the eye-tracking coordinate data to fit in a webpage
 #'     scrolled vertically by the participant
@@ -274,13 +274,13 @@ scroll_calibration <- function(screen_width, screen_height, shift_top, shift_lef
 #'     c(1607,6481,1920,6655)), dim = c(4,2,1)))
 #' test_rules = list(rule_before_scrolling, rule_after_scrolling, rule_true)
 #' test_calibration <- scroll_calibration(1920, 1080, 88, 0, 40, 0, 100)
-#' test_data <- eye_tracker_gaze_scroll(anchors = test_anchors,
+#' test_data <- eye_tracker_fixation_scroll(anchors = test_anchors,
 #'     rules = test_rules, calibration = test_calibration)
 #' }
 #' @export
 #' @importFrom rlang .data
-eye_tracker_gaze_scroll <- function (file_name = "mouse_events_and_fixation_coordinates.csv", time_shift=388, timestamp_start=53753, image_height=6655, image_width=1920, timestamp_stop=113579, starting_scroll = 0, output_file = "eye_tracker_gaze_corrected.csv", anchors = list(array(c(c(0,0,1902,95), c(0,0,1902,95), c(1607,96,1902,905), c(1607,96,1902,905)), dim = c(4,2,2)), array(c(c(0,0,1902,63), c(0,32,1902,95), c(1607,63,1902,900), c(1607,63,1902,900)), dim = c(4,2,2)), array(c(c(1607,906,1920,1080), c(1607,6481,1920,6655)), dim = c(4,2,1))), rules = list(rule_before_scrolling, rule_after_scrolling, rule_true), outside_image_is_na = TRUE, na.rm=TRUE, calibration){
-  #TODO: column names as parameters?
+eye_tracker_fixation_scroll <- function (file_name = "tt.csv", time_shift=388, timestamp_start=53753, image_height=6655, image_width=1920, timestamp_stop=113579, starting_scroll = 0, output_file = "eye_tracker_fixation_corrected.csv", anchors = list(array(c(c(0,0,1902,95), c(0,0,1902,95), c(1607,96,1902,905), c(1607,96,1902,905)), dim = c(4,2,2)), array(c(c(0,0,1902,63), c(0,32,1902,95), c(1607,63,1902,900), c(1607,63,1902,900)), dim = c(4,2,2)), array(c(c(1607,906,1920,1080), c(1607,6481,1920,6655)), dim = c(4,2,1))), rules = list(rule_before_scrolling, rule_after_scrolling, rule_true), outside_image_is_na = TRUE, na.rm=TRUE, calibration)
+{
   scroll_pixels <- calibration$scroll_pixels
   screen_width <- calibration$screen_width
   screen_height <- calibration$screen_height
@@ -289,29 +289,29 @@ eye_tracker_gaze_scroll <- function (file_name = "mouse_events_and_fixation_coor
   shift_bottom <- calibration$shift_bottom
   shift_left <- calibration$shift_left
   event <- "WM_MOUSEWHEEL"
-  eyes_data <- utils::read.csv(file = file_name, header = FALSE, colClasses = c("NULL", rep(NA, 14)), col.names = c("", "timestamps", "U1", "U2", "U3", "U4", "U5", "U6", "U7", "event_controller", "event", "U8", "U9", "x", "y"))
-  eyes_data$timestamps <- eyes_data$timestamps - time_shift
-  eyes_data <- dplyr::filter(eyes_data, .data$timestamps > timestamp_start, .data$timestamps < timestamp_stop)
+  eyes_data <- utils::read.csv(file = file_name, skip = 1)
+  eyes_data$Timestamp <- eyes_data$Timestamp - time_shift
+  eyes_data <- dplyr::filter(eyes_data, .data$Timestamp > timestamp_start, .data$Timestamp < timestamp_stop)
   scroll <- starting_scroll
   corrected_y <- c()
   min_scroll <- 0
   rules <- check_anchors_rules(anchors, rules)
   flags <- c(rep(TRUE, length(rules)))
   max_scroll <- image_height - screen_height - shift_top - shift_bottom
-  eyes_data$corrected_y <- vapply(eyes_data$y, shift_image_by_dimension, shift_before = shift_top, shift_after = shift_bottom, screen_dimension = screen_height, outside_image_is_na = outside_image_is_na, FUN.VALUE = 1.0)
-  eyes_data$corrected_x <- vapply(eyes_data$x, shift_image_by_dimension, shift_before = shift_left, shift_after = shift_right, screen_dimension = screen_width, outside_image_is_na = outside_image_is_na, FUN.VALUE = 1.0)
+  eyes_data$Corrected.Y <- vapply(eyes_data$Fixation.Y, shift_image_by_dimension, shift_before = shift_top, shift_after = shift_bottom, screen_dimension = screen_height, outside_image_is_na = outside_image_is_na, FUN.VALUE = 1.0)
+  eyes_data$Corrected.X <- vapply(eyes_data$Fixation.X, shift_image_by_dimension, shift_before = shift_left, shift_after = shift_right, screen_dimension = screen_width, outside_image_is_na = outside_image_is_na, FUN.VALUE = 1.0)
 
   for (line in 1:dim(eyes_data)[1])
   {
     # prepare_smooth_scroll(event, eyes_data[line ,], smooth_scroll, smooth_scroll_table, scroll, min_scroll, max_scroll)
     scroll <- shift_scroll(event, eyes_data[line ,], scroll, min_scroll, max_scroll, scroll_pixels)
     flags <- check_rules_true(rules, eyes_data[line, ], flags, anchors, scroll)
-    if (!is.na(eyes_data[line, ]$corrected_y))
+    if (!is.na(eyes_data[line, ]$Corrected.Y))
     {
       corrected_y[line] <- enforce_rules(flags, anchors, eyes_data[line, ])
       if (is.na(corrected_y[line]))
       {
-        corrected_y[line] <- eyes_data[line, ]$corrected_y+scroll
+        corrected_y[line] <- eyes_data[line, ]$Corrected.Y+scroll
       }
     }
     else
@@ -320,7 +320,7 @@ eye_tracker_gaze_scroll <- function (file_name = "mouse_events_and_fixation_coor
     }
   }
 
-  eyes_data$corrected_y <- corrected_y
+  eyes_data$Corrected.Y <- corrected_y
   if (na.rm)
   {
     eyes_data <- eyes_data[stats::complete.cases(eyes_data[, 'corrected_y']),]
@@ -332,12 +332,28 @@ eye_tracker_gaze_scroll <- function (file_name = "mouse_events_and_fixation_coor
   return(eyes_data)
 }
 
-#TODO: working heatmap
+#' @title generate_heatmap
+#'
+#' @description Creates a heatmap based on the dataset
+#'
+#' @param data The dataset output by the eye_tracker_fixation_scroll
+#' @param img An image on which to apply the heatmap
+#'
+#' @return A plot with the image and the heatmap
+#' @examples
+#' \dontrun{
+#' img <- readPNG("test.png")
+#' test_data <- eye_tracker_fixation_scroll(anchors = test_anchors,
+#'     rules = test_rules, calibration = test_calibration)
+#' generate_heatmap(test_data, img)
+#' }
+#' @export
+#' @importFrom rlang .data
 generate_heatmap <- function(data, img)
 {
 
-  data$corrected_y <- dim(img)[1] - data$corrected_y
-  ggplot2::ggplot(data, ggplot2::aes(.data$corrected_x, .data$corrected_y))  +
+  data$Corrected.Y <- dim(img)[1] - data$Corrected.Y
+  ggplot2::ggplot(data, ggplot2::aes(.data$Corrected.X, .data$Corrected.Y))  +
     ggplot2::annotation_raster(img, xmin=-Inf, xmax=Inf, ymin=-Inf, ymax=Inf)+
     ggplot2::stat_density2d(geom = "polygon", ggplot2::aes(fill=.data$..level.., alpha = 0.2)) +
     ggplot2::geom_point(size=0.5)+
@@ -350,34 +366,34 @@ generate_heatmap <- function(data, img)
 # Future features?
 # prepare_smooth_scroll <- function (event, data_line, smooth_scroll, smooth_scroll_table, scroll, min_scroll, max_scroll, scroll_pixels)
 # {
-#   if (grepl(event, data_line$event, fixed=TRUE))
+#   if (grepl(event, data_line$Data, fixed=TRUE))
 #   {
-#     scroll_delta = strtoi(unlist(strsplit(unlist(strsplit(data_line$event, ";", fixed=TRUE))[5], ":", fixed = TRUE))[2])
-#     if (max(smooth_scroll_table$timestamp) < data_line$timestamp)
+#     scroll_delta = strtoi(unlist(strsplit(unlist(strsplit(data_line$Data, ";", fixed=TRUE))[5], ":", fixed = TRUE))[2])
+#     if (max(smooth_scroll_table$Timestamp) < data_line$Timestamp)
 #     {
 #       if (scroll_delta<0)
 #       {
 #         scroll_delta <- min(c(scroll + scroll_pixels, max_scroll))
-#         smooth_scroll_table <- data.frame(timestamp = data_line$timestamp:(data_line$timestamp+smooth_scroll-1), delta_scroll = scroll - seq(0,scroll_delta, length.out=smooth_scroll))
+#         smooth_scroll_table <- data.frame(timestamp = data_line$Timestamp:(data_line$Timestamp+smooth_scroll-1), delta_scroll = scroll - seq(0,scroll_delta, length.out=smooth_scroll))
 #       }
 #       else if (scroll_delta>0)
 #       {
 #         scroll_delta <- max(c(scroll - scroll_pixels, min_scroll))
-#         smooth_scroll_table <- data.frame(timestamp = data_line$timestamp:(data_line$timestamp+smooth_scroll-1), delta_scroll = scroll - seq(0,scroll_delta, length.out=smooth_scroll))
+#         smooth_scroll_table <- data.frame(timestamp = data_line$Timestamp:(data_line$Timestamp+smooth_scroll-1), delta_scroll = scroll - seq(0,scroll_delta, length.out=smooth_scroll))
 #       }
 #     }
 #     else
 #     {
-#       smooth_scroll_table <- dplyr::filter(smooth_scroll_table, timestamp>=data_line$timestamp)
+#       smooth_scroll_table <- dplyr::filter(smooth_scroll_table, timestamp>=data_line$Timestamp)
 #       if (scroll_delta<0)
 #       {
 #         scroll_delta <- min(c(scroll - scroll_delta, max_scroll))
-#         smooth_scroll_table <- data.frame(timestamp = data_line$timestamp:(data_line$timestamp+smooth_scroll-1), delta_scroll = scroll - seq(0,scroll_delta, length.out=smooth_scroll))
+#         smooth_scroll_table <- data.frame(timestamp = data_line$Timestamp:(data_line$Timestamp+smooth_scroll-1), delta_scroll = scroll - seq(0,scroll_delta, length.out=smooth_scroll))
 #       }
 #       else if (scroll_delta>0)
 #       {
 #         scroll_delta <- max(c(scroll - scroll_delta, min_scroll))
-#         smooth_scroll_table <- data.frame(timestamp = data_line$timestamp:(data_line$timestamp+smooth_scroll-1), delta_scroll = scroll - seq(0,scroll_delta, length.out=smooth_scroll))
+#         smooth_scroll_table <- data.frame(timestamp = data_line$Timestamp:(data_line$Timestamp+smooth_scroll-1), delta_scroll = scroll - seq(0,scroll_delta, length.out=smooth_scroll))
 #       }
 #     }
 #   }
