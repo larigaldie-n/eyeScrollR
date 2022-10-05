@@ -1,11 +1,18 @@
 Package: eyeScrollR
 Type: Package
-Title: What the Package Does (Title Case)
+Title: Correctly place eye-tracking fixation data on areas of scrollable websites
 Version: 0.1.0
-Author: Who wrote it
-Maintainer: The package maintainer <yourself@somewhere.net>
-Description: More about what it does (maybe more than one line)
-    Use four spaces when indenting paragraphs within the Description.
+Authors@R: c(person("Nathanael", "Larigaldie", email="larigaldie.n@gmail.com",
+    role = c("aut", "cre")),
+    person("Anna", "Dreneva", role=c("aut")),
+    person("Jacob", "Orquin", role=c("aut")))
+Maintainer: Nathanael Larigaldie <larigaldie.n@gmail.com>
+Description: Eye-tracking software usually outputs fixation coordinates from
+    participants on the screen, but scrollable settings often require manual
+    coordinate corrections from experimenters. This package allows for easier
+    and mostly automatic corrections to use eye-tracking on scrollable websites,
+    and generate fixation heatmaps on complete images taken from them, and
+    manages potential immovable and/or retractable areas (e.g. navbars).
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
