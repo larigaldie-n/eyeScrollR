@@ -26,7 +26,7 @@ eye_tracker_gaze_scroll(
 \arguments{
 \item{file_name}{The name of the .csv file with the coordinates & input events}
 
-\item{time_shift}{A time shift parameter to synchronize the .csv file with a video recording (e.g. if the recording started after the start of the .csv)}
+\item{time_shift}{[Optional] A time shift parameter to synchronize the .csv file with a video recording (e.g. if the recording started after the start of the .csv). Default: 0}
 
 \item{timestamp_start}{The starting timestamp from the .csv file at which the participant was watching the scrollable (AFTER time_shift applied)}
 
@@ -36,17 +36,17 @@ eye_tracker_gaze_scroll(
 
 \item{timestamp_stop}{The final timestamp from the .csv file at which the participant was watching the scrollable (AFTER time_shift applied)}
 
-\item{starting_scroll}{[Optional] If the participant did not start watching the webpage from the top, you can indicate the y coordinate at which he started here (in pixels)}
+\item{starting_scroll}{[Optional] If the participant did not start watching the webpage from the top, you can indicate the y coordinate at which he started here (in pixels). Default: 0}
 
-\item{output_file}{The name of the output .csv file. If empty, will just return the data without creating a new file}
+\item{output_file}{[Optional] The name of the output .csv file. If empty, will just return the data without creating a new file. Default: empty}
 
-\item{anchors}{A list of potentially immovable areas inside the scrollable (e.g. anchored menus in a website) - see manual for a correct usage}
+\item{anchors}{[Optional] A list of potentially immovable areas inside the scrollable (e.g. anchored menus in a website) - see manual for a correct usage}
 
-\item{rules}{A list of functions that can act as rules to activate/deactivate immovables areas in the scrollable (e.g. a menu that disappears after X pixels have been scrolled) - See manual for a correct}
+\item{rules}{[Optional] A list of functions that can act as rules to activate/deactivate immovables areas in the scrollable (e.g. a menu that disappears after X pixels have been scrolled) - See manual for a correct}
 
-\item{outside_image_is_na}{Indicates if values outside the AOI (e.g. the windows bar) should be set to NA or kept in the file/dataset. If set to False, coordinates above/before the AOI will become negative.}
+\item{outside_image_is_na}{[Optional] Indicates if values outside the AOI (e.g. the windows bar) should be set to NA or kept in the file/dataset. If set to FALSE, coordinates above/before the AOI will become negative. Default: TRUE}
 
-\item{na.rm}{Indicates if lines with NA y values should be dropped in the final file/dataset}
+\item{na.rm}{[Optional] Indicates if lines with NA y values should be dropped in the final file/dataset. Default: TRUE}
 
 \item{calibration}{A calibration list (see the scroll_calibration function)}
 }
@@ -68,7 +68,5 @@ test_rules = list(rule_before_scrolling, rule_after_scrolling, rule_true)
 test_calibration <- scroll_calibration(1920, 1080, 88, 0, 40, 0, 100)
 test_data <- eye_tracker_gaze_scroll(anchors = test_anchors,
     rules = test_rules, calibration = test_calibration)
-test_img <- readPNG("test.png")
-generate_heatmap(test_data, test_img)
 }
 }
