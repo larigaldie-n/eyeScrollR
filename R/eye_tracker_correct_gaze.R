@@ -320,8 +320,7 @@ eye_tracker_gaze_scroll <- function (file_name = "mouse_events_and_fixation_coor
     }
   }
 
-  eyes_data$corrected_y <- -corrected_y
-  # eyes_data$corrected_y <- image_height -corrected_y
+  eyes_data$corrected_y <- corrected_y
   if (na.rm)
   {
     eyes_data <- eyes_data[stats::complete.cases(eyes_data[, 'corrected_y']),]
@@ -337,7 +336,7 @@ eye_tracker_gaze_scroll <- function (file_name = "mouse_events_and_fixation_coor
 generate_heatmap <- function(data, img)
 {
 
-  data$corrected_y <- dim(img)[1] + data$corrected_y
+  data$corrected_y <- dim(img)[1] - data$corrected_y
   ggplot2::ggplot(data, ggplot2::aes(.data$corrected_x, .data$corrected_y))  +
     ggplot2::annotation_raster(img, xmin=-Inf, xmax=Inf, ymin=-Inf, ymax=Inf)+
     ggplot2::stat_density2d(geom = "polygon", ggplot2::aes(fill=.data$..level.., alpha = 0.2)) +
