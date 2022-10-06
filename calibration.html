@@ -74,7 +74,8 @@
                         //if (window.screenX >= 0)
                         //{
                             shift_left = window.screenX;
-                            shift_right = screen.width - (window.screenX + window.outerWidth);
+                            // shift_right = screen.width - (window.screenX + window.outerWidth);
+                            shift_right = screen.width - (shift_left + document.documentElement.clientWidth);
                             shift_top = window.screenY + (window.outerHeight - window.innerHeight);
                             shift_bottom = screen.height - (window.outerHeight + window.screenY);
                         //}
@@ -85,7 +86,8 @@
                         //if(window.screenLeft >= 0)
                         //{
                             shift_left = window.screenLeft;
-                            shift_right = screen.width - (window.screenLeft + window.outerWidth);
+                            // shift_right = screen.width - (window.screenLeft + window.outerWidth);
+                            shift_right = screen.width - (shift_left + document.documentElement.clientWidth);
                             shift_top = window.screenTop + (window.outerHeight - window.innerHeight);
                             shift_bottom = screen.height - (window.outerHeight + window.screenTop);
                         //}
