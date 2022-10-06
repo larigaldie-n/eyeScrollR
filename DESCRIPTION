@@ -17,6 +17,8 @@ License: GPL-3
 Encoding: UTF-8
 LazyData: true
 Suggests: 
+    knitr,
+    rmarkdown,
     testthat (>= 3.0.0)
 Config/testthat/edition: 3
 RoxygenNote: 7.2.1
@@ -25,3 +27,4 @@ Imports:
     ggplot2,
     rlang
 URL: https://larigaldie-n.github.io/eyeScrollR/
+VignetteBuilder: knitr

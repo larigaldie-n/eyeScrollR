@@ -5,50 +5,47 @@
 \title{eye_tracker_fixation_scroll}
 \usage{
 eye_tracker_fixation_scroll(
-  file_name = "tt.csv",
-  time_shift = 388,
-  timestamp_start = 53753,
-  image_height = 6655,
-  image_width = 1920,
-  timestamp_stop = 113579,
+  eyes_data,
+  timestamp_start,
+  timestamp_stop,
+  image_height,
+  image_width,
+  calibration,
+  time_shift = 0,
   starting_scroll = 0,
   output_file = "eye_tracker_fixation_corrected.csv",
-  anchors = list(array(c(c(0, 0, 1902, 95), c(0, 0, 1902, 95), c(1607, 96, 1902, 905),
-    c(1607, 96, 1902, 905)), dim = c(4, 2, 2)), array(c(c(0, 0, 1902, 63), c(0, 32, 1902,
-    95), c(1607, 63, 1902, 900), c(1607, 63, 1902, 900)), dim = c(4, 2, 2)),
-    array(c(c(1607, 906, 1920, 1080), c(1607, 6481, 1920, 6655)), dim = c(4, 2, 1))),
-  rules = list(rule_before_scrolling, rule_after_scrolling, rule_true),
+  anchors = list(),
+  rules = list(),
   outside_image_is_na = TRUE,
-  na.rm = TRUE,
-  calibration
+  na.rm = TRUE
 )
 }
 \arguments{
-\item{file_name}{The name of the .csv file with the coordinates & input events}
-
-\item{time_shift}{[Optional] A time shift parameter to synchronize the .csv file with a video recording (e.g. if the recording started after the start of the .csv). Default: 0}
+\item{eyes_data}{The dataset}
 
 \item{timestamp_start}{The starting timestamp from the .csv file at which the participant was watching the scrollable (AFTER time_shift applied)}
+
+\item{timestamp_stop}{The final timestamp from the .csv file at which the participant was watching the scrollable (AFTER time_shift applied)}
 
 \item{image_height}{The total height of the image (in pixels)}
 
 \item{image_width}{The total width of the image (in pixels)}
 
-\item{timestamp_stop}{The final timestamp from the .csv file at which the participant was watching the scrollable (AFTER time_shift applied)}
+\item{calibration}{A calibration list (see the scroll_calibration function)}
+
+\item{time_shift}{[Optional] A time shift parameter to synchronize the .csv file with a video recording (e.g. if the recording started after the start of the .csv). Default: 0}
 
 \item{starting_scroll}{[Optional] If the participant did not start watching the webpage from the top, you can indicate the y coordinate at which he started here (in pixels). Default: 0}
 
-\item{output_file}{[Optional] The name of the output .csv file. If empty, will just return the data without creating a new file. Default: empty}
+\item{output_file}{[Optional] The name of the output .csv file. If an empty string, will just return the data without creating a new file. Default: empty string}
 
-\item{anchors}{[Optional] A list of potentially immovable areas inside the scrollable (e.g. anchored menus in a website) - see manual for a correct usage}
+\item{anchors}{[Optional] A list of potentially immovable areas inside the scrollable (e.g. anchored menus in a website) - see manual for a correct usage. Default: empty list}
 
-\item{rules}{[Optional] A list of functions that can act as rules to activate/deactivate immovables areas in the scrollable (e.g. a menu that disappears after X pixels have been scrolled) - See manual for a correct}
+\item{rules}{[Optional] A list of functions that can act as rules to activate/deactivate immovables areas in the scrollable (e.g. a menu that disappears after X pixels have been scrolled) - See manual for a correct. Default: empty list}
 
 \item{outside_image_is_na}{[Optional] Indicates if values outside the AOI (e.g. the windows bar) should be set to NA or kept in the file/dataset. If set to FALSE, coordinates above/before the AOI will become negative. Default: TRUE}
 
 \item{na.rm}{[Optional] Indicates if lines with NA y values should be dropped in the final file/dataset. Default: TRUE}
-
-\item{calibration}{A calibration list (see the scroll_calibration function)}
 }
 \value{
 The Dataset with corrected x and y's
