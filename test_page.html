@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        #immovable-header {
+            text-align: center;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background-color:purple;
+            color: white;
+            z-index: 10;
+            transition: 0.2s;
+            font-size: 60px;
+            height: 20%;
+            font-weight: bold;
+        }
+        #first-text {
+            position: relative;
+            top: 500px;
+            width: 50%;
+            margin: auto;
+            text-align: center;
+            background-color: aqua;
+        }
+        #long-div {
+            height:10000px;
+        }
+        #immovable-box-bottom-right {
+            text-align: center;
+            position: fixed;
+            bottom: 0;
+            right:0;
+            width: 15%;
+            height: 10%;
+            background-color:purple;
+            color: white;
+            z-index: 10;
+            transition: 0.2s;
+            font-size: 30px;
+            font-weight: bold;
+        }
+        #immovable-box-right {
+            text-align: center;
+            position: fixed;
+            right:0;
+            top:20%;
+            width: 15%;
+            height: 75%;
+            background-color:blue;
+            color: white;
+            z-index: 10;
+            transition: 0.2s;
+            font-size: 30px;
+            font-weight: bold;
+        }
+       
+    </style>
+</head>
+ 
+<body>
+    <div id="immovable-header">
+      I won't move as you scroll down<br><br>
+      But at some point, I will shrink
+    </div>
+
+    <div id="first-text">
+        <h1>This content moves</h1><br>
+    </div>
+
+    <div>
+
+    </div>
+
+    <div id="long-div">
+        
+    </div>
+    <div id="immovable-box-right">
+        I won't move, but I will follow the shrinkage from the top header
+    </div>
+    <div id="immovable-box-bottom-right">
+        I won't move either (but I won't shrink at all)
+    </div>
+    <script type="text/javascript">
+    // When the user scrolls down 500px from the top of the document, resize the header's font size
+    window.onscroll = function() {scrollFunction()};
+
+    function scrollFunction() {
+    if (document.body.scrollTop > 1000 || document.documentElement.scrollTop > 1000) {
+        document.getElementById("immovable-header").style.fontSize = "30px";
+        document.getElementById("immovable-header").style.height = "10%";
+        document.getElementById("immovable-box-right").style.top = "10%";
+        document.getElementById("immovable-box-right").style.height = "85%";  
+    } else {
+        document.getElementById("immovable-header").style.fontSize = "60px";
+        document.getElementById("immovable-header").style.height = "20%";
+        document.getElementById("immovable-box-right").style.top = "20%";
+        document.getElementById("immovable-box-right").style.height = "75%"; 
+    }
+    }
+</script>
+</body>
+ 
+</html>
