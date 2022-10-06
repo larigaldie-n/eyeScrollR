@@ -279,7 +279,7 @@ scroll_calibration <- function(screen_width, screen_height, shift_top, shift_lef
 #' }
 #' @export
 #' @importFrom rlang .data
-eye_tracker_fixation_scroll <- function (file_name = "tt.csv", time_shift=388, timestamp_start=53753, image_height=6655, image_width=1920, timestamp_stop=113579, starting_scroll = 0, output_file = "eye_tracker_fixation_corrected.csv", anchors = list(array(c(c(0,0,1902,95), c(0,0,1902,95), c(1607,96,1902,905), c(1607,96,1902,905)), dim = c(4,2,2)), array(c(c(0,0,1902,63), c(0,32,1902,95), c(1607,63,1902,900), c(1607,63,1902,900)), dim = c(4,2,2)), array(c(c(1607,906,1920,1080), c(1607,6481,1920,6655)), dim = c(4,2,1))), rules = list(rule_before_scrolling, rule_after_scrolling, rule_true), outside_image_is_na = TRUE, na.rm=TRUE, calibration)
+eye_tracker_fixation_scroll <- function (eyes_data, time_shift=388, timestamp_start=53753, image_height=6655, image_width=1920, timestamp_stop=113579, starting_scroll = 0, output_file = "eye_tracker_fixation_corrected.csv", anchors = list(array(c(c(0,0,1902,95), c(0,0,1902,95), c(1607,96,1902,905), c(1607,96,1902,905)), dim = c(4,2,2)), array(c(c(0,0,1902,63), c(0,32,1902,95), c(1607,63,1902,900), c(1607,63,1902,900)), dim = c(4,2,2)), array(c(c(1607,906,1920,1080), c(1607,6481,1920,6655)), dim = c(4,2,1))), rules = list(rule_before_scrolling, rule_after_scrolling, rule_true), outside_image_is_na = TRUE, na.rm=TRUE, calibration)
 {
   scroll_pixels <- calibration$scroll_pixels
   screen_width <- calibration$screen_width
@@ -289,7 +289,6 @@ eye_tracker_fixation_scroll <- function (file_name = "tt.csv", time_shift=388, t
   shift_bottom <- calibration$shift_bottom
   shift_left <- calibration$shift_left
   event <- "WM_MOUSEWHEEL"
-  eyes_data <- utils::read.csv(file = file_name, skip = 1)
   eyes_data$Timestamp <- eyes_data$Timestamp - time_shift
   eyes_data <- dplyr::filter(eyes_data, .data$Timestamp > timestamp_start, .data$Timestamp < timestamp_stop)
   scroll <- starting_scroll
