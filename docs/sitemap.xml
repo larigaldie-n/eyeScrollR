@@ -7,6 +7,9 @@
     <loc>https://larigaldie-n.github.io/eyeScrollR/articles/eyeScrollR.html</loc>
   </url>
   <url>
+    <loc>https://larigaldie-n.github.io/eyeScrollR/articles/fixed_areas.html</loc>
+  </url>
+  <url>
     <loc>https://larigaldie-n.github.io/eyeScrollR/articles/index.html</loc>
   </url>
   <url>
@@ -20,9 +23,6 @@
   </url>
   <url>
     <loc>https://larigaldie-n.github.io/eyeScrollR/reference/eye_tracker_fixation_scroll.html</loc>
-  </url>
-  <url>
-    <loc>https://larigaldie-n.github.io/eyeScrollR/reference/eye_tracker_gaze_scroll.html</loc>
   </url>
   <url>
     <loc>https://larigaldie-n.github.io/eyeScrollR/reference/generate_heatmap.html</loc>
@@ -41,6 +41,9 @@
   </url>
   <url>
     <loc>https://larigaldie-n.github.io/eyeScrollR/reference/scroll_calibration.html</loc>
+  </url>
+  <url>
+    <loc>https://larigaldie-n.github.io/eyeScrollR/test_no_fixed.html</loc>
   </url>
   <url>
     <loc>https://larigaldie-n.github.io/eyeScrollR/test_page.html</loc>

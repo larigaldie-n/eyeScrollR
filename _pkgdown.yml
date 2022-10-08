@@ -10,8 +10,11 @@ home:
   links:
   - text: Calibration tool
     href: calibration.html
-  - text: Test page
+  - text: Test page (easy)
+    href: test_no_fixed.html
+  - text: Test page (hard)
     href: test_page.html
+
 reference:
 - title: Core functions
   desc: |

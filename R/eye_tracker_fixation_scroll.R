@@ -1,6 +1,6 @@
 shift_image_by_dimension <- function(coordinate, shift_before, shift_after, screen_dimension, outside_image_is_na)
 {
-  if (is.na(coordinate) || (outside_image_is_na && (coordinate < shift_before || coordinate > (screen_dimension - (shift_after + shift_before)))))
+  if (is.na(coordinate) || (outside_image_is_na && (coordinate < shift_before || coordinate > (screen_dimension - shift_after))))
   {
     return(NA)
   }
@@ -294,7 +294,7 @@ eye_tracker_fixation_scroll <- function (eyes_data, timestamp_start, timestamp_s
   min_scroll <- 0
   rules <- check_anchors_rules(anchors, rules)
   flags <- c(rep(TRUE, length(rules)))
-  max_scroll <- image_height - screen_height - shift_top - shift_bottom
+  max_scroll <- image_height - (screen_height - shift_top - shift_bottom)
   eyes_data$Corrected.Y <- vapply(eyes_data$Fixation.Y, shift_image_by_dimension, shift_before = shift_top, shift_after = shift_bottom, screen_dimension = screen_height, outside_image_is_na = outside_image_is_na, FUN.VALUE = 1.0)
   eyes_data$Corrected.X <- vapply(eyes_data$Fixation.X, shift_image_by_dimension, shift_before = shift_left, shift_after = shift_right, screen_dimension = screen_width, outside_image_is_na = outside_image_is_na, FUN.VALUE = 1.0)
 
@@ -320,7 +320,7 @@ eye_tracker_fixation_scroll <- function (eyes_data, timestamp_start, timestamp_s
   eyes_data$Corrected.Y <- corrected_y
   if (na.rm)
   {
-    eyes_data <- eyes_data[stats::complete.cases(eyes_data[, 'corrected_y']),]
+    eyes_data <- eyes_data[stats::complete.cases(eyes_data[, 'Corrected.Y']),]
   }
   if (output_file != "")
   {
@@ -352,8 +352,8 @@ generate_heatmap <- function(data, img)
   data$Corrected.Y <- dim(img)[1] - data$Corrected.Y
   ggplot2::ggplot(data, ggplot2::aes(.data$Corrected.X, .data$Corrected.Y))  +
     ggplot2::annotation_raster(img, xmin=-Inf, xmax=Inf, ymin=-Inf, ymax=Inf)+
-    ggplot2::stat_density2d(geom = "polygon", ggplot2::aes(fill=.data$..level.., alpha = 0.2)) +
-    ggplot2::geom_point(size=0.5)+
+    ggplot2::stat_density2d(geom = "polygon", ggplot2::aes(fill=.data$..level.., alpha = 0.15)) +
+    ggplot2::geom_point(size=1)+
     ggplot2::scale_fill_gradient(low="green", high="red") +
     ggplot2::scale_x_continuous(limits=c(0,dim(img)[2]),expand=c(0,0))+
     ggplot2::scale_y_continuous(limits=c(0,dim(img)[1]),expand=c(0,0))+
