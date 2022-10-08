@@ -73,42 +73,97 @@
 
     
     
-<p>The goal of eyeScrollR is to extract the necessary information from eye-tracking data to easily and automatically place fixations on the right areas of a scrollable website.</p>
-<p>Usually, eye-tracker data consist in arrays of fixation coordinates on the screen itself. If a participant is staring right at the middle of a screen with resolution 1920*1080, eye-tracking software will therefore return an array of fixation records with coordinates x = 960; y = 540. When the material being watched is static and does not overflow, converting coordinates from the screen to coordinates on the image can be effortless (and even automatically made by the software).</p>
-<p>However, if the participant has the option to scroll down on the application he is using, this conversion suddenly can become difficult, and some researchers end up either making endless manual corrections, or even abandoning these research settings altogether. With this package, only a few minutes of preparation should be necessary for most researchers to perform these conversions without sacrificing too much ecological validity. This documentation was designed to make the use of this package as easy as possible, with step-by-step reproducible examples.</p>
+<p>The goal of eyeScrollR is to extract the necessary information from
+eye-tracking data to easily and automatically place fixations on the
+right areas of a scrollable website.</p>
+<p>Usually, eye-tracker data consist in arrays of fixation coordinates
+on the screen itself. If a participant is staring right at the middle of
+a screen with resolution 1920*1080, eye-tracking software will therefore
+return an array of fixation records with coordinates x = 960; y = 540.
+When the material being watched is static and does not overflow,
+converting coordinates from the screen to coordinates on the image can
+be effortless (and even automatically made by the software).</p>
+<p>However, if the participant has the option to scroll down on the
+application he is using, this conversion suddenly can become difficult,
+and some researchers end up either making endless manual corrections, or
+even abandoning these research settings altogether. With this package,
+only a few minutes of preparation should be necessary for most
+researchers to perform these conversions without sacrificing too much
+ecological validity. This documentation was designed to make the use of
+this package as easy as possible, with step-by-step reproducible
+examples.</p>
 <div class="section level2">
 <h2 id="before-you-start">Before you start<a class="anchor" aria-label="anchor" href="#before-you-start"></a>
 </h2>
 <div class="section level3">
 <h3 id="understand-the-use-case-scenario">Understand the use-case scenario<a class="anchor" aria-label="anchor" href="#understand-the-use-case-scenario"></a>
 </h3>
-<p>Consider this situation, where a participant fixates 5 different areas on a screen (represented by red and green spots) while browsing a website, scrolls down, then fixates the 5 exact same areas:</p>
+<p>Consider this situation, where a participant fixates 5 different
+areas on a screen (represented by red and green spots) while browsing a
+website, scrolls down, then fixates the 5 exact same areas:</p>
 <p><img src="example_eyeScrollR_small_vertical.png" width="100%"></p>
-<p>Although red fixation spots do indeed match the same content in both situations, green fixations spots don’t; and any analysis on the content being fixated should convert those screen coordinates to the “content coordinates”.</p>
-<p>In other words, if we unscrolled the content of the screen to a single long image, we would like the fixations to be correctly placed on it, as so:</p>
+<p>Although red fixation spots do indeed match the same content in both
+situations, green fixations spots don’t; and any analysis on the content
+being fixated should convert those screen coordinates to the “content
+coordinates”.</p>
+<p>In other words, if we unscrolled the content of the screen to a
+single long image, we would like the fixations to be correctly placed on
+it, as so:</p>
 <p><img src="example_eyeScrollR_vertical_full.png" width="100%"></p>
 <p>… Which is exactly what this package is for.</p>
-<p>On top of this, we may often want to get rid of anything outside the website itself (such as the browser header, the Windows bar at the bottom, …), and some areas of websites might be fixed and follow the screen as the participant scrolls down. eyeScrollR is equipped to deal with such situations.</p>
-<p><strong>Please do note that as of now, eyeScrollR has only been tested on data from the iMotions software. Future support for other software should be expected, but is not yet guaranteed.</strong></p>
+<p>On top of this, we may often want to get rid of anything outside the
+website itself (such as the browser header, the Windows bar at the
+bottom, …), and some areas of websites might be fixed and follow the
+screen as the participant scrolls down. eyeScrollR is equipped to deal
+with such situations.</p>
+<p><strong>Please do note that as of now, eyeScrollR has only been
+tested on data from the iMotions software. Future support for other
+software should be expected, but is not yet guaranteed.</strong></p>
 </div>
 <div class="section level3">
 <h3 id="set-up-the-experimental-setting">Set up the experimental setting<a class="anchor" aria-label="anchor" href="#set-up-the-experimental-setting"></a>
 </h3>
-<p>Although eyeScrollR is dealing with the participant’s data, getting the most reliable and accurate placements and timings may require to change a few browser settings. These steps are not completely necessary, but if omitted may often result in a few pixels of inaccuracy in the fixation’s coordinates, and they may be temporarily ahead of time by up to ~150ms during scrolling blur periods. Quite rarely, it may mess up with the whole file; especially if the participant had a very fast-paced and erratic scrolling pattern.</p>
-<p>This is why it is recommended to deactivate the smooth scrolling on your browser, and to get rid of the side scrollbar. In Chrome/Chromium browsers, deactivating the smooth scrolling can easily be done by typing “<a href="chrome://flags/" class="uri">chrome://flags/</a>” in the address bar, and disabling the “Smooth Scrolling” option. Similarly, the scrollbar can be hidden by enabling the “Overlay Scrollbars” option.</p>
-<p>In Firefox browsers, a few free extensions can easily be found to hide the scrollbar and smooth scrolling can be deactivated directly from the settings menu.</p>
+<p>Although eyeScrollR is dealing with the participant’s data, getting
+the most reliable and accurate placements and timings may require to
+change a few browser settings. These steps are not completely necessary,
+but if omitted may often result in a few pixels of inaccuracy in the
+fixation’s coordinates, and they may be temporarily ahead of time by up
+to ~150ms during scrolling blur periods. Quite rarely, it may mess up
+with the whole file; especially if the participant had a very fast-paced
+and erratic scrolling pattern.</p>
+<p>This is why it is recommended to deactivate the smooth scrolling on
+your browser, and to get rid of the side scrollbar. In Chrome/Chromium
+browsers, deactivating the smooth scrolling can easily be done by typing
+“<a href="chrome://flags/" class="uri">chrome://flags/</a>” in the
+address bar, and disabling the “Smooth Scrolling” option. Similarly, the
+scrollbar can be hidden by enabling the “Overlay Scrollbars” option.</p>
+<p>In Firefox browsers, a few free extensions can easily be found to
+hide the scrollbar and smooth scrolling can be deactivated directly from
+the settings menu.</p>
 </div>
 <div class="section level3">
 <h3 id="anticipate-the-necessary-information-material">Anticipate the necessary information &amp; material<a class="anchor" aria-label="anchor" href="#anticipate-the-necessary-information-material"></a>
 </h3>
-<p>eyeScrollR is mainly designed to work on “unscrolled” images of websites. Those can be automatically captured through various free or paid extensions for Chromium/Firefox browsers (and probably more), or manually constructed/modified if necessary. The resulting image should be an unscrolled image, with an horizontal size equal to that of your browser viewing area (and a vertical size equal to however long the webpage is). Procuring this image is let to the reader’s preferences.</p>
-<p>Once you have this image, all you need are a few measurements on the monitor used for the experiment, an eye-tracking dataset <em>including the participant’s mouse inputs and fixation coordinates</em>, and you are all set.</p>
+<p>eyeScrollR is mainly designed to work on “unscrolled” images of
+websites. Those can be automatically captured through various free or
+paid extensions for Chromium/Firefox browsers (and probably more), or
+manually constructed/modified if necessary. The resulting image should
+be an unscrolled image, with an horizontal size equal to that of your
+browser viewing area (and a vertical size equal to however long the
+webpage is). Procuring this image is let to the reader’s
+preferences.</p>
+<p>Once you have this image, all you need are a few measurements on the
+monitor used for the experiment, an eye-tracking dataset <em>including
+the participant’s mouse inputs and fixation coordinates</em>, and you
+are all set.</p>
 </div>
 </div>
 <div class="section level2">
 <h2 id="a-complete-example">A complete example<a class="anchor" aria-label="anchor" href="#a-complete-example"></a>
 </h2>
-<p>Provided that you already have an image, a dataset and correct measurements, outputting a correct heatmap from the eye-tracker’s raw data may be as simple as this:</p>
+<p>Provided that you already have an image, a dataset and correct
+measurements, outputting a correct heatmap from the eye-tracker’s raw
+data may be as simple as this:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://larigaldie-n.github.io/eyeScrollR/">eyeScrollR</a></span><span class="op">)</span></span>
 <span><span class="va">calibration</span> <span class="op">&lt;-</span> <span class="fu">scroll_calibrate</span><span class="op">(</span>screen_width <span class="op">=</span> <span class="fl">2560</span>, screen_height <span class="op">=</span> <span class="fl">1440</span>,</span>
