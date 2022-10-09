@@ -65,7 +65,7 @@ Provided that you already have an image, a dataset and correct measurements, out
 
 ```{r eval=FALSE}
 library(eyeScrollR)
-calibration <- scroll_calibrate(screen_width = 2560, screen_height = 1440,
+calibration <- scroll_calibration(screen_width = 2560, screen_height = 1440,
                  shift_top = 103, shift_left = 0, shift_bottom = 40,
                  shift_right = 0, scroll_pixels = 100)
 data <- eye_tracker_fixation_scroll(eyes_data = dataset, timestamp_start = 2000,
