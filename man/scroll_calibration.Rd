@@ -7,10 +7,10 @@
 scroll_calibration(
   screen_width,
   screen_height,
-  shift_top,
-  shift_left,
-  shift_bottom,
-  shift_right,
+  top_left_x,
+  top_left_y,
+  bottom_right_x,
+  bottom_right_y,
   scroll_pixels
 )
 }
@@ -19,13 +19,13 @@ scroll_calibration(
 
 \item{screen_height}{Resolution height of the screen on which the experiment is conducted (in pixels). E.g. 1080}
 
-\item{shift_top}{The number of pixels above the area of interest on the screen (and therefore, outside of the image)}
+\item{top_left_x}{x coordinate of the top left pixel of the browser viewing area}
 
-\item{shift_left}{Same, but on the left of the AOI}
+\item{top_left_y}{y coordinate of the same pixel}
 
-\item{shift_bottom}{Same, but below the AOI}
+\item{bottom_right_x}{x coordinate of the bottom right pixel of the browser viewing area}
 
-\item{shift_right}{Same, but on the right of the AOI}
+\item{bottom_right_y}{y coordinate of the same pixel}
 
 \item{scroll_pixels}{The amount of pixels being scrolled by each mouse scroll
 (depends on the browser)}

@@ -25,6 +25,7 @@
       <br><b>Please place the browser on the screen exactly as it is during the study, and refresh this page before you start</b><br>
       <br><b>It is strongly advised that you deactivate the smooth scrolling feature on your browser before you run the experiment</b><br>
       <br>If in doubt, only take the scroll_pixels value and do the rest by hand (see manual)<br>
+      <p id="result_scroll"></p>
       <p id="result">Please scroll down a bit to calibrate</p>
     </div>
 
@@ -61,6 +62,7 @@
             {
                 scrolls = [];
                 document.getElementById('result').innerText = "Please scroll down to calibrate"
+                document.getElementById('result_scroll').innerText = ""
                 window.forceTop(0)
             }
         }
@@ -71,30 +73,34 @@
                 {
                     if (typeof window.screenX !== 'undefined')
                     {
-                        //if (window.screenX >= 0)
-                        //{
-                            shift_left = window.screenX * window.devicePixelRatio;
-                            shift_right = (screen.width - (window.screenX + window.outerWidth))*window.devicePixelRatio;
-                            // shift_right = screen.width - (shift_left + document.documentElement.clientWidth);
-                            shift_top = (window.screenY + (window.outerHeight - window.innerHeight))*window.devicePixelRatio;
-                            shift_bottom = (screen.height - (window.outerHeight + window.screenY))*window.devicePixelRatio;
-                        //}
+                        top_left_x = window.screenX * window.devicePixelRatio;
+                        top_left_y = (window.screenY + (window.outerHeight - window.innerHeight))*window.devicePixelRatio;
+                        bottom_right_x = (window.screenX + window.innerWidth)*window.devicePixelRatio;
+                        bottom_right_y = (window.screenY + window.outerHeight)*window.devicePixelRatio;
+
+                        // shift_right = (screen.width - (window.screenX + window.outerWidth))*window.devicePixelRatio;
+                        // shift_right = screen.width - (shift_left + document.documentElement.clientWidth);
                         
                     }
                     else if (typeof window.screenLeft !== 'undefined')
                     {
-                        //if(window.screenLeft >= 0)
-                        //{
-                            shift_left = window.screenLeft*window.devicePixelRatio;;
-                            shift_right = (screen.width - (window.screenLeft + window.outerWidth))*window.devicePixelRatio;
-                            // shift_right = screen.width - (shift_left + document.documentElement.clientWidth);
-                            shift_top = (window.screenTop + (window.outerHeight - window.innerHeight))*window.devicePixelRatio;
-                            shift_bottom = (screen.height - (window.outerHeight + window.screenTop))*window.devicePixelRatio;
-                        //}
+                        top_left_x = window.screenLeft*window.devicePixelRatio;
+                        top_left_y = (window.screenTop + (window.outerHeight - window.innerHeight))*window.devicePixelRatio;
+                        bottom_right_x = (window.screenLeft + window.innerWidth)*window.devicePixelRatio;
+                        bottom_right_y = (window.screenTop + window.outerHeight)*window.devicePixelRatio;
+
+                        // shift_right = (screen.width - (window.screenLeft + window.outerWidth))*window.devicePixelRatio;
+                        // shift_right = screen.width - (shift_left + document.documentElement.clientWidth);
                     }
-                    document.getElementById('result').innerText = "scroll_calibrate(" + "screen_width = " + screen.width +  ", screen_height = " + screen.height + ", shift_top = " + shift_top + ", shift_left = " + shift_left + ", shift_bottom = " + shift_bottom + ", shift_right = " + shift_right + ", scroll_pixels = " + Math.round(window.scrollY/scrolls.length) + ")";
-                    
-                    
+                    else
+                    {
+                        top_left_x = -1;
+                        top_left_y = -1;
+                        bottom_right_x = -1;
+                        bottom_right_y = -1;
+                    }
+                    document.getElementById('result_scroll').innerText = "scroll_pixels = " + Math.round(window.scrollY/scrolls.length)
+                    document.getElementById('result').innerText = "scroll_calibrate(" + "screen_width = " + screen.width +  ", screen_height = " + screen.height + ", top_left_x = " + top_left_x + ", top_left_y = " + top_left_y + ", bottom_right_x = " + bottom_right_x + ", bottom_right_y = " + bottom_right_y + ", scroll_pixels = " + Math.round(window.scrollY/scrolls.length) + ")";                    
                 }
 
         }
