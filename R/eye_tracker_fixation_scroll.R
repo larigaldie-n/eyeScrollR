@@ -219,10 +219,10 @@ shift_scroll <- function(event, data_line, scroll, min_scroll, max_scroll, scrol
 #'
 #' @param screen_width Resolution width of the screen on which the experiment is conducted (in pixels). E.g. 1920
 #' @param screen_height Resolution height of the screen on which the experiment is conducted (in pixels). E.g. 1080
-#' @param shift_top The number of pixels above the area of interest on the screen (and therefore, outside of the image)
-#' @param shift_left Same, but on the left of the AOI
-#' @param shift_bottom Same, but below the AOI
-#' @param shift_right Same, but on the right of the AOI
+#' @param top_left_x x coordinate of the top left pixel of the browser viewing area
+#' @param top_left_y y coordinate of the same pixel
+#' @param bottom_right_x x coordinate of the bottom right pixel of the browser viewing area
+#' @param bottom_right_y y coordinate of the same pixel
 #' @param scroll_pixels The amount of pixels being scrolled by each mouse scroll
 #'     (depends on the browser)
 #'
@@ -230,9 +230,11 @@ shift_scroll <- function(event, data_line, scroll, min_scroll, max_scroll, scrol
 #' @examples
 #' calibration <- scroll_calibration(1920, 1080, 88, 0, 40, 0, 100)
 #' @export
-scroll_calibration <- function(screen_width, screen_height, shift_top, shift_left, shift_bottom, shift_right, scroll_pixels)
+scroll_calibration <- function(screen_width, screen_height, top_left_x, top_left_y, bottom_right_x, bottom_right_y, scroll_pixels)
 {
-  l <- list(screen_width = screen_width, screen_height = screen_height, shift_top = shift_top, shift_left = shift_left, shift_bottom = shift_bottom, shift_right = shift_right, scroll_pixels = scroll_pixels)
+  shift_right <- screen_width - bottom_right_x
+  shift_bottom <- screen_height - bottom_right_y
+  l <- list(screen_width = screen_width, screen_height = screen_height, top_left_x = top_left_x, top_left_y = top_left_y, bottom_right_x = bottom_right_x, bottom_right_y = bottom_right_y, shift_right = shift_right, shift_bottom = shift_bottom, scroll_pixels = scroll_pixels)
   return(l)
 }
 
@@ -282,10 +284,12 @@ eye_tracker_fixation_scroll <- function (eyes_data, timestamp_start, timestamp_s
   scroll_pixels <- calibration$scroll_pixels
   screen_width <- calibration$screen_width
   screen_height <- calibration$screen_height
-  shift_top <- calibration$shift_top
-  shift_right <- calibration$shift_right
+  top_left_y <- calibration$top_left_y
+  bottom_right_x <- calibration$bottom_right_x
+  bottom_right_y <- calibration$bottom_right_y
+  top_left_x <- calibration$top_left_x
   shift_bottom <- calibration$shift_bottom
-  shift_left <- calibration$shift_left
+  shift_right <- calibration$shift_right
   event <- "WM_MOUSEWHEEL"
   eyes_data$Timestamp <- eyes_data$Timestamp - time_shift
   eyes_data <- dplyr::filter(eyes_data, .data$Timestamp > timestamp_start, .data$Timestamp < timestamp_stop)
@@ -294,9 +298,9 @@ eye_tracker_fixation_scroll <- function (eyes_data, timestamp_start, timestamp_s
   min_scroll <- 0
   rules <- check_anchors_rules(anchors, rules)
   flags <- c(rep(TRUE, length(rules)))
-  max_scroll <- image_height - (screen_height - shift_top - shift_bottom)
-  eyes_data$Corrected.Y <- vapply(eyes_data$Fixation.Y, shift_image_by_dimension, shift_before = shift_top, shift_after = shift_bottom, screen_dimension = screen_height, outside_image_is_na = outside_image_is_na, FUN.VALUE = 1.0)
-  eyes_data$Corrected.X <- vapply(eyes_data$Fixation.X, shift_image_by_dimension, shift_before = shift_left, shift_after = shift_right, screen_dimension = screen_width, outside_image_is_na = outside_image_is_na, FUN.VALUE = 1.0)
+  max_scroll <- image_height - (screen_height - top_left_y - shift_bottom)
+  eyes_data$Corrected.Y <- vapply(eyes_data$Fixation.Y, shift_image_by_dimension, shift_before = top_left_y, shift_after = shift_bottom, screen_dimension = screen_height, outside_image_is_na = outside_image_is_na, FUN.VALUE = 1.0)
+  eyes_data$Corrected.X <- vapply(eyes_data$Fixation.X, shift_image_by_dimension, shift_before = top_left_x, shift_after = shift_right, screen_dimension = screen_width, outside_image_is_na = outside_image_is_na, FUN.VALUE = 1.0)
 
   for (line in 1:dim(eyes_data)[1])
   {
