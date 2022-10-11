@@ -97,13 +97,12 @@ measurements, outputting a correct heatmap from the eye-tracker’s raw
 data may be as simple as this:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">eyeScrollR</span><span class="op">)</span></span>
-<span><span class="va">calibration</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/scroll_calibration.html">scroll_calibration</a></span><span class="op">(</span>screen_width <span class="op">=</span> <span class="fl">1920</span>, screen_height <span class="op">=</span> <span class="fl">1080</span>,</span>
-<span>                 top_left_x <span class="op">=</span> <span class="fl">0</span>, top_left_y <span class="op">=</span> <span class="fl">108</span>, bottom_right_x <span class="op">=</span> <span class="fl">0</span>,</span>
-<span>                 bottom_right_y <span class="op">=</span> <span class="fl">40</span>, scroll_pixels <span class="op">=</span> <span class="fl">100</span><span class="op">)</span></span>
+<span><span class="va">calibration</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/scroll_calibration_auto.html">scroll_calibration_auto</a></span><span class="op">(</span>calibration_image <span class="op">=</span> <span class="va">calibration_image</span>,</span>
+<span>                                       scroll_pixels <span class="op">=</span> <span class="fl">100</span><span class="op">)</span></span>
 <span><span class="va">data</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/eye_tracker_fixation_scroll.html">eye_tracker_fixation_scroll</a></span><span class="op">(</span>eyes_data <span class="op">=</span> <span class="va">dataset</span>, timestamp_start <span class="op">=</span> <span class="fl">2000</span>,</span>
 <span>                            timstamp_stop <span class="op">=</span> <span class="fl">50000</span>, image_width <span class="op">=</span> <span class="fl">1920</span>,</span>
 <span>                            image_height <span class="op">=</span> <span class="fl">10000</span>, calibration <span class="op">=</span> <span class="va">calibration</span><span class="op">)</span></span>
-<span><span class="fu"><a href="../reference/generate_heatmap.html">generate_heatmap</a></span><span class="op">(</span><span class="va">data</span>, <span class="va">img</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="../reference/generate_heatmap.html">generate_heatmap</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">data</span>, heatmap_image <span class="op">=</span> <span class="va">heatmap_image</span><span class="op">)</span></span></code></pre></div>
 <div class="section level2">
 <h2 id="before-you-start">Before you start<a class="anchor" aria-label="anchor" href="#before-you-start"></a>
 </h2>
@@ -113,7 +112,7 @@ data may be as simple as this:</p>
 <p>Consider this situation, where a participant fixates 5 different
 areas on a screen (represented by red and green spots) while browsing a
 website, scrolls down, then fixates the 5 exact same areas:</p>
-<p><img src="../../../../../OneDrive%20-%20Aarhus%20universitet/Desktop/eyeScrollR/eyeScrollR/articles/example_eyeScrollR_small_vertical.png" width="100%"></p>
+<p><img src="example_eyeScrollR_small_vertical.png" width="100%"></p>
 <p>Although red fixation spots do indeed match the same content in both
 situations, green fixations spots don’t; and any analysis on the content
 being fixated should convert those screen coordinates to the “content
@@ -121,7 +120,7 @@ coordinates”.</p>
 <p>In other words, if we unscrolled the content of the screen to a
 single long image, we would like the fixations to be correctly placed on
 it, as so:</p>
-<p><img src="../../../../../OneDrive%20-%20Aarhus%20universitet/Desktop/eyeScrollR/eyeScrollR/articles/example_eyeScrollR_vertical_full.png" width="100%"></p>
+<p><img src="example_eyeScrollR_vertical_full.png" width="100%"></p>
 <p>… Which is exactly what this package is for.</p>
 <p>On top of this, we may often want to get rid of anything outside the
 website itself (such as the browser header, the Windows bar at the
@@ -169,11 +168,7 @@ monitor used for the experiment, an eye-tracking dataset <em>including
 the participant’s mouse inputs and fixation coordinates</em>, and you
 are all set.</p>
 <p>Some of these measurements can be done automatically through the <a href="../calibration.html" title="Calibration page">Calibration
-page</a>, although those may sometimes be slightly inaccurate. These
-inaccuracies should not amount to more than 8 pixels on Windows
-computers, but if it is not acceptable for your project, it is advised
-to confirm measurements manually (both will be explained in the
-following example).</p>
+page</a>, but they can also be input manually if necessary.</p>
 </div>
 </div>
 <div class="section level2">
@@ -186,16 +181,54 @@ be to get all the measurements ready for the “calibration” phase.</p>
 <div class="section level3">
 <h3 id="calibrate">Calibrate<a class="anchor" aria-label="anchor" href="#calibrate"></a>
 </h3>
-<p>If this is your first time using this package or if you need the best
-accuracy possible, it is advisable to check the results from the
-automatic calibration with the manual one.</p>
+<p>If this is your first time using this package, it is advisable to
+check the results from the automatic calibration with the manual one to
+check for consistency. If any discrepancy is found, or if the automatic
+calibration fails, please revert to the manual one.</p>
+<p>The purpose of the calibration is to feed the program with the size
+of the screen, the location of the browsing area inside the screen, and
+how many pixels are being scrolled each time a participant scrolls down
+or up on the browser that will be used.</p>
+<p>You just have to go to the <a href="../calibration.html" title="Calibration page">Calibration page</a> and follow the
+instructions. Once you have the scroll_pixels value, take a screenshot
+of the whole screen including the calibration page, and save it as an
+image file.</p>
+<p>If you have several monitors on the computer, make sure to only take
+a screenshot of the monitor on which the eye-tracker is used. The
+resulting image should therefore be the exact same size as your monitor
+resolution.</p>
 <div class="section level4">
 <h4 id="automatic-calibration">Automatic calibration<a class="anchor" aria-label="anchor" href="#automatic-calibration"></a>
 </h4>
+<p>This is the fastest and easiest way to calibrate. Just pass the
+screenshot you just took along with the scroll_pixels value to the
+scroll_calibration_auto function. For instance:</p>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">eyeScrollR</span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="http://www.rforge.net/png/" class="external-link">png</a></span><span class="op">)</span></span>
+<span><span class="va">calibration_image</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/png/man/readPNG.html" class="external-link">readPNG</a></span><span class="op">(</span><span class="st">"calibrate.png"</span><span class="op">)</span></span>
+<span><span class="va">calibration</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/scroll_calibration_auto.html">scroll_calibration_auto</a></span><span class="op">(</span>calibration_image <span class="op">=</span> <span class="va">calibration_image</span>,</span>
+<span>                                       scroll_pixels <span class="op">=</span> <span class="fl">100</span><span class="op">)</span></span></code></pre></div>
+<p>The calibration should now be over!</p>
 </div>
 <div class="section level4">
 <h4 id="manual-calibration">Manual calibration<a class="anchor" aria-label="anchor" href="#manual-calibration"></a>
 </h4>
+<p>Should the automatic calibration fail, you can always do it manually.
+Just open the screenshot you took earlier, and look for the coordinates
+of the pixels in the most to the top left and to the bottom right of the
+browsing area. The search is made easier by the colored squares in those
+corners.</p>
+<p>Most graphics editors should allow you to easily get the image size
+and the coordinates of the pixel you are interested in by just zooming
+and placing your cursor on it, as so:</p>
+<p><img src="example_eyeScrollR_small_vertical.png" width="100%"></p>
+<p>You then just have to report the values in the
+scroll_calibration_manual function:</p>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">eyeScrollR</span><span class="op">)</span></span>
+<span><span class="va">calibration</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/scroll_calibration_manual.html">scroll_calibration_manual</a></span><span class="op">(</span>calibration_image <span class="op">=</span> <span class="va">calibration_image</span>,</span>
+<span>                                       scroll_pixels <span class="op">=</span> <span class="fl">100</span><span class="op">)</span></span></code></pre></div>
 </div>
 </div>
 <div class="section level3">

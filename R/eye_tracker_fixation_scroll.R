@@ -211,11 +211,10 @@ shift_scroll <- function(event, data_line, scroll, min_scroll, max_scroll, scrol
   return (scroll)
 }
 
-#' @title scroll_calibration
+#' @title scroll_calibration_manual
 #'
 #' @description Creates a calibration list for use in the eye_tracker_fixation_scroll
-#'     function. Can be filled in by taking measurements by hand, or using the
-#'     calibration tool.
+#'     function. Uses values taken by hand
 #'
 #' @param screen_width Resolution width of the screen on which the experiment is conducted (in pixels). E.g. 1920
 #' @param screen_height Resolution height of the screen on which the experiment is conducted (in pixels). E.g. 1080
@@ -224,18 +223,176 @@ shift_scroll <- function(event, data_line, scroll, min_scroll, max_scroll, scrol
 #' @param bottom_right_x x coordinate of the bottom right pixel of the browser viewing area
 #' @param bottom_right_y y coordinate of the same pixel
 #' @param scroll_pixels The amount of pixels being scrolled by each mouse scroll
-#'     (depends on the browser)
+#'     (depends on the browser). Output by the calibration webpage
 #'
 #' @return A list representing the calibration to the screen & browser used for the experiment
 #' @examples
-#' calibration <- scroll_calibration(1920, 1080, 88, 0, 40, 0, 100)
+#' calibration <- scroll_calibration_manual(1920, 1080, 88, 0, 40, 0, 100)
 #' @export
-scroll_calibration <- function(screen_width, screen_height, top_left_x, top_left_y, bottom_right_x, bottom_right_y, scroll_pixels)
+scroll_calibration_manual <- function(screen_width, screen_height, top_left_x, top_left_y, bottom_right_x, bottom_right_y, scroll_pixels)
 {
-  shift_right <- screen_width - bottom_right_x
-  shift_bottom <- screen_height - bottom_right_y
+  shift_right <- screen_width - bottom_right_x - 1
+  shift_bottom <- screen_height - bottom_right_y - 1
   l <- list(screen_width = screen_width, screen_height = screen_height, top_left_x = top_left_x, top_left_y = top_left_y, bottom_right_x = bottom_right_x, bottom_right_y = bottom_right_y, shift_right = shift_right, shift_bottom = shift_bottom, scroll_pixels = scroll_pixels)
   return(l)
+}
+
+#' @title scroll_calibration_auto
+#'
+#' @description Creates a calibration list for use in the eye_tracker_fixation_scroll
+#'     function. Uses a screenshot of a full screen including the calibration webpage
+#'
+#' @param calibration_image The screenshot, loaded as a large array (e.g. using readPNG)
+#' @param scroll_pixels The amount of pixels being scrolled by each mouse scroll
+#'     (depends on the browser). Output by the calibration webpage
+#'
+#' @return A list representing the calibration to the screen & browser used for the experiment
+#' @examples
+#' \dontrun{
+#' library(png)
+#' img <- readPNG("calibrate.png")
+#' calibration <- scroll_calibration_auto(calibration_image = img, scroll_pixels = 100)
+#' }
+#' @export
+scroll_calibration_auto <- function(calibration_image, scroll_pixels)
+{
+  red <- c(1,0,0)
+  green <- c(0,1,0)
+  blue <- c(0,0,1)
+  screen_width <- dim(calibration_image)[2]
+  screen_height <- dim(calibration_image)[1]
+  calibration_image <- calibration_image[,,-c(4)]
+
+  for (height in 1:dim(calibration_image)[1])
+  {
+    for (width in 1:dim(calibration_image)[2])
+    {
+      if (all(calibration_image[height,width,] == red))
+      {
+        if (check_squares(calibration_image[height,,], width, FALSE) && check_squares(calibration_image[,width,], height, FALSE))
+        {
+          top_left_x <- width - 1
+          top_left_y <- height - 1
+        }
+        else if(check_squares(calibration_image[height,,], width, TRUE) && check_squares(calibration_image[,width,], height, TRUE))
+        {
+          bottom_right_x <- width - 1
+          bottom_right_y <- height - 1
+        }
+      }
+    }
+  }
+  if (!exists("top_left_x") || !exists("bottom_right_x"))
+  {
+    stop("Could not calibrate. Either the image does not include the calibration
+          webpage, or your should calibrate by hand using the
+          scroll_calibration_manual function.")
+  }
+  shift_right <- screen_width - bottom_right_x - 1
+  shift_bottom <- screen_height - bottom_right_y - 1
+  cat(paste("Screen width: ", screen_width, ", Screen height: ", screen_height,
+        ",\nTop left x: ", top_left_x, ", Top left y: ", top_left_y,
+        ",\nBottom right x: ", bottom_right_x, ", Bottom right y: ", bottom_right_y,
+        "\n", sep=""))
+  l <- list(screen_width = screen_width, screen_height = screen_height, top_left_x = top_left_x, top_left_y = top_left_y, bottom_right_x = bottom_right_x, bottom_right_y = bottom_right_y, shift_right = shift_right, shift_bottom = shift_bottom, scroll_pixels = scroll_pixels)
+  return(l)
+}
+
+check_squares <- function(line, coordinate, reverse)
+{
+  red <- c(1,0,0)
+  green <- c(0,1,0)
+  blue <- c(0,0,1)
+  color <- "red"
+  if(reverse == FALSE)
+  {
+    if(coordinate>1)
+    {
+      if(all(line[coordinate-1,] == red))
+      {
+        return(FALSE)
+      }
+    }
+    while(coordinate+1<dim(line)[1])
+    {
+      if(color == "red")
+      {
+        if(all(line[coordinate+1,] == red))
+        {
+          color <- "red"
+        }
+        else if (all(line[coordinate+1,] == green))
+        {
+          color <- "green"
+        }
+        else
+        {
+          return(FALSE)
+        }
+      }
+      else if (color =="green")
+      {
+        if(all(line[coordinate+1,] == green))
+        {
+          color <- "green"
+        }
+        else if (all(line [coordinate+1,] == blue))
+        {
+          return(TRUE)
+        }
+        else
+        {
+          return(FALSE)
+        }
+      }
+      coordinate <- coordinate + 1
+    }
+  }
+  else
+  {
+    if(coordinate<dim(line)[1])
+    {
+      if(all(line[coordinate+1,] == red))
+      {
+        return(FALSE)
+      }
+    }
+    while(coordinate-1>0)
+    {
+      if(color == "red")
+      {
+        if(all(line[coordinate-1,] == red))
+        {
+          color <- "red"
+        }
+        else if (all(line[coordinate-1,] == green))
+        {
+          color <- "green"
+        }
+        else
+        {
+          return(FALSE)
+        }
+      }
+      else if (color =="green")
+      {
+        if(all(line[coordinate-1,] == green))
+        {
+          color <- "green"
+        }
+        else if (all(line [coordinate-1,] == blue))
+        {
+          return(TRUE)
+        }
+        else
+        {
+          return(FALSE)
+        }
+      }
+      coordinate <- coordinate - 1
+    }
+  }
+  return(FALSE)
 }
 
 # test_anchors <- list(array(c(c(0,0,1902,95), c(0,0,1902,95), c(1607,96,1902,905), c(1607,96,1902,905)), dim = c(4,2,2)), array(c(c(0,0,1902,63), c(0,32,1902,95), c(1607,63,1902,900), c(1607,63,1902,900)), dim = c(4,2,2)), array(c(c(1607,906,1920,1080), c(1607,6481,1920,6655)), dim = c(4,2,1)))
@@ -338,7 +495,7 @@ eye_tracker_fixation_scroll <- function (eyes_data, timestamp_start, timestamp_s
 #' @description Creates a heatmap based on the dataset
 #'
 #' @param data The dataset output by the eye_tracker_fixation_scroll
-#' @param img An image on which to apply the heatmap
+#' @param heatmap_image An image on which to apply the heatmap
 #'
 #' @return A plot with the image and the heatmap
 #' @examples
@@ -346,21 +503,21 @@ eye_tracker_fixation_scroll <- function (eyes_data, timestamp_start, timestamp_s
 #' img <- readPNG("test.png")
 #' test_data <- eye_tracker_fixation_scroll(anchors = test_anchors,
 #'     rules = test_rules, calibration = test_calibration)
-#' generate_heatmap(test_data, img)
+#' generate_heatmap(data = test_data, heatmap_image = img)
 #' }
 #' @export
 #' @importFrom rlang .data
-generate_heatmap <- function(data, img)
+generate_heatmap <- function(data, heatmap_image)
 {
 
-  data$Corrected.Y <- dim(img)[1] - data$Corrected.Y
+  data$Corrected.Y <- dim(heatmap_image)[1] - data$Corrected.Y
   ggplot2::ggplot(data, ggplot2::aes(.data$Corrected.X, .data$Corrected.Y))  +
-    ggplot2::annotation_raster(img, xmin=-Inf, xmax=Inf, ymin=-Inf, ymax=Inf)+
+    ggplot2::annotation_raster(heatmap_image, xmin=-Inf, xmax=Inf, ymin=-Inf, ymax=Inf)+
     ggplot2::stat_density2d(geom = "polygon", ggplot2::aes(fill=.data$..level.., alpha = 0.15)) +
     ggplot2::geom_point(size=1)+
     ggplot2::scale_fill_gradient(low="green", high="red") +
-    ggplot2::scale_x_continuous(limits=c(0,dim(img)[2]),expand=c(0,0))+
-    ggplot2::scale_y_continuous(limits=c(0,dim(img)[1]),expand=c(0,0))+
+    ggplot2::scale_x_continuous(limits=c(0,dim(heatmap_image)[2]),expand=c(0,0))+
+    ggplot2::scale_y_continuous(limits=c(0,dim(heatmap_image)[1]),expand=c(0,0))+
     ggplot2::coord_fixed()
 }
 

@@ -25,7 +25,9 @@ reference:
 - title: Preparation functions
   desc: |
     Functions to prepare the settings and the dataset for the core functions
-  contents: scroll_calibration
+  contents:
+  - scroll_calibration_manual
+  - scroll_calibration_auto
 - title: Helper anchor rule functions
   desc: |
     Functions to check which set(s) of immovable areas should be used or not
