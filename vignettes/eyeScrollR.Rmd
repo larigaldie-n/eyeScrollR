@@ -124,6 +124,7 @@ calibration <- scroll_calibration_manual(screen_width = 1920, screen_height = 10
                                          scroll_pixels = 100)
 ```
 
+
 ## Get some data, and the full website image
 
 The next step is to get a full, unscrolled image of the website. As was said earlier, there are several ways to achieve this, and many browser extensions are available. In our case, we ended up with this simple image:
