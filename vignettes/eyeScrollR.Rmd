@@ -106,23 +106,63 @@ The calibration should now be over!
 
 Should the automatic calibration fail, you can always do it manually. Just open the screenshot you took earlier, and look for the coordinates of the pixels in the most to the top left and to the bottom right of the browsing area. The search is made easier by the colored squares in those corners.
 
-Most graphics editors should allow you to easily get the image size and the coordinates of the pixel you are interested in by just zooming and placing your cursor on it, as so:
+Most graphics editors should allow you to easily get the image size and the coordinates of the pixel you are interested in by just zooming and placing your cursor on it (for the example, the pixel you are interested in was colored in black).
 
 ```{r, echo=FALSE, out.width="100%"}
-knitr::include_graphics("example_eyeScrollR_small_vertical.png")
+knitr::include_graphics("calibration_manual_example_combined.png")
 ```
+
+Repeat the same process for the bottom-rightmost pixel.
 
 You then just have to report the values in the scroll_calibration_manual function:
 
 ```{r eval=FALSE}
 library(eyeScrollR)
-calibration <- scroll_calibration_manual(calibration_image = calibration_image,
-                                       scroll_pixels = 100)
+calibration <- scroll_calibration_manual(screen_width = 1920, screen_height = 1080,
+                                         top_left_x = 0, top_left_y = 89,
+                                         bottom_right_x = 1919, bottom_right_y = 1029,
+                                         scroll_pixels = 100)
 ```
+
+## Get some data, and the full website image
+
+The next step is to get a full, unscrolled image of the website. As was said earlier, there are several ways to achieve this, and many browser extensions are available. In our case, we ended up with this simple image:
+
+```{r, echo=FALSE, out.width="100%"}
+knitr::include_graphics("a_random_website.png")
+```
+
+This image width and height are to be passed to the eye_tracker_fixation_scroll function in the next section.
 
 ## Convert
 
+After a careful examination of the video from the eye-tracking session of the participant and the key events, it could be determined in our example that the participant was looking at the webpage of interest from timestamps 3577 to 30864. All we need now is to import our dataset, which includes the fixation coordinates, mouse events, and timestamps. After that, we can apply the correction!
+
+```{r eval=FALSE}
+library(readr)
+test_data <- read_csv("test_data.csv", comment = "#")
+corrected_data <- eye_tracker_fixation_scroll(eyes_data = test_data,
+                                              timestamp_start = 3577,
+                                              timestamp_stop = 30864,
+                                              image_width = 1920,
+                                              image_height = 1442,
+                                              calibration = calibration)
+```
+
+The dataset itself has to respect the standard naming conventions from the iMotions software (see more details in the eye_tracker_fixation_scroll help page).
+
 ## Output!
+
+Finally, we can use the built-in heatmap generation function to check if everything went fine:
+
+```{r eval=FALSE}
+heatmap_image <- readPNG("a_random_website.png")
+generate_heatmap(data = corrected_data, heatmap_image = heatmap_image)
+```
+
+```{r, echo=FALSE, out.width="100%"}
+knitr::include_graphics("final_plot.png")
+```
 
 # A more complicated setting?
 

@@ -172,7 +172,7 @@ check_rules_true <- function(rules, data_line, flags, anchors, scroll)
 {
   for (rule_num in seq_len(length(rules)))
   {
-    flags[rule_num] <- rules[[rule_num]](data_line$Timestamp, data_line$Data, data_line$Corrected.X, data_line$Corrected.Y, anchors[[rule_num]], flags[rule_num], scroll)
+    flags[rule_num] <- rules[[rule_num]](data_line$Timestamp, data_line$Data, data_line$'Corrected.X', data_line$'Corrected.Y', anchors[[rule_num]], flags[rule_num], scroll)
   }
   return(flags)
 }
@@ -184,7 +184,7 @@ enforce_rules <- function(flags, anchors, data_line)
   {
     if (flags[flag_num])
     {
-      y <- resolve_anchor_box(anchors[[flag_num]], data_line$Corrected.X, data_line$Corrected.Y)
+      y <- resolve_anchor_box(anchors[[flag_num]], data_line$'Corrected.X', data_line$'Corrected.Y')
       if (!is.na(y))
       {
         break
@@ -456,20 +456,20 @@ eye_tracker_fixation_scroll <- function (eyes_data, timestamp_start, timestamp_s
   rules <- check_anchors_rules(anchors, rules)
   flags <- c(rep(TRUE, length(rules)))
   max_scroll <- image_height - (screen_height - top_left_y - shift_bottom)
-  eyes_data$Corrected.Y <- vapply(eyes_data$Fixation.Y, shift_image_by_dimension, shift_before = top_left_y, shift_after = shift_bottom, screen_dimension = screen_height, outside_image_is_na = outside_image_is_na, FUN.VALUE = 1.0)
-  eyes_data$Corrected.X <- vapply(eyes_data$Fixation.X, shift_image_by_dimension, shift_before = top_left_x, shift_after = shift_right, screen_dimension = screen_width, outside_image_is_na = outside_image_is_na, FUN.VALUE = 1.0)
+  eyes_data$'Corrected.Y' <- vapply(eyes_data$'Fixation Y', shift_image_by_dimension, shift_before = top_left_y, shift_after = shift_bottom, screen_dimension = screen_height, outside_image_is_na = outside_image_is_na, FUN.VALUE = 1.0)
+  eyes_data$'Corrected.X' <- vapply(eyes_data$'Fixation X', shift_image_by_dimension, shift_before = top_left_x, shift_after = shift_right, screen_dimension = screen_width, outside_image_is_na = outside_image_is_na, FUN.VALUE = 1.0)
 
   for (line in 1:dim(eyes_data)[1])
   {
     # prepare_smooth_scroll(event, eyes_data[line ,], smooth_scroll, smooth_scroll_table, scroll, min_scroll, max_scroll)
     scroll <- shift_scroll(event, eyes_data[line ,], scroll, min_scroll, max_scroll, scroll_pixels)
     flags <- check_rules_true(rules, eyes_data[line, ], flags, anchors, scroll)
-    if (!is.na(eyes_data[line, ]$Corrected.Y))
+    if (!is.na(eyes_data[line, ]$'Corrected.Y'))
     {
       corrected_y[line] <- enforce_rules(flags, anchors, eyes_data[line, ])
       if (is.na(corrected_y[line]))
       {
-        corrected_y[line] <- eyes_data[line, ]$Corrected.Y+scroll
+        corrected_y[line] <- eyes_data[line, ]$'Corrected.Y'+scroll
       }
     }
     else
@@ -478,7 +478,7 @@ eye_tracker_fixation_scroll <- function (eyes_data, timestamp_start, timestamp_s
     }
   }
 
-  eyes_data$Corrected.Y <- corrected_y
+  eyes_data$'Corrected.Y' <- corrected_y
   if (na.rm)
   {
     eyes_data <- eyes_data[stats::complete.cases(eyes_data[, 'Corrected.Y']),]
@@ -510,8 +510,8 @@ eye_tracker_fixation_scroll <- function (eyes_data, timestamp_start, timestamp_s
 generate_heatmap <- function(data, heatmap_image)
 {
 
-  data$Corrected.Y <- dim(heatmap_image)[1] - data$Corrected.Y
-  ggplot2::ggplot(data, ggplot2::aes(.data$Corrected.X, .data$Corrected.Y))  +
+  data$'Corrected.Y' <- dim(heatmap_image)[1] - data$'Corrected.Y'
+  ggplot2::ggplot(data, ggplot2::aes(.data$'Corrected.X', .data$'Corrected.Y'))  +
     ggplot2::annotation_raster(heatmap_image, xmin=-Inf, xmax=Inf, ymin=-Inf, ymax=Inf)+
     ggplot2::stat_density2d(geom = "polygon", ggplot2::aes(fill=.data$..level.., alpha = 0.15)) +
     ggplot2::geom_point(size=1)+

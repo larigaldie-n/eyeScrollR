@@ -221,23 +221,62 @@ browsing area. The search is made easier by the colored squares in those
 corners.</p>
 <p>Most graphics editors should allow you to easily get the image size
 and the coordinates of the pixel you are interested in by just zooming
-and placing your cursor on it, as so:</p>
-<p><img src="example_eyeScrollR_small_vertical.png" width="100%"></p>
+and placing your cursor on it (for the example, the pixel you are
+interested in was colored in black).</p>
+<p><img src="calibration_manual_example_combined.png" width="100%"></p>
+<p>Repeat the same process for the bottom-rightmost pixel.</p>
 <p>You then just have to report the values in the
 scroll_calibration_manual function:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://larigaldie-n.github.io/eyeScrollR/">eyeScrollR</a></span><span class="op">)</span></span>
-<span><span class="va">calibration</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/scroll_calibration_manual.html">scroll_calibration_manual</a></span><span class="op">(</span>calibration_image <span class="op">=</span> <span class="va">calibration_image</span>,</span>
-<span>                                       scroll_pixels <span class="op">=</span> <span class="fl">100</span><span class="op">)</span></span></code></pre></div>
+<span><span class="va">calibration</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/scroll_calibration_manual.html">scroll_calibration_manual</a></span><span class="op">(</span>screen_width <span class="op">=</span> <span class="fl">1920</span>, screen_height <span class="op">=</span> <span class="fl">1080</span>,</span>
+<span>                                         top_left_x <span class="op">=</span> <span class="fl">0</span>, top_left_y <span class="op">=</span> <span class="fl">89</span>,</span>
+<span>                                         bottom_right_x <span class="op">=</span> <span class="fl">1919</span>, bottom_right_y <span class="op">=</span> <span class="fl">1029</span>,</span>
+<span>                                         scroll_pixels <span class="op">=</span> <span class="fl">100</span><span class="op">)</span></span></code></pre></div>
 </div>
+</div>
+<div class="section level3">
+<h3 id="get-some-data-and-the-full-website-image">Get some data, and the full website image<a class="anchor" aria-label="anchor" href="#get-some-data-and-the-full-website-image"></a>
+</h3>
+<p>The next step is to get a full, unscrolled image of the website. As
+was said earlier, there are several ways to achieve this, and many
+browser extensions are available. In our case, we ended up with this
+simple image:</p>
+<p><img src="a_random_website.png" width="100%"></p>
+<p>This image width and height are to be passed to the
+eye_tracker_fixation_scroll function in the next section.</p>
 </div>
 <div class="section level3">
 <h3 id="convert">Convert<a class="anchor" aria-label="anchor" href="#convert"></a>
 </h3>
+<p>After a careful examination of the video from the eye-tracking
+session of the participant and the key events, it could be determined in
+our example that the participant was looking at the webpage of interest
+from timestamps 3577 to 30864. All we need now is to import our dataset,
+which includes the fixation coordinates, mouse events, and timestamps.
+After that, we can apply the correction!</p>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://readr.tidyverse.org" class="external-link">readr</a></span><span class="op">)</span></span>
+<span><span class="va">test_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://readr.tidyverse.org/reference/read_delim.html" class="external-link">read_csv</a></span><span class="op">(</span><span class="st">"test_data.csv"</span>, comment <span class="op">=</span> <span class="st">"#"</span><span class="op">)</span></span>
+<span><span class="va">corrected_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/eye_tracker_fixation_scroll.html">eye_tracker_fixation_scroll</a></span><span class="op">(</span>eyes_data <span class="op">=</span> <span class="va">test_data</span>,</span>
+<span>                                              timestamp_start <span class="op">=</span> <span class="fl">3577</span>,</span>
+<span>                                              timestamp_stop <span class="op">=</span> <span class="fl">30864</span>,</span>
+<span>                                              image_width <span class="op">=</span> <span class="fl">1920</span>,</span>
+<span>                                              image_height <span class="op">=</span> <span class="fl">1442</span>,</span>
+<span>                                              calibration <span class="op">=</span> <span class="va">calibration</span><span class="op">)</span></span></code></pre></div>
+<p>The dataset itself has to respect the standard naming conventions
+from the iMotions software (see more details in the
+eye_tracker_fixation_scroll help page).</p>
 </div>
 <div class="section level3">
 <h3 id="output">Output!<a class="anchor" aria-label="anchor" href="#output"></a>
 </h3>
+<p>Finally, we can use the built-in heatmap generation function to check
+if everything went fine:</p>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">heatmap_image</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/png/man/readPNG.html" class="external-link">readPNG</a></span><span class="op">(</span><span class="st">"a_random_website.png"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="../reference/generate_heatmap.html">generate_heatmap</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">corrected_data</span>, heatmap_image <span class="op">=</span> <span class="va">heatmap_image</span><span class="op">)</span></span></code></pre></div>
+<p><img src="final_plot.png" width="100%"></p>
 </div>
 </div>
 <div class="section level2">
