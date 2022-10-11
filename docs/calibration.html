@@ -17,7 +17,6 @@
         #foot {
             height:10000px;
         }
-<<<<<<< HEAD
         #topleftpixel {
             background-color: red;
             position: fixed;
@@ -37,23 +36,10 @@
             z-index: -5;
         }
         #topleftbigbox {
-=======
-        #topleftpix {
-            background-color: chartreuse;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 1px;
-            height: 1px;
-            z-index: 10;
-        }
-        #topleftbox {
->>>>>>> be3947eef32a3bb11b5d5279a615d91d70448f1a
             background-color: blue;
             position: fixed;
             top: 0;
             left: 0;
-<<<<<<< HEAD
             width: 30px;
             height: 30px;
             z-index: -10;
@@ -84,26 +70,16 @@
             width: 30px;
             height: 30px;
             z-index: -10;
-=======
-            width: 10px;
-            height: 10px;
-            z-index: 5;
->>>>>>> be3947eef32a3bb11b5d5279a615d91d70448f1a
         }
        
     </style>
 </head>
  
 <body>
-<<<<<<< HEAD
     <div id="topleftpixel"></div>
     <div id="topleftsmallbox"></div>
     <div id="topleftbigbox"></div>
     <div id="head">
-=======
-    <div id="topleftpix"></div>
-    <div id="my-div">
->>>>>>> be3947eef32a3bb11b5d5279a615d91d70448f1a
       <h1>Calibration for eyeScrollR</h1>
       <b>For this tool to work properly, please use it on the monitor that will be used for eye-tracking.</b><br>
       <!-- <br><b>Furthermore, for automatic calibration, the monitor HAS to be the main display</b><br> -->
@@ -117,12 +93,9 @@
     </div>
 
     <div id="foot"></div>
-<<<<<<< HEAD
     <div id="bottomrightpixel"></div>
     <div id="bottomrightsmallbox"></div>
     <div id="bottomrightbigbox"></div>
-=======
->>>>>>> be3947eef32a3bb11b5d5279a615d91d70448f1a
     
     <script type="text/javascript">
         window.addEventListener("wheel", handleWheel);
@@ -148,52 +121,57 @@
                         scrolls.push(scrolls[0]);
                     }
                 }
+                updateScrollPixels();
             }
             else
             {
                 scrolls = [];
-                document.getElementById('result').innerText = "Please scroll down to calibrate"
+                document.getElementById('result').innerText = "Please scroll down a bit to get a scroll_pixels value"
                 // document.getElementById('result_scroll').innerText = ""
                 window.forceTop(0)
             }
         }
 
         function handleScroll(e) {
+                
+                    // if (typeof window.screenX !== 'undefined')
+                    // {
+                    //     top_left_x = window.screenX * window.devicePixelRatio;
+                    //     top_left_y = (window.screenY + (window.outerHeight - window.innerHeight))*window.devicePixelRatio;
+                    //     bottom_right_x = (window.screenX + window.innerWidth)*window.devicePixelRatio;
+                    //     bottom_right_y = (window.screenY + window.outerHeight)*window.devicePixelRatio;
 
-                if(scrolls.length > 0)
-                {
-                    if (typeof window.screenX !== 'undefined')
-                    {
-                        top_left_x = window.screenX * window.devicePixelRatio;
-                        top_left_y = (window.screenY + (window.outerHeight - window.innerHeight))*window.devicePixelRatio;
-                        bottom_right_x = (window.screenX + window.innerWidth)*window.devicePixelRatio;
-                        bottom_right_y = (window.screenY + window.outerHeight)*window.devicePixelRatio;
-
-                        // shift_right = (screen.width - (window.screenX + window.outerWidth))*window.devicePixelRatio;
-                        // shift_right = screen.width - (shift_left + document.documentElement.clientWidth);
+                    //     // shift_right = (screen.width - (window.screenX + window.outerWidth))*window.devicePixelRatio;
+                    //     // shift_right = screen.width - (shift_left + document.documentElement.clientWidth);
                         
-                    }
-                    else if (typeof window.screenLeft !== 'undefined')
-                    {
-                        top_left_x = window.screenLeft*window.devicePixelRatio;
-                        top_left_y = (window.screenTop + (window.outerHeight - window.innerHeight))*window.devicePixelRatio;
-                        bottom_right_x = (window.screenLeft + window.innerWidth)*window.devicePixelRatio;
-                        bottom_right_y = (window.screenTop + window.outerHeight)*window.devicePixelRatio;
+                    // }
+                    // else if (typeof window.screenLeft !== 'undefined')
+                    // {
+                    //     top_left_x = window.screenLeft*window.devicePixelRatio;
+                    //     top_left_y = (window.screenTop + (window.outerHeight - window.innerHeight))*window.devicePixelRatio;
+                    //     bottom_right_x = (window.screenLeft + window.innerWidth)*window.devicePixelRatio;
+                    //     bottom_right_y = (window.screenTop + window.outerHeight)*window.devicePixelRatio;
 
-                        // shift_right = (screen.width - (window.screenLeft + window.outerWidth))*window.devicePixelRatio;
-                        // shift_right = screen.width - (shift_left + document.documentElement.clientWidth);
-                    }
-                    else
-                    {
-                        top_left_x = -1;
-                        top_left_y = -1;
-                        bottom_right_x = -1;
-                        bottom_right_y = -1;
-                    }
-                    document.getElementById('result').innerText = "scroll_pixels = " + Math.round(window.scrollY/scrolls.length)
+                    //     // shift_right = (screen.width - (window.screenLeft + window.outerWidth))*window.devicePixelRatio;
+                    //     // shift_right = screen.width - (shift_left + document.documentElement.clientWidth);
+                    // }
+                    // else
+                    // {
+                    //     top_left_x = -1;
+                    //     top_left_y = -1;
+                    //     bottom_right_x = -1;
+                    //     bottom_right_y = -1;
+                    // }
                     // document.getElementById('result').innerText = "scroll_calibrate(" + "screen_width = " + screen.width +  ", screen_height = " + screen.height + ", top_left_x = " + top_left_x + ", top_left_y = " + top_left_y + ", bottom_right_x = " + bottom_right_x + ", bottom_right_y = " + bottom_right_y + ", scroll_pixels = " + Math.round(window.scrollY/scrolls.length) + ")";                    
-                }
+                updateScrollPixels();
+        }
 
+        function updateScrollPixels()
+        {
+            if(scrolls.length > 0)
+            {
+                document.getElementById('result').innerText = "scroll_pixels = " + Math.round(window.scrollY/scrolls.length)
+            }
         }
     </script>
 </body>

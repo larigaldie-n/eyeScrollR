@@ -96,7 +96,7 @@ examples.</p>
 measurements, outputting a correct heatmap from the eye-tracker’s raw
 data may be as simple as this:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">eyeScrollR</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://larigaldie-n.github.io/eyeScrollR/">eyeScrollR</a></span><span class="op">)</span></span>
 <span><span class="va">calibration</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/scroll_calibration_auto.html">scroll_calibration_auto</a></span><span class="op">(</span>calibration_image <span class="op">=</span> <span class="va">calibration_image</span>,</span>
 <span>                                       scroll_pixels <span class="op">=</span> <span class="fl">100</span><span class="op">)</span></span>
 <span><span class="va">data</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/eye_tracker_fixation_scroll.html">eye_tracker_fixation_scroll</a></span><span class="op">(</span>eyes_data <span class="op">=</span> <span class="va">dataset</span>, timestamp_start <span class="op">=</span> <span class="fl">2000</span>,</span>
@@ -204,7 +204,7 @@ resolution.</p>
 screenshot you just took along with the scroll_pixels value to the
 scroll_calibration_auto function. For instance:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">eyeScrollR</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://larigaldie-n.github.io/eyeScrollR/">eyeScrollR</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="http://www.rforge.net/png/" class="external-link">png</a></span><span class="op">)</span></span>
 <span><span class="va">calibration_image</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/png/man/readPNG.html" class="external-link">readPNG</a></span><span class="op">(</span><span class="st">"calibrate.png"</span><span class="op">)</span></span>
 <span><span class="va">calibration</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/scroll_calibration_auto.html">scroll_calibration_auto</a></span><span class="op">(</span>calibration_image <span class="op">=</span> <span class="va">calibration_image</span>,</span>
@@ -226,7 +226,7 @@ and placing your cursor on it, as so:</p>
 <p>You then just have to report the values in the
 scroll_calibration_manual function:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">eyeScrollR</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://larigaldie-n.github.io/eyeScrollR/">eyeScrollR</a></span><span class="op">)</span></span>
 <span><span class="va">calibration</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/scroll_calibration_manual.html">scroll_calibration_manual</a></span><span class="op">(</span>calibration_image <span class="op">=</span> <span class="va">calibration_image</span>,</span>
 <span>                                       scroll_pixels <span class="op">=</span> <span class="fl">100</span><span class="op">)</span></span></code></pre></div>
 </div>
