@@ -4,7 +4,11 @@ pkgdown_sha: ~
 articles:
   eyeScrollR: eyeScrollR.html
   fixed_areas: fixed_areas.html
+<<<<<<< HEAD
 last_built: 2022-10-11T13:57Z
+=======
+last_built: 2022-10-11T08:07Z
+>>>>>>> be3947eef32a3bb11b5d5279a615d91d70448f1a
 urls:
   reference: https://larigaldie-n.github.io/eyeScrollR/reference
   article: https://larigaldie-n.github.io/eyeScrollR/articles
