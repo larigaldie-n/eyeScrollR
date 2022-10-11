@@ -124,7 +124,11 @@ calibration <- scroll_calibration_manual(screen_width = 1920, screen_height = 10
                                          scroll_pixels = 100)
 ```
 
+<<<<<<< HEAD
 ## Get some data, and the full website image
+=======
+## Get some data, and the full website image visited by the participant
+>>>>>>> 968fbbddf8721a071bf0478e6cc1df74689712aa
 
 The next step is to get a full, unscrolled image of the website. As was said earlier, there are several ways to achieve this, and many browser extensions are available. In our case, we ended up with this simple image:
 
@@ -136,7 +140,11 @@ This image width and height are to be passed to the eye_tracker_fixation_scroll 
 
 ## Convert
 
+<<<<<<< HEAD
 After a careful examination of the video from the eye-tracking session of the participant and the key events, it could be determined in our example that the participant was looking at the webpage of interest from timestamps 3577 to 30864. All we need now is to import our dataset, which includes the fixation coordinates, mouse events, and timestamps. After that, we can apply the correction!
+=======
+After a careful examination of the video from the eye-tracking session of the participant and the key events, it could be determined in our example that the participant was looking at the webpage of interest from timestamps 3577 to 30864. All we need now is to import our dataset, which includes both the fixation coordinates, and the key events. After that, we can apply the correction!
+>>>>>>> 968fbbddf8721a071bf0478e6cc1df74689712aa
 
 ```{r eval=FALSE}
 library(readr)
@@ -149,8 +157,11 @@ corrected_data <- eye_tracker_fixation_scroll(eyes_data = test_data,
                                               calibration = calibration)
 ```
 
+<<<<<<< HEAD
 The dataset itself has to respect the standard naming conventions from the iMotions software (see more details in the eye_tracker_fixation_scroll help page).
 
+=======
+>>>>>>> 968fbbddf8721a071bf0478e6cc1df74689712aa
 ## Output!
 
 Finally, we can use the built-in heatmap generation function to check if everything went fine:
