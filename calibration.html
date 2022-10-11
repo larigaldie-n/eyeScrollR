@@ -5,7 +5,10 @@
         h1 {
             color: green;
         }
-        #my-div {
+        #result {
+            font-size:2em;
+        }
+        #head {
             text-align: center;
             position: fixed;
             top: 0;
@@ -14,41 +17,85 @@
         #foot {
             height:10000px;
         }
-        #topleftpix {
-            background-color: chartreuse;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 1px;
-            height: 1px;
-            z-index: 10;
-        }
-        #topleftbox {
-            background-color: blue;
+        #topleftpixel {
+            background-color: red;
             position: fixed;
             top: 0;
             left: 0;
             width: 10px;
             height: 10px;
-            z-index: 5;
+            z-index: -1;
+        }
+        #topleftsmallbox {
+            background-color: #00FF00;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 20px;
+            height: 20px;
+            z-index: -5;
+        }
+        #topleftbigbox {
+            background-color: blue;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 30px;
+            height: 30px;
+            z-index: -10;
+        }
+        #bottomrightpixel {
+            background-color: #FF0000;
+            position: fixed;
+            bottom: 0px;
+            right: 0px;
+            width: 10px;
+            height: 10px;
+            z-index: -1;
+        }
+        #bottomrightsmallbox {
+            background-color: #00FF00;
+            position: fixed;
+            bottom: 0px;
+            right: 0px;
+            width: 20px;
+            height: 20px;
+            z-index: -5;
+        }
+        #bottomrightbigbox {
+            background-color: #0000FF;
+            position: fixed;
+            bottom: 0px;
+            right: 0px;
+            width: 30px;
+            height: 30px;
+            z-index: -10;
         }
        
     </style>
 </head>
  
 <body>
-    <div id="topleftpix"></div>
-    <div id="my-div">
+    <div id="topleftpixel"></div>
+    <div id="topleftsmallbox"></div>
+    <div id="topleftbigbox"></div>
+    <div id="head">
       <h1>Calibration for eyeScrollR</h1>
-      <b>NB: for this tool to work properly, please execute it on the monitor that will be used for eye-tracking. Furthermore, the monitor HAS to be the main display</b><br>
-      <br><b>Please place the browser on the screen exactly as it is during the study, and refresh this page before you start</b><br>
-      <br><b>It is strongly advised that you deactivate the smooth scrolling feature on your browser before you run the experiment</b><br>
-      <br>If in doubt, only take the scroll_pixels value and do the rest by hand (see manual)<br>
-      <p id="result_scroll"></p>
-      <p id="result">Please scroll down a bit to calibrate</p>
+      <b>For this tool to work properly, please use it on the monitor that will be used for eye-tracking.</b><br>
+      <!-- <br><b>Furthermore, for automatic calibration, the monitor HAS to be the main display</b><br> -->
+      <br><b>Place the browser on the screen exactly as it will be during the study, and refresh this page before you start</b><br>
+      <br><b>It is strongly advised that you deactivate the smooth scrolling feature on your browser before you run the experiment, and before you calibrate</b><br>
+      <br><b>Once you have a scroll_pixels value, take a screenshot of the whole screen, and use it in the scroll_calibration_auto function (or take measurements by hand)</b><br>
+      <!--<p><b>Automatic calibration results: </b></p> -->
+      <p id="result">Please scroll down a bit to get a scroll_pixels value</p>
+      <!-- <p><b>Manual calibration results: </b></p>
+      <p id="result_scroll"> </p> -->
     </div>
 
     <div id="foot"></div>
+    <div id="bottomrightpixel"></div>
+    <div id="bottomrightsmallbox"></div>
+    <div id="bottomrightbigbox"></div>
     
     <script type="text/javascript">
         window.addEventListener("wheel", handleWheel);
@@ -79,7 +126,7 @@
             {
                 scrolls = [];
                 document.getElementById('result').innerText = "Please scroll down to calibrate"
-                document.getElementById('result_scroll').innerText = ""
+                // document.getElementById('result_scroll').innerText = ""
                 window.forceTop(0)
             }
         }
@@ -116,8 +163,8 @@
                         bottom_right_x = -1;
                         bottom_right_y = -1;
                     }
-                    document.getElementById('result_scroll').innerText = "scroll_pixels = " + Math.round(window.scrollY/scrolls.length)
-                    document.getElementById('result').innerText = "scroll_calibrate(" + "screen_width = " + screen.width +  ", screen_height = " + screen.height + ", top_left_x = " + top_left_x + ", top_left_y = " + top_left_y + ", bottom_right_x = " + bottom_right_x + ", bottom_right_y = " + bottom_right_y + ", scroll_pixels = " + Math.round(window.scrollY/scrolls.length) + ")";                    
+                    document.getElementById('result').innerText = "scroll_pixels = " + Math.round(window.scrollY/scrolls.length)
+                    // document.getElementById('result').innerText = "scroll_calibrate(" + "screen_width = " + screen.width +  ", screen_height = " + screen.height + ", top_left_x = " + top_left_x + ", top_left_y = " + top_left_y + ", bottom_right_x = " + bottom_right_x + ", bottom_right_y = " + bottom_right_y + ", scroll_pixels = " + Math.round(window.scrollY/scrolls.length) + ")";                    
                 }
 
         }

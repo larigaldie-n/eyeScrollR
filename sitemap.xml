@@ -40,7 +40,10 @@
     <loc>https://larigaldie-n.github.io/eyeScrollR/reference/rule_true.html</loc>
   </url>
   <url>
-    <loc>https://larigaldie-n.github.io/eyeScrollR/reference/scroll_calibration.html</loc>
+    <loc>https://larigaldie-n.github.io/eyeScrollR/reference/scroll_calibration_auto.html</loc>
+  </url>
+  <url>
+    <loc>https://larigaldie-n.github.io/eyeScrollR/reference/scroll_calibration_manual.html</loc>
   </url>
   <url>
     <loc>https://larigaldie-n.github.io/eyeScrollR/test_no_fixed.html</loc>
