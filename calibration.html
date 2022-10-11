@@ -11,14 +11,33 @@
             top: 0;
             width: 100%;
         }
-        #test {
+        #foot {
             height:10000px;
+        }
+        #topleftpix {
+            background-color: chartreuse;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 1px;
+            height: 1px;
+            z-index: 10;
+        }
+        #topleftbox {
+            background-color: blue;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 10px;
+            height: 10px;
+            z-index: 5;
         }
        
     </style>
 </head>
  
 <body>
+    <div id="topleftpix"></div>
     <div id="my-div">
       <h1>Calibration for eyeScrollR</h1>
       <b>NB: for this tool to work properly, please execute it on the monitor that will be used for eye-tracking. Furthermore, the monitor HAS to be the main display</b><br>
@@ -29,9 +48,7 @@
       <p id="result">Please scroll down a bit to calibrate</p>
     </div>
 
-    <div id="test">
-
-    </div>
+    <div id="foot"></div>
     
     <script type="text/javascript">
         window.addEventListener("wheel", handleWheel);
