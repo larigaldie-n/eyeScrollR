@@ -4,12 +4,12 @@
 \alias{generate_heatmap}
 \title{generate_heatmap}
 \usage{
-generate_heatmap(data, img)
+generate_heatmap(data, heatmap_image)
 }
 \arguments{
 \item{data}{The dataset output by the eye_tracker_fixation_scroll}
 
-\item{img}{An image on which to apply the heatmap}
+\item{heatmap_image}{An image on which to apply the heatmap}
 }
 \value{
 A plot with the image and the heatmap
@@ -22,6 +22,6 @@ Creates a heatmap based on the dataset
 img <- readPNG("test.png")
 test_data <- eye_tracker_fixation_scroll(anchors = test_anchors,
     rules = test_rules, calibration = test_calibration)
-generate_heatmap(test_data, img)
+generate_heatmap(data = test_data, heatmap_image = img)
 }
 }

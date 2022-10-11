@@ -2,7 +2,7 @@
 title: "Introduction to eyeScrollR"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{eyeScrollR}
+  %\VignetteIndexEntry{Introduction to eyeScrollR}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -24,13 +24,12 @@ Provided that you already have an image, a dataset and correct measurements, out
 
 ```{r eval=FALSE}
 library(eyeScrollR)
-calibration <- scroll_calibration(screen_width = 1920, screen_height = 1080,
-                 top_left_x = 0, top_left_y = 108, bottom_right_x = 0,
-                 bottom_right_y = 40, scroll_pixels = 100)
+calibration <- scroll_calibration_auto(calibration_image = calibration_image,
+                                       scroll_pixels = 100)
 data <- eye_tracker_fixation_scroll(eyes_data = dataset, timestamp_start = 2000,
                             timstamp_stop = 50000, image_width = 1920,
                             image_height = 10000, calibration = calibration)
-generate_heatmap(data, img)
+generate_heatmap(data = data, heatmap_image = heatmap_image)
 ```
 
 # Before you start
@@ -71,7 +70,7 @@ eyeScrollR is mainly designed to work on "unscrolled" images of websites. Those 
 
 Once you have this image, all you need are a few measurements on the monitor used for the experiment, an eye-tracking dataset *including the participant's mouse inputs and fixation coordinates*, and you are all set.
 
-Some of these measurements can be done automatically through the [Calibration page](../calibration.html "Calibration page"), although those may sometimes be slightly inaccurate. These inaccuracies should not amount to more than 8 pixels on Windows computers, but if it is not acceptable for your project, it is advised to confirm measurements manually (both will be explained in the following example).
+Some of these measurements can be done automatically through the [Calibration page](../calibration.html "Calibration page"), but they can also be input manually if necessary.
 
 # A complete example
 
@@ -81,11 +80,45 @@ Arguably, the first step before even getting eye-tracker data would be to get al
 
 ## Calibrate
 
-If this is your first time using this package or if you need the best accuracy possible, it is advisable to check the results from the automatic calibration with the manual one.
+If this is your first time using this package, it is advisable to check the results from the automatic calibration with the manual one to check for consistency. If any discrepancy is found, or if the automatic calibration fails, please revert to the manual one.
+
+The purpose of the calibration is to feed the program with the size of the screen, the location of the browsing area inside the screen, and how many pixels are being scrolled each time a participant scrolls down or up on the browser that will be used.
+
+You just have to go to the [Calibration page](../calibration.html "Calibration page") and follow the instructions. Once you have the scroll_pixels value, take a screenshot of the whole screen including the calibration page, and save it as an image file.
+
+If you have several monitors on the computer, make sure to only take a screenshot of the monitor on which the eye-tracker is used. The resulting image should therefore be the exact same size as your monitor resolution.
 
 ### Automatic calibration
 
+This is the fastest and easiest way to calibrate. Just pass the screenshot you just took along with the scroll_pixels value to the scroll_calibration_auto function. For instance:
+
+```{r eval=FALSE}
+library(eyeScrollR)
+library(png)
+calibration_image <- readPNG("calibrate.png")
+calibration <- scroll_calibration_auto(calibration_image = calibration_image,
+                                       scroll_pixels = 100)
+```
+
+The calibration should now be over!
+
 ### Manual calibration
+
+Should the automatic calibration fail, you can always do it manually. Just open the screenshot you took earlier, and look for the coordinates of the pixels in the most to the top left and to the bottom right of the browsing area. The search is made easier by the colored squares in those corners.
+
+Most graphics editors should allow you to easily get the image size and the coordinates of the pixel you are interested in by just zooming and placing your cursor on it, as so:
+
+```{r, echo=FALSE, out.width="100%"}
+knitr::include_graphics("example_eyeScrollR_small_vertical.png")
+```
+
+You then just have to report the values in the scroll_calibration_manual function:
+
+```{r eval=FALSE}
+library(eyeScrollR)
+calibration <- scroll_calibration_manual(calibration_image = calibration_image,
+                                       scroll_pixels = 100)
+```
 
 ## Convert
 
