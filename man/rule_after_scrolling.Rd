@@ -4,16 +4,10 @@
 \alias{rule_after_scrolling}
 \title{rule_after_scrolling}
 \usage{
-rule_after_scrolling(timestamp, event, x, y, array_anchors, flag, scroll)
+rule_after_scrolling(data_line, array_anchors, flag, scroll)
 }
 \arguments{
-\item{timestamp}{The timestamp of the current line in the .csv file}
-
-\item{event}{The event column from this line}
-
-\item{x}{The x parameter (eye gaze) from this line}
-
-\item{y}{The y parameter (eye gaze) from this line}
+\item{data_line}{The current line in the .csv file}
 
 \item{array_anchors}{The array of anchors linked to this rule}
 

@@ -16,7 +16,7 @@ knitr::opts_chunk$set(
 
 The goal of eyeScrollR is to extract the necessary information from eye-tracking data to easily and automatically place fixations on the right areas of a scrollable website.
 
-Usually, eye-tracker data consist in arrays of fixation coordinates on the screen itself. If a participant is staring right at the middle of a screen with resolution 1920\*1080, eye-tracking software will therefore return an array of fixation records with coordinates x = 960; y = 540. When the material being watched is static and does not overflow, converting coordinates from the screen to coordinates on the image can be effortless (and even automatically made by the software).
+Usually, eye-tracker data consist in arrays of fixation coordinates on the screen itself. If a participant is staring right at the middle of a screen with resolution 1920\*1080, eye-tracking software will return an array of fixation records with coordinates x = 960; y = 540. When the material being watched is static and does not overflow, converting coordinates from the screen to coordinates on the image can be effortless (and even automatically made by the software).
 
 However, if the participant has the option to scroll down on the application he is using, this conversion suddenly can become difficult, and some researchers end up either making endless manual corrections, or even abandoning these research settings altogether. With this package, only a few minutes of preparation should be necessary for most researchers to perform these conversions without sacrificing too much ecological validity. This documentation was designed to make the use of this package as easy as possible, with step-by-step reproducible examples.
 
@@ -36,7 +36,7 @@ generate_heatmap(data = data, heatmap_image = heatmap_image)
 
 ## Understand the use-case scenario
 
-Consider this situation, where a participant fixates 5 different areas on a screen (represented by red and green spots) while browsing a website, scrolls down, then fixates the 5 exact same areas:
+Consider this situation, where a participant fixates 6 different areas on a screen (represented by red and green spots) while browsing a website, scrolls down, then fixates the 6 exact same areas:
 
 ```{r, echo=FALSE, out.width="100%"}
 knitr::include_graphics("example_eyeScrollR_small_vertical.png")
@@ -52,7 +52,7 @@ knitr::include_graphics("example_eyeScrollR_vertical_full.png")
 
 ... Which is exactly what this package is for.
 
-On top of this, we may often want to get rid of anything outside the website itself (such as the browser header, the Windows bar at the bottom, ...), and some areas of websites might be fixed and follow the screen as the participant scrolls down. eyeScrollR is equipped to deal with such situations.
+On top of this, we may often want to get rid of anything outside the website itself (such as the browser header, the Windows bar at the bottom, ...), and some areas of websites might be static and follow the screen even when the participant scrolls down. eyeScrollR is equipped to deal with such situations.
 
 **Please do note that as of now, eyeScrollR has only been tested on data from the iMotions software. Future support for other software should be expected, but is not yet guaranteed.**
 

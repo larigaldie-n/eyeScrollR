@@ -82,10 +82,7 @@ check_anchors_rules <- function(anchors, rules)
 #'     to create your own rule. All arguments are automatically passed to any
 #'     rule function by eye_tracker_fixation_scroll
 #'
-#' @param timestamp The timestamp of the current line in the .csv file
-#' @param event The event column from this line
-#' @param x The x parameter (eye gaze) from this line
-#' @param y The y parameter (eye gaze) from this line
+#' @param data_line The current line in the .csv file
 #' @param array_anchors The array of anchors linked to this rule
 #' @param flag A boolean that says if this rule is TRUE or FALSE at the moment
 #' @param scroll The total amount of pixels that have been scrolled down from
@@ -95,7 +92,7 @@ check_anchors_rules <- function(anchors, rules)
 #' @examples
 #' rules <- list(rule_before_scrolling, rule_after_scrolling, rule_true)
 #' @export
-rule_true <- function (timestamp, event, x, y, array_anchors, flag, scroll)
+rule_true <- function (data_line, array_anchors, flag, scroll)
 {
   return (TRUE)
 }
@@ -109,10 +106,7 @@ rule_true <- function (timestamp, event, x, y, array_anchors, flag, scroll)
 #'     create your own rule. All arguments are automatically passed to any
 #'     rule function by eye_tracker_fixation_scroll
 #'
-#' @param timestamp The timestamp of the current line in the .csv file
-#' @param event The event column from this line
-#' @param x The x parameter (eye gaze) from this line
-#' @param y The y parameter (eye gaze) from this line
+#' @param data_line The current line in the .csv file
 #' @param array_anchors The array of anchors linked to this rule
 #' @param flag A boolean that says if this rule is TRUE or FALSE at the moment
 #' @param scroll The total amount of pixels that have been scrolled down from
@@ -122,7 +116,7 @@ rule_true <- function (timestamp, event, x, y, array_anchors, flag, scroll)
 #' @examples
 #' rules <- list(rule_before_scrolling, rule_after_scrolling, rule_true)
 #' @export
-rule_before_scrolling <- function (timestamp, event, x, y, array_anchors, flag, scroll)
+rule_before_scrolling <- function (data_line, array_anchors, flag, scroll)
 {
   if (scroll < 30)
   {
@@ -143,10 +137,7 @@ rule_before_scrolling <- function (timestamp, event, x, y, array_anchors, flag, 
 #'     create your own rule. All arguments are automatically passed to any
 #'     rule function by eye_tracker_fixation_scroll
 #'
-#' @param timestamp The timestamp of the current line in the .csv file
-#' @param event The event column from this line
-#' @param x The x parameter (eye gaze) from this line
-#' @param y The y parameter (eye gaze) from this line
+#' @param data_line The current line in the .csv file
 #' @param array_anchors The array of anchors linked to this rule
 #' @param flag A boolean that says if this rule is TRUE or FALSE at the moment
 #' @param scroll The total amount of pixels that have been scrolled down from
@@ -156,7 +147,7 @@ rule_before_scrolling <- function (timestamp, event, x, y, array_anchors, flag, 
 #' @examples
 #' rules <- list(rule_before_scrolling, rule_after_scrolling, rule_true)
 #' @export
-rule_after_scrolling <- function (timestamp, event, x, y, array_anchors, flag, scroll)
+rule_after_scrolling <- function (data_line, array_anchors, flag, scroll)
 {
   if (scroll >= 30)
   {
@@ -172,7 +163,7 @@ check_rules_true <- function(rules, data_line, flags, anchors, scroll)
 {
   for (rule_num in seq_len(length(rules)))
   {
-    flags[rule_num] <- rules[[rule_num]](data_line$Timestamp, data_line$Data, data_line$'Corrected.X', data_line$'Corrected.Y', anchors[[rule_num]], flags[rule_num], scroll)
+    flags[rule_num] <- rules[[rule_num]](data_line, anchors[[rule_num]], flags[rule_num], scroll)
   }
   return(flags)
 }
@@ -448,8 +439,8 @@ eye_tracker_fixation_scroll <- function (eyes_data, timestamp_start, timestamp_s
   shift_bottom <- calibration$shift_bottom
   shift_right <- calibration$shift_right
   event <- "WM_MOUSEWHEEL"
-  eyes_data$Timestamp <- eyes_data$Timestamp - time_shift
-  eyes_data <- dplyr::filter(eyes_data, .data$Timestamp > timestamp_start, .data$Timestamp < timestamp_stop)
+  eyes_data$Timestamp.shifted <- eyes_data$Timestamp - time_shift
+  eyes_data <- dplyr::filter(eyes_data, .data$Timestamp.shifted > timestamp_start, .data$Timestamp.shifted < timestamp_stop)
   scroll <- starting_scroll
   corrected_y <- c()
   min_scroll <- 0

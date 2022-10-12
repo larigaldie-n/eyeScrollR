@@ -4,16 +4,10 @@
 \alias{rule_true}
 \title{rule_true}
 \usage{
-rule_true(timestamp, event, x, y, array_anchors, flag, scroll)
+rule_true(data_line, array_anchors, flag, scroll)
 }
 \arguments{
-\item{timestamp}{The timestamp of the current line in the .csv file}
-
-\item{event}{The event column from this line}
-
-\item{x}{The x parameter (eye gaze) from this line}
-
-\item{y}{The y parameter (eye gaze) from this line}
+\item{data_line}{The current line in the .csv file}
 
 \item{array_anchors}{The array of anchors linked to this rule}
 
