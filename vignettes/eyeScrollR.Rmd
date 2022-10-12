@@ -124,7 +124,6 @@ calibration <- scroll_calibration_manual(screen_width = 1920, screen_height = 10
                                          scroll_pixels = 100)
 ```
 
-
 ## Get some data, and the full website image
 
 The next step is to get a full, unscrolled image of the website. As was said earlier, there are several ways to achieve this, and many browser extensions are available. In our case, we ended up with this simple image:
@@ -136,6 +135,7 @@ knitr::include_graphics("a_random_website.png")
 This image width and height are to be passed to the eye_tracker_fixation_scroll function in the next section.
 
 ## Convert
+
 
 After a careful examination of the video from the eye-tracking session of the participant and the key events, it could be determined in our example that the participant was looking at the webpage of interest from timestamps 3577 to 30864. All we need now is to import our dataset, which includes the fixation coordinates, mouse events, and timestamps. After that, we can apply the correction!
 
