@@ -153,16 +153,19 @@
 <span>                                         top_left_x <span class="op">=</span> <span class="fl">0</span>, top_left_y <span class="op">=</span> <span class="fl">89</span>,</span>
 <span>                                         bottom_right_x <span class="op">=</span> <span class="fl">1919</span>, bottom_right_y <span class="op">=</span> <span class="fl">1029</span>,</span>
 <span>                                         scroll_pixels <span class="op">=</span> <span class="fl">100</span><span class="op">)</span></span></code></pre></div>
-<p>&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD ## Get some data, and the full website image ======= ## Get some data, and the full website image visited by the participant &gt;&gt;&gt;&gt;&gt;&gt;&gt; 968fbbddf8721a071bf0478e6cc1df74689712aa</p>
+</div>
+</div>
+<div class="section level3">
+<h3 id="get-some-data-and-the-full-website-image">Get some data, and the full website image<a class="anchor" aria-label="anchor" href="#get-some-data-and-the-full-website-image"></a>
+</h3>
 <p>The next step is to get a full, unscrolled image of the website. As was said earlier, there are several ways to achieve this, and many browser extensions are available. In our case, we ended up with this simple image:</p>
 <p><img src="a_random_website.png" width="100%"></p>
 <p>This image width and height are to be passed to the eye_tracker_fixation_scroll function in the next section.</p>
 </div>
-</div>
 <div class="section level3">
 <h3 id="convert">Convert<a class="anchor" aria-label="anchor" href="#convert"></a>
 </h3>
-<p>&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD After a careful examination of the video from the eye-tracking session of the participant and the key events, it could be determined in our example that the participant was looking at the webpage of interest from timestamps 3577 to 30864. All we need now is to import our dataset, which includes the fixation coordinates, mouse events, and timestamps. After that, we can apply the correction! ======= After a careful examination of the video from the eye-tracking session of the participant and the key events, it could be determined in our example that the participant was looking at the webpage of interest from timestamps 3577 to 30864. All we need now is to import our dataset, which includes both the fixation coordinates, and the key events. After that, we can apply the correction! &gt;&gt;&gt;&gt;&gt;&gt;&gt; 968fbbddf8721a071bf0478e6cc1df74689712aa</p>
+<p>After a careful examination of the video from the eye-tracking session of the participant and the key events, it could be determined in our example that the participant was looking at the webpage of interest from timestamps 3577 to 30864. All we need now is to import our dataset, which includes the fixation coordinates, mouse events, and timestamps. After that, we can apply the correction!</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://readr.tidyverse.org" class="external-link">readr</a></span><span class="op">)</span></span>
 <span><span class="va">test_data</span> <span class="op">&lt;-</span> <span class="fu">read_csv</span><span class="op">(</span><span class="st">"test_data.csv"</span>, comment <span class="op">=</span> <span class="st">"#"</span><span class="op">)</span></span>
@@ -172,8 +175,11 @@
 <span>                                              image_width <span class="op">=</span> <span class="fl">1920</span>,</span>
 <span>                                              image_height <span class="op">=</span> <span class="fl">1442</span>,</span>
 <span>                                              calibration <span class="op">=</span> <span class="va">calibration</span><span class="op">)</span></span></code></pre></div>
-<p>&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD The dataset itself has to respect the standard naming conventions from the iMotions software (see more details in the eye_tracker_fixation_scroll help page).</p>
-<p>======= &gt;&gt;&gt;&gt;&gt;&gt;&gt; 968fbbddf8721a071bf0478e6cc1df74689712aa ## Output!</p>
+<p>The dataset itself has to respect the standard naming conventions from the iMotions software (see more details in the eye_tracker_fixation_scroll help page).</p>
+</div>
+<div class="section level3">
+<h3 id="output">Output!<a class="anchor" aria-label="anchor" href="#output"></a>
+</h3>
 <p>Finally, we can use the built-in heatmap generation function to check if everything went fine:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">heatmap_image</span> <span class="op">&lt;-</span> <span class="fu">readPNG</span><span class="op">(</span><span class="st">"a_random_website.png"</span><span class="op">)</span></span>
