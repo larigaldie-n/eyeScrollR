@@ -13,8 +13,8 @@ eye_tracker_fixation_scroll(
   calibration,
   time_shift = 0,
   starting_scroll = 0,
-  output_file = "eye_tracker_fixation_corrected.csv",
-  anchors = list(),
+  output_file = "",
+  fixed_areas = list(),
   rules = list(),
   outside_image_is_na = TRUE,
   na.rm = TRUE
@@ -39,7 +39,7 @@ eye_tracker_fixation_scroll(
 
 \item{output_file}{[Optional] The name of the output .csv file. If an empty string, will just return the data without creating a new file. Default: empty string}
 
-\item{anchors}{[Optional] A list of potentially immovable areas inside the scrollable (e.g. anchored menus in a website) - see manual for a correct usage. Default: empty list}
+\item{fixed_areas}{[Optional] A list of potentially immovable areas inside the scrollable (e.g. fixed menus in a website) - see manual for a correct usage. Default: empty list}
 
 \item{rules}{[Optional] A list of functions that can act as rules to activate/deactivate immovables areas in the scrollable (e.g. a menu that disappears after X pixels have been scrolled) - See manual for a correct. Default: empty list}
 
@@ -56,14 +56,14 @@ corrects the eye-tracking coordinate data to fit in a webpage
 }
 \examples{
 \dontrun{
-test_anchors <- list(array(c(c(0,0,1902,95), c(0,0,1902,95),
+test_fixed_areas <- list(array(c(c(0,0,1902,95), c(0,0,1902,95),
     c(1607,96,1902,905), c(1607,96,1902,905)), dim = c(4,2,2)),
     array(c(c(0,0,1902,63), c(0,32,1902,95), c(1607,63,1902,900),
     c(1607,63,1902,900)), dim = c(4,2,2)), array(c(c(1607,906,1920,1080),
     c(1607,6481,1920,6655)), dim = c(4,2,1)))
 test_rules = list(rule_before_scrolling, rule_after_scrolling, rule_true)
-test_calibration <- scroll_calibration(1920, 1080, 88, 0, 40, 0, 100)
-test_data <- eye_tracker_fixation_scroll(anchors = test_anchors,
+test_calibration <- scroll_calibration_manual(1920, 1080, 88, 0, 40, 0, 100)
+test_data <- eye_tracker_fixation_scroll(fixed_areas = test_fixed_areas,
     rules = test_rules, calibration = test_calibration)
 }
 }

@@ -4,12 +4,12 @@
 \alias{rule_after_scrolling}
 \title{rule_after_scrolling}
 \usage{
-rule_after_scrolling(data_line, array_anchors, flag, scroll)
+rule_after_scrolling(data_line, array_fixed_areas, flag, scroll)
 }
 \arguments{
 \item{data_line}{The current line in the .csv file}
 
-\item{array_anchors}{The array of anchors linked to this rule}
+\item{array_fixed_areas}{The array of fixed areas linked to this rule}
 
 \item{flag}{A boolean that says if this rule is TRUE or FALSE at the moment}
 
@@ -20,7 +20,7 @@ the top of the website at the moment}
 A boolean saying if this rule should now be enforced or not
 }
 \description{
-Helper function to enforce anchor rules (this one checks
+Helper function to enforce fixed area rules (this one checks
     if the total amount of pixels that have been scrolled down from the top
     of the website is superior to 30). NB: you should never
     have to call this function yourself, but you can use it as a basis to

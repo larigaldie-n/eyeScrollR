@@ -4,12 +4,12 @@
 \alias{rule_true}
 \title{rule_true}
 \usage{
-rule_true(data_line, array_anchors, flag, scroll)
+rule_true(data_line, array_fixed_areas, flag, scroll)
 }
 \arguments{
 \item{data_line}{The current line in the .csv file}
 
-\item{array_anchors}{The array of anchors linked to this rule}
+\item{array_fixed_areas}{The array of fixed areas linked to this rule}
 
 \item{flag}{A boolean that says if this rule is TRUE or FALSE at the moment}
 
@@ -20,7 +20,7 @@ the top of the website at the moment}
 A boolean saying if this rule should now be enforced or not
 }
 \description{
-Helper function to enforce anchor rules (this one is always
+Helper function to enforce fixed area rules (this one is always
     true, meaning that this rule should always be enforced). NB: you should
     never have to call this function yourself, but you can use it as a basis
     to create your own rule. All arguments are automatically passed to any

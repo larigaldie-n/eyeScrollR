@@ -78,11 +78,11 @@ eye-tracking data to easily and automatically place fixations on the
 right areas of a scrollable website.</p>
 <p>Usually, eye-tracker data consist in arrays of fixation coordinates
 on the screen itself. If a participant is staring right at the middle of
-a screen with resolution 1920*1080, eye-tracking software will therefore
-return an array of fixation records with coordinates x = 960; y = 540.
-When the material being watched is static and does not overflow,
-converting coordinates from the screen to coordinates on the image can
-be effortless (and even automatically made by the software).</p>
+a screen with resolution 1920*1080, eye-tracking software will return an
+array of fixation records with coordinates x = 960; y = 540. When the
+material being watched is static and does not overflow, converting
+coordinates from the screen to coordinates on the image can be
+effortless (and even automatically made by the software).</p>
 <p>However, if the participant has the option to scroll down on the
 application he is using, this conversion suddenly can become difficult,
 and some researchers end up either making endless manual corrections, or
@@ -96,7 +96,7 @@ examples.</p>
 measurements, outputting a correct heatmap from the eye-tracker’s raw
 data may be as simple as this:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://larigaldie-n.github.io/eyeScrollR/">eyeScrollR</a></span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">eyeScrollR</span><span class="op">)</span></span>
 <span><span class="va">calibration</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/scroll_calibration_auto.html">scroll_calibration_auto</a></span><span class="op">(</span>calibration_image <span class="op">=</span> <span class="va">calibration_image</span>,</span>
 <span>                                       scroll_pixels <span class="op">=</span> <span class="fl">100</span><span class="op">)</span></span>
 <span><span class="va">data</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/eye_tracker_fixation_scroll.html">eye_tracker_fixation_scroll</a></span><span class="op">(</span>eyes_data <span class="op">=</span> <span class="va">dataset</span>, timestamp_start <span class="op">=</span> <span class="fl">2000</span>,</span>
@@ -109,9 +109,9 @@ data may be as simple as this:</p>
 <div class="section level3">
 <h3 id="understand-the-use-case-scenario">Understand the use-case scenario<a class="anchor" aria-label="anchor" href="#understand-the-use-case-scenario"></a>
 </h3>
-<p>Consider this situation, where a participant fixates 5 different
+<p>Consider this situation, where a participant fixates 6 different
 areas on a screen (represented by red and green spots) while browsing a
-website, scrolls down, then fixates the 5 exact same areas:</p>
+website, scrolls down, then fixates the 6 exact same areas:</p>
 <p><img src="example_eyeScrollR_small_vertical.png" width="100%"></p>
 <p>Although red fixation spots do indeed match the same content in both
 situations, green fixations spots don’t; and any analysis on the content
@@ -124,9 +124,9 @@ it, as so:</p>
 <p>… Which is exactly what this package is for.</p>
 <p>On top of this, we may often want to get rid of anything outside the
 website itself (such as the browser header, the Windows bar at the
-bottom, …), and some areas of websites might be fixed and follow the
-screen as the participant scrolls down. eyeScrollR is equipped to deal
-with such situations.</p>
+bottom, …), and some areas of websites might be static and follow the
+screen even when the participant scrolls down. eyeScrollR is equipped to
+deal with such situations.</p>
 <p><strong>Please do note that as of now, eyeScrollR has only been
 tested on data from the iMotions software. Future support for other
 software should be expected, but is not yet guaranteed.</strong></p>
@@ -204,7 +204,7 @@ resolution.</p>
 screenshot you just took along with the scroll_pixels value to the
 scroll_calibration_auto function. For instance:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://larigaldie-n.github.io/eyeScrollR/">eyeScrollR</a></span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">eyeScrollR</span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="http://www.rforge.net/png/" class="external-link">png</a></span><span class="op">)</span></span>
 <span><span class="va">calibration_image</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/png/man/readPNG.html" class="external-link">readPNG</a></span><span class="op">(</span><span class="st">"calibrate.png"</span><span class="op">)</span></span>
 <span><span class="va">calibration</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/scroll_calibration_auto.html">scroll_calibration_auto</a></span><span class="op">(</span>calibration_image <span class="op">=</span> <span class="va">calibration_image</span>,</span>
@@ -228,7 +228,7 @@ interested in was colored in black).</p>
 <p>You then just have to report the values in the
 scroll_calibration_manual function:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://larigaldie-n.github.io/eyeScrollR/">eyeScrollR</a></span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">eyeScrollR</span><span class="op">)</span></span>
 <span><span class="va">calibration</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/scroll_calibration_manual.html">scroll_calibration_manual</a></span><span class="op">(</span>screen_width <span class="op">=</span> <span class="fl">1920</span>, screen_height <span class="op">=</span> <span class="fl">1080</span>,</span>
 <span>                                         top_left_x <span class="op">=</span> <span class="fl">0</span>, top_left_y <span class="op">=</span> <span class="fl">89</span>,</span>
 <span>                                         bottom_right_x <span class="op">=</span> <span class="fl">1919</span>, bottom_right_y <span class="op">=</span> <span class="fl">1029</span>,</span>
@@ -236,12 +236,7 @@ scroll_calibration_manual function:</p>
 </div>
 </div>
 <div class="section level3">
-<<<<<<< HEAD
 <h3 id="get-some-data-and-the-full-website-image">Get some data, and the full website image<a class="anchor" aria-label="anchor" href="#get-some-data-and-the-full-website-image"></a>
-=======
-<h3 id="get-some-data-and-the-full-website-image-visited-by-the-participant">Get some data, and the full website image visited by the
-participant<a class="anchor" aria-label="anchor" href="#get-some-data-and-the-full-website-image-visited-by-the-participant"></a>
->>>>>>> 968fbbddf8721a071bf0478e6cc1df74689712aa
 </h3>
 <p>The next step is to get a full, unscrolled image of the website. As
 was said earlier, there are several ways to achieve this, and many
@@ -258,13 +253,8 @@ eye_tracker_fixation_scroll function in the next section.</p>
 session of the participant and the key events, it could be determined in
 our example that the participant was looking at the webpage of interest
 from timestamps 3577 to 30864. All we need now is to import our dataset,
-<<<<<<< HEAD
 which includes the fixation coordinates, mouse events, and timestamps.
 After that, we can apply the correction!</p>
-=======
-which includes both the fixation coordinates, and the key events. After
-that, we can apply the correction!</p>
->>>>>>> 968fbbddf8721a071bf0478e6cc1df74689712aa
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://readr.tidyverse.org" class="external-link">readr</a></span><span class="op">)</span></span>
 <span><span class="va">test_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://readr.tidyverse.org/reference/read_delim.html" class="external-link">read_csv</a></span><span class="op">(</span><span class="st">"test_data.csv"</span>, comment <span class="op">=</span> <span class="st">"#"</span><span class="op">)</span></span>
@@ -274,12 +264,9 @@ that, we can apply the correction!</p>
 <span>                                              image_width <span class="op">=</span> <span class="fl">1920</span>,</span>
 <span>                                              image_height <span class="op">=</span> <span class="fl">1442</span>,</span>
 <span>                                              calibration <span class="op">=</span> <span class="va">calibration</span><span class="op">)</span></span></code></pre></div>
-<<<<<<< HEAD
 <p>The dataset itself has to respect the standard naming conventions
 from the iMotions software (see more details in the
 eye_tracker_fixation_scroll help page).</p>
-=======
->>>>>>> 968fbbddf8721a071bf0478e6cc1df74689712aa
 </div>
 <div class="section level3">
 <h3 id="output">Output!<a class="anchor" aria-label="anchor" href="#output"></a>

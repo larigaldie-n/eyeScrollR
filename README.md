@@ -4,6 +4,6 @@ An R package to correctly place eye-tracking fixation data on areas of scrollabl
 # ToDo list
 
 -   Tests for new functions
--   Rename everything "anchor" to "fixed_area"
 -   Documentation for the fixed areas
--   Make sure the scroll is within the area
+-   Better documentation for individual functions
+-   Included dataset?

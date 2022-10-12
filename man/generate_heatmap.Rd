@@ -20,7 +20,7 @@ Creates a heatmap based on the dataset
 \examples{
 \dontrun{
 img <- readPNG("test.png")
-test_data <- eye_tracker_fixation_scroll(anchors = test_anchors,
+test_data <- eye_tracker_fixation_scroll(fixed_areas = test_fixed_areas,
     rules = test_rules, calibration = test_calibration)
 generate_heatmap(data = test_data, heatmap_image = img)
 }
