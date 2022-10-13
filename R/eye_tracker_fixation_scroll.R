@@ -1,3 +1,4 @@
+# Checks if the fixed_areas and rules lists are correctly formed
 check_fixed_areas_rules <- function(fixed_areas, rules)
 {
   if (!is.list(fixed_areas))
@@ -47,6 +48,7 @@ check_fixed_areas_rules <- function(fixed_areas, rules)
   return(rules)
 }
 
+# Checks if each rule in the rules list is true or false
 check_rules_true <- function(rules, data_line, flags, fixed_areas, scroll)
 {
   for (rule_num in seq_len(length(rules)))
@@ -56,7 +58,8 @@ check_rules_true <- function(rules, data_line, flags, fixed_areas, scroll)
   return(flags)
 }
 
-check_squares <- function(line, coordinate, reverse)
+# Checks if a calibration line has been found
+check_calibration_line <- function(line, coordinate, reverse)
 {
   red <- c(1,0,0)
   green <- c(0,1,0)
@@ -88,7 +91,7 @@ check_squares <- function(line, coordinate, reverse)
           return(FALSE)
         }
       }
-      else if (color =="green")
+      else if (color == "green")
       {
         if(all(line[coordinate+1,] == green))
         {
@@ -153,6 +156,8 @@ check_squares <- function(line, coordinate, reverse)
   return(FALSE)
 }
 
+# Checks which rules are true, and returns y coordinates of fixations if
+# it is inside a fixed area if its association rule its true
 enforce_rules <- function(flags, fixed_areas, data_line)
 {
   y <- NA
@@ -170,6 +175,7 @@ enforce_rules <- function(flags, fixed_areas, data_line)
   return(y)
 }
 
+# Check if a fixation point is inside a given fixed area
 resolve_fixed_box <- function(array_fixed_areas, x, y)
 {
   for (i in 1:dim(array_fixed_areas)[3])
@@ -185,6 +191,8 @@ resolve_fixed_box <- function(array_fixed_areas, x, y)
   return (NA)
 }
 
+# Shifts the original coordinate (on one dimension) to fit the image coordinate
+# and returns NA to any coordinate outside the image according to outside_image_is_na
 shift_image_by_dimension <- function(coordinate, shift_before, shift_after, screen_dimension, outside_image_is_na)
 {
   if (is.na(coordinate) || (outside_image_is_na && (coordinate < shift_before || coordinate > (screen_dimension - shift_after))))
@@ -197,6 +205,7 @@ shift_image_by_dimension <- function(coordinate, shift_before, shift_after, scre
   }
 }
 
+# Gets the Data message, and updates the scroll delta according to it
 shift_scroll <- function(event, data_line, scroll, min_scroll, max_scroll, scroll_pixels, top_left_x, top_left_y, bottom_right_x, bottom_right_y)
 {
   if (grepl(event, data_line$Data, fixed=TRUE))
@@ -363,12 +372,12 @@ scroll_calibration_auto <- function(calibration_image, scroll_pixels)
     {
       if (all(calibration_image[height,width,] == red))
       {
-        if (check_squares(calibration_image[height,,], width, FALSE) && check_squares(calibration_image[,width,], height, FALSE))
+        if (check_calibration_line(calibration_image[height,,], width, FALSE) && check_calibration_line(calibration_image[,width,], height, FALSE))
         {
           top_left_x <- width - 1
           top_left_y <- height - 1
         }
-        else if(check_squares(calibration_image[height,,], width, TRUE) && check_squares(calibration_image[,width,], height, TRUE))
+        else if(check_calibration_line(calibration_image[height,,], width, TRUE) && check_calibration_line(calibration_image[,width,], height, TRUE))
         {
           bottom_right_x <- width - 1
           bottom_right_y <- height - 1
