@@ -165,7 +165,7 @@ enforce_rules <- function(flags, fixed_areas, data_line)
   {
     if (flags[flag_num])
     {
-      y <- resolve_fixed_box(fixed_areas[[flag_num]], data_line$'Corrected.X', data_line$'Corrected.Y')
+      y <- resolve_fixed_box(fixed_areas[[flag_num]], data_line$Corrected.X, data_line$Corrected.Y)
       if (!is.na(y))
       {
         break
@@ -235,7 +235,7 @@ shift_scroll <- function(event, data_line, scroll, min_scroll, max_scroll, scrol
 #'     true, meaning that this rule should always be enforced). NB: you should
 #'     never have to call this function yourself, but you can use it as a basis
 #'     to create your own rule. All arguments are automatically passed to any
-#'     rule function by eye_tracker_fixation_scroll
+#'     rule function by eye_scroll_correct
 #'
 #' @param data_line The current line in the .csv file
 #' @param array_fixed_areas The array of fixed areas linked to this rule
@@ -259,7 +259,7 @@ rule_true <- function (data_line, array_fixed_areas, flag, scroll)
 #'     of the website is inferior to 30). NB: you should never
 #'     have to call this function yourself, but you can use it as a basis to
 #'     create your own rule. All arguments are automatically passed to any
-#'     rule function by eye_tracker_fixation_scroll
+#'     rule function by eye_scroll_correct
 #'
 #' @param data_line The current line in the .csv file
 #' @param array_fixed_areas The array of fixed areas linked to this rule
@@ -290,7 +290,7 @@ rule_before_scrolling <- function (data_line, array_fixed_areas, flag, scroll)
 #'     of the website is superior to 30). NB: you should never
 #'     have to call this function yourself, but you can use it as a basis to
 #'     create your own rule. All arguments are automatically passed to any
-#'     rule function by eye_tracker_fixation_scroll
+#'     rule function by eye_scroll_correct
 #'
 #' @param data_line The current line in the .csv file
 #' @param array_fixed_areas The array of fixed areas linked to this rule
@@ -314,9 +314,9 @@ rule_after_scrolling <- function (data_line, array_fixed_areas, flag, scroll)
   }
 }
 
-#' @title scroll_calibration_manual
+#' @title Manual calibration
 #'
-#' @description Creates a calibration list for use in the eye_tracker_fixation_scroll
+#' @description Creates a calibration list for use in the eye_scroll_correct
 #'     function. Uses values taken by hand
 #'
 #' @param screen_width Resolution width of the screen on which the experiment is conducted (in pixels). E.g. 1920
@@ -340,9 +340,9 @@ scroll_calibration_manual <- function(screen_width, screen_height, top_left_x, t
   return(l)
 }
 
-#' @title scroll_calibration_auto
+#' @title Automatic calibration
 #'
-#' @description Creates a calibration list for use in the eye_tracker_fixation_scroll
+#' @description Creates a calibration list for use in the eye_scroll_correct
 #'     function. Uses a screenshot of a full screen including the calibration webpage
 #'
 #' @param calibration_image The screenshot, loaded as a large array (e.g. using readPNG)
@@ -401,41 +401,51 @@ scroll_calibration_auto <- function(calibration_image, scroll_pixels)
   return(l)
 }
 
-#' @title eye_tracker_fixation_scroll
+#' @title Corrects eye-tracking coordinate data
 #'
-#' @description corrects the eye-tracking coordinate data to fit in a webpage
-#'     scrolled vertically by the participant
+#' @description The core function that corrects the eye-tracking coordinate data
+#' to fit in a webpage scrolled vertically by the participant
 #'
-#' @param eyes_data The dataset
-#' @param timestamp_start The starting timestamp from the .csv file at which the participant was watching the scrollable (AFTER time_shift applied)
-#' @param timestamp_stop The final timestamp from the .csv file at which the participant was watching the scrollable (AFTER time_shift applied)
-#' @param image_height The total height of the image (in pixels)
-#' @param image_width The total width of the image (in pixels)
-#' @param calibration A calibration list (see the scroll_calibration function)
-#' @param time_shift [Optional] A time shift parameter to synchronize the .csv file with a video recording (e.g. if the recording started after the start of the .csv). Default: 0
-#' @param fixed_areas [Optional] A list of potentially immovable areas inside the scrollable (e.g. fixed menus in a website) - see manual for a correct usage. Default: empty list
-#' @param rules [Optional] A list of functions that can act as rules to activate/deactivate immovables areas in the scrollable (e.g. a menu that disappears after X pixels have been scrolled) - See manual for a correct. Default: empty list
+#' @param eyes_data The dataset. Please note that it MUST include correctly named columns (see below)
+#' @param timestamp_start The starting timestamp from the dataset at which the participant was watching the webpage (INCLUDING the time_shift, if applicable)
+#' @param timestamp_stop The final timestamp from the dataset at which the participant was watching the webpage (INCLUDING the time_shift, if applicable)
+#' @param image_height The total height of the webpage image (in pixels)
+#' @param image_width The total width of the webpage image (in pixels)
+#' @param calibration A calibration list (see the \code{\link{scroll_calibration_auto}} or the \code{\link{scroll_calibration_manual}} functions)
+#' @param time_shift [Optional] A time shift parameter to synchronize the dataset with another source (e.g. if a screen recording started after timestamp 0 of the .csv). Default: 0
 #' @param starting_scroll [Optional] If the participant did not start watching the webpage from the top, you can indicate the y coordinate at which he started here (in pixels). Default: 0
-#' @param output_file [Optional] The name of the output .csv file. If an empty string, will just return the data without creating a new file. Default: empty string
+#' @param output_file [Optional] The name of the output .csv file. If an empty string, will just return the data without creating a file. Default: empty string
+#' @param fixed_areas [Optional] A list of potentially immovable areas inside the webpage (e.g. fixed menus in a website) - see the Fixed Areas article for more information. Default: empty list
+#' @param rules [Optional] A list of functions that can act as rules to activate/deactivate immovables areas in the webpage (e.g. a menu that disappears after X pixels have been scrolled) - See the Fixed Areas article for more information. Default: empty list
 #' @param outside_image_is_na [Optional] Indicates if values outside the AOI (e.g. the windows bar) should be set to NA or kept in the file/dataset. If set to FALSE, coordinates above/before the AOI will become negative. Default: TRUE
 #' @param na.rm [Optional] Indicates if lines with NA y values should be dropped in the final file/dataset. Default: TRUE
 #'
-#' @return The Dataset with corrected x and y's
+#' @details
+#' \strong{The Dataset} \cr\cr
+#' The dataset MUST include correctly named columns, which are:
+#' \itemize{
+#' \item A "Fixation.X" column with the x coordinate of fixation points
+#' \item A "Fixation.Y" column with the y coordinate of fixation points
+#' \item A "Data" column, with user-generated events (such as keystrokes or browser changes)
+#' \item A "Timestamp" column with the timestamps for each fixation point and event
+#' }
+#'
+#' @return Returns the same dataset with added columns of corrected x, y and shifted timestamps (named "Corrected.X", "Corrected.Y", and "Timestamps.shifted")
 #' @examples
 #' \dontrun{
-#' test_fixed_areas <- list(array(c(c(0,0,1902,95), c(0,0,1902,95),
-#'     c(1607,96,1902,905), c(1607,96,1902,905)), dim = c(4,2,2)),
-#'     array(c(c(0,0,1902,63), c(0,32,1902,95), c(1607,63,1902,900),
-#'     c(1607,63,1902,900)), dim = c(4,2,2)), array(c(c(1607,906,1920,1080),
-#'     c(1607,6481,1920,6655)), dim = c(4,2,1)))
-#' test_rules = list(rule_before_scrolling, rule_after_scrolling, rule_true)
-#' test_calibration <- scroll_calibration_manual(1920, 1080, 88, 0, 40, 0, 100)
-#' test_data <- eye_tracker_fixation_scroll(fixed_areas = test_fixed_areas,
-#'     rules = test_rules, calibration = test_calibration)
+#' library(eyeScrollR)
+#' calibration <- scroll_calibration_auto(calibration_image = calibration_image,
+#'                                        scroll_pixels = 100)
+#' data <- eye_scroll_correct(eyes_data = dataset, timestamp_start = 2000,
+#'                                     timstamp_stop = 50000, image_width = 1920,
+#'                                     image_height = 10000, calibration = calibration)
+#' generate_heatmap(data = data, heatmap_image = heatmap_image)
 #' }
+#'
+
 #' @export
 #' @importFrom rlang .data
-eye_tracker_fixation_scroll <- function (eyes_data, timestamp_start, timestamp_stop, image_height, image_width, calibration, time_shift=0, starting_scroll = 0, output_file = "", fixed_areas = list(), rules = list(), outside_image_is_na = TRUE, na.rm=TRUE)
+eye_scroll_correct <- function (eyes_data, timestamp_start, timestamp_stop, image_height, image_width, calibration, time_shift=0, starting_scroll = 0, output_file = "", fixed_areas = list(), rules = list(), outside_image_is_na = TRUE, na.rm=TRUE)
 {
   scroll_pixels <- calibration$scroll_pixels
   screen_width <- calibration$screen_width
@@ -455,20 +465,20 @@ eye_tracker_fixation_scroll <- function (eyes_data, timestamp_start, timestamp_s
   rules <- check_fixed_areas_rules(fixed_areas, rules)
   flags <- c(rep(TRUE, length(rules)))
   max_scroll <- image_height - (screen_height - top_left_y - shift_bottom)
-  eyes_data$'Corrected.Y' <- vapply(eyes_data$'Fixation Y', shift_image_by_dimension, shift_before = top_left_y, shift_after = shift_bottom, screen_dimension = screen_height, outside_image_is_na = outside_image_is_na, FUN.VALUE = 1.0)
-  eyes_data$'Corrected.X' <- vapply(eyes_data$'Fixation X', shift_image_by_dimension, shift_before = top_left_x, shift_after = shift_right, screen_dimension = screen_width, outside_image_is_na = outside_image_is_na, FUN.VALUE = 1.0)
+  eyes_data$Corrected.Y <- vapply(eyes_data$Fixation.Y, shift_image_by_dimension, shift_before = top_left_y, shift_after = shift_bottom, screen_dimension = screen_height, outside_image_is_na = outside_image_is_na, FUN.VALUE = 1.0)
+  eyes_data$Corrected.X <- vapply(eyes_data$Fixation.X, shift_image_by_dimension, shift_before = top_left_x, shift_after = shift_right, screen_dimension = screen_width, outside_image_is_na = outside_image_is_na, FUN.VALUE = 1.0)
 
   for (line in 1:dim(eyes_data)[1])
   {
     # prepare_smooth_scroll(event, eyes_data[line ,], smooth_scroll, smooth_scroll_table, scroll, min_scroll, max_scroll)
     scroll <- shift_scroll(event, eyes_data[line ,], scroll, min_scroll, max_scroll, scroll_pixels, top_left_x, top_left_y, bottom_right_x, bottom_right_y)
     flags <- check_rules_true(rules, eyes_data[line, ], flags, fixed_areas, scroll)
-    if (!is.na(eyes_data[line, ]$'Corrected.Y'))
+    if (!is.na(eyes_data[line, ]$Corrected.Y))
     {
       corrected_y[line] <- enforce_rules(flags, fixed_areas, eyes_data[line, ])
       if (is.na(corrected_y[line]))
       {
-        corrected_y[line] <- eyes_data[line, ]$'Corrected.Y'+scroll
+        corrected_y[line] <- eyes_data[line, ]$Corrected.Y+scroll
       }
     }
     else
@@ -477,7 +487,7 @@ eye_tracker_fixation_scroll <- function (eyes_data, timestamp_start, timestamp_s
     }
   }
 
-  eyes_data$'Corrected.Y' <- corrected_y
+  eyes_data$Corrected.Y <- corrected_y
   if (na.rm)
   {
     eyes_data <- eyes_data[stats::complete.cases(eyes_data[, 'Corrected.Y']),]
@@ -489,18 +499,18 @@ eye_tracker_fixation_scroll <- function (eyes_data, timestamp_start, timestamp_s
   return(eyes_data)
 }
 
-#' @title generate_heatmap
+#' @title Creates generic heatmap
 #'
-#' @description Creates a heatmap based on the dataset
+#' @description Creates a heatmap based on the dataset and the unscrolled webpage image
 #'
-#' @param data The dataset output by the eye_tracker_fixation_scroll
-#' @param heatmap_image An image on which to apply the heatmap
+#' @param data The dataset output by the \code{\link{eye_scroll_correct}} function
+#' @param heatmap_image The unscrolled webpage image on which to apply the heatmap
 #'
 #' @return A plot with the image and the heatmap
 #' @examples
 #' \dontrun{
 #' img <- readPNG("test.png")
-#' test_data <- eye_tracker_fixation_scroll(fixed_areas = test_fixed_areas,
+#' test_data <- eye_scroll_correct(fixed_areas = test_fixed_areas,
 #'     rules = test_rules, calibration = test_calibration)
 #' generate_heatmap(data = test_data, heatmap_image = img)
 #' }
@@ -509,8 +519,8 @@ eye_tracker_fixation_scroll <- function (eyes_data, timestamp_start, timestamp_s
 generate_heatmap <- function(data, heatmap_image)
 {
 
-  data$'Corrected.Y' <- dim(heatmap_image)[1] - data$'Corrected.Y'
-  ggplot2::ggplot(data, ggplot2::aes(.data$'Corrected.X', .data$'Corrected.Y'))  +
+  data$Corrected.Y <- dim(heatmap_image)[1] - data$Corrected.Y
+  ggplot2::ggplot(data, ggplot2::aes(.data$Corrected.X, .data$Corrected.Y))  +
     ggplot2::annotation_raster(heatmap_image, xmin=-Inf, xmax=Inf, ymin=-Inf, ymax=Inf)+
     ggplot2::stat_density2d(geom = "polygon", ggplot2::aes(fill=.data$..level.., alpha = 0.15)) +
     ggplot2::geom_point(size=1)+
