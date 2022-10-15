@@ -20,7 +20,7 @@ reference:
   desc: |
     Functions to correct the gaze coordinates on the image, and to create the heatmap
   contents:
-  - eye_tracker_fixation_scroll
+  - eye_scroll_correct
   - generate_heatmap
 - title: Preparation functions
   desc: |

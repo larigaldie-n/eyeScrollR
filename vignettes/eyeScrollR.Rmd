@@ -26,7 +26,7 @@ Provided that you already have an image, a dataset and correct measurements, out
 library(eyeScrollR)
 calibration <- scroll_calibration_auto(calibration_image = calibration_image,
                                        scroll_pixels = 100)
-data <- eye_tracker_fixation_scroll(eyes_data = dataset, timestamp_start = 2000,
+data <- eye_scroll_correct(eyes_data = dataset, timestamp_start = 2000,
                             timstamp_stop = 50000, image_width = 1920,
                             image_height = 10000, calibration = calibration)
 generate_heatmap(data = data, heatmap_image = heatmap_image)
@@ -132,7 +132,7 @@ The next step is to get a full, unscrolled image of the website. As was said ear
 knitr::include_graphics("a_random_website.png")
 ```
 
-This image width and height are to be passed to the eye_tracker_fixation_scroll function in the next section.
+This image width and height are to be passed to the eye_scroll_correct function in the next section.
 
 ## Convert
 
@@ -142,7 +142,8 @@ After a careful examination of the video from the eye-tracking session of the pa
 ```{r eval=FALSE}
 library(readr)
 test_data <- read_csv("test_data.csv", comment = "#")
-corrected_data <- eye_tracker_fixation_scroll(eyes_data = test_data,
+names(test_data) <- make.names(names(test_data))
+corrected_data <- eye_scroll_correct(eyes_data = test_data,
                                               timestamp_start = 3577,
                                               timestamp_stop = 30864,
                                               image_width = 1920,
@@ -150,7 +151,7 @@ corrected_data <- eye_tracker_fixation_scroll(eyes_data = test_data,
                                               calibration = calibration)
 ```
 
-The dataset itself has to respect the standard naming conventions from the iMotions software (see more details in the eye_tracker_fixation_scroll help page).
+The dataset itself has to respect the standard naming conventions from the iMotions software (see more details in the eye_scroll_correct help page).
 
 ## Output!
 

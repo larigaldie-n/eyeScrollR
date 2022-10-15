@@ -3,12 +3,11 @@ An R package to correctly place eye-tracking fixation data on areas of scrollabl
 
 # ToDo list
 
--   Better documentation for individual functions
--   Documentation for the fixed areas
--   Article on dataset requirements & limitations
--   Included dataset?
+-   Documentation for fixed areas
+-   Article limitations
 
 # Future features
 
 -   "Webpage" tool from iMotions (more accurate)
 -   Other software
+-   More than fixations?
