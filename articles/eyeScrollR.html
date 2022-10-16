@@ -44,7 +44,8 @@
 <li class="nav-item dropdown">
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
-    <a class="dropdown-item" href="../articles/fixed_areas.html">fixed_areas</a>
+    <a class="dropdown-item" href="../articles/fixed_areas.html">Using eyeScrollR with fixed areas</a>
+    <a class="dropdown-item" href="../articles/limitations.html">limitations</a>
   </div>
 </li>
       </ul>
@@ -171,11 +172,11 @@
 <span><span class="va">test_data</span> <span class="op">&lt;-</span> <span class="fu">read_csv</span><span class="op">(</span><span class="st">"test_data.csv"</span>, comment <span class="op">=</span> <span class="st">"#"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">test_data</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/make.names.html" class="external-link">make.names</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">test_data</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">corrected_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/eye_scroll_correct.html">eye_scroll_correct</a></span><span class="op">(</span>eyes_data <span class="op">=</span> <span class="va">test_data</span>,</span>
-<span>                                              timestamp_start <span class="op">=</span> <span class="fl">3577</span>,</span>
-<span>                                              timestamp_stop <span class="op">=</span> <span class="fl">30864</span>,</span>
-<span>                                              image_width <span class="op">=</span> <span class="fl">1920</span>,</span>
-<span>                                              image_height <span class="op">=</span> <span class="fl">1442</span>,</span>
-<span>                                              calibration <span class="op">=</span> <span class="va">calibration</span><span class="op">)</span></span></code></pre></div>
+<span>                                     timestamp_start <span class="op">=</span> <span class="fl">3577</span>,</span>
+<span>                                     timestamp_stop <span class="op">=</span> <span class="fl">30864</span>,</span>
+<span>                                     image_width <span class="op">=</span> <span class="fl">1920</span>,</span>
+<span>                                     image_height <span class="op">=</span> <span class="fl">1442</span>,</span>
+<span>                                     calibration <span class="op">=</span> <span class="va">calibration</span><span class="op">)</span></span></code></pre></div>
 <p>The dataset itself has to respect the standard naming conventions from the iMotions software (see more details in the eye_scroll_correct help page).</p>
 </div>
 <div class="section level3">
