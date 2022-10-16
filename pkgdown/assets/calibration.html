@@ -170,7 +170,7 @@
         {
             if(scrolls.length > 0)
             {
-                document.getElementById('result').innerText = "scroll_pixels = " + Math.round(window.scrollY/scrolls.length)
+                document.getElementById('result').innerText = "scroll_pixels = " + Math.round((window.scrollY/scrolls.length)*window.devicePixelRatio);
             }
         }
     </script>

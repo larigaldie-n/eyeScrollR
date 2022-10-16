@@ -144,11 +144,11 @@ library(readr)
 test_data <- read_csv("test_data.csv", comment = "#")
 names(test_data) <- make.names(names(test_data))
 corrected_data <- eye_scroll_correct(eyes_data = test_data,
-                                              timestamp_start = 3577,
-                                              timestamp_stop = 30864,
-                                              image_width = 1920,
-                                              image_height = 1442,
-                                              calibration = calibration)
+                                     timestamp_start = 3577,
+                                     timestamp_stop = 30864,
+                                     image_width = 1920,
+                                     image_height = 1442,
+                                     calibration = calibration)
 ```
 
 The dataset itself has to respect the standard naming conventions from the iMotions software (see more details in the eye_scroll_correct help page).
