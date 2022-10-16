@@ -10,9 +10,9 @@ home:
   links:
   - text: Calibration tool
     href: calibration.html
-  - text: Test page (easy)
+  - text: Test page (without fixed areas)
     href: test_no_fixed.html
-  - text: Test page (hard)
+  - text: Test page (with fixed areas)
     href: test_page.html
 
 reference:

@@ -229,6 +229,24 @@ shift_scroll <- function(event, data_line, scroll, min_scroll, max_scroll, scrol
   return (scroll)
 }
 
+#' @export
+fixed_areas_bundle <- function(...)
+{
+  data <- list(...)
+  if(length(data)==0 || length(data)%%2 !=0)
+  {
+    stop("You must pass screen-to-image mapping pairs of coordinate vectors to this function")
+  }
+  for (i in 1:length(data))
+  {
+    if(!is.vector(data[[i]]) || length(data[[i]])!=4)
+    {
+      stop("Every argument should be a coordinate vector in the form: c(top_left_x, top_left_y, bottom_right_x, bottom_right_y)")
+    }
+  }
+  return(array(unlist(data), dim=c(4,2,(length(data)/2))))
+}
+
 #' @title rule_true
 #'
 #' @description Helper function to enforce fixed area rules (this one is always
@@ -464,7 +482,11 @@ eye_scroll_correct <- function (eyes_data, timestamp_start, timestamp_stop, imag
   min_scroll <- 0
   rules <- check_fixed_areas_rules(fixed_areas, rules)
   flags <- c(rep(TRUE, length(rules)))
-  max_scroll <- image_height - (screen_height - top_left_y - shift_bottom)
+  for (i in 1:length(fixed_areas))
+  {
+    fixed_areas[[i]] <- fixed_areas[[i]] - c(top_left_x,top_left_y,top_left_x,top_left_y, 0, 0, 0, 0)
+  }
+  max_scroll <- image_height - (bottom_right_y - top_left_y + 2) # +2 because bottom_right_y and top_left_y are coordinates
   eyes_data$Corrected.Y <- vapply(eyes_data$Fixation.Y, shift_image_by_dimension, shift_before = top_left_y, shift_after = shift_bottom, screen_dimension = screen_height, outside_image_is_na = outside_image_is_na, FUN.VALUE = 1.0)
   eyes_data$Corrected.X <- vapply(eyes_data$Fixation.X, shift_image_by_dimension, shift_before = top_left_x, shift_after = shift_right, screen_dimension = screen_width, outside_image_is_na = outside_image_is_na, FUN.VALUE = 1.0)
 
@@ -529,40 +551,3 @@ generate_heatmap <- function(data, heatmap_image)
     ggplot2::scale_y_continuous(limits=c(0,dim(heatmap_image)[1]),expand=c(0,0))+
     ggplot2::coord_fixed()
 }
-
-# Future features?
-# prepare_smooth_scroll <- function (event, data_line, smooth_scroll, smooth_scroll_table, scroll, min_scroll, max_scroll, scroll_pixels)
-# {
-#   if (grepl(event, data_line$Data, fixed=TRUE))
-#   {
-#     scroll_delta = strtoi(unlist(strsplit(unlist(strsplit(data_line$Data, ";", fixed=TRUE))[5], ":", fixed = TRUE))[2])
-#     if (max(smooth_scroll_table$Timestamp) < data_line$Timestamp)
-#     {
-#       if (scroll_delta<0)
-#       {
-#         scroll_delta <- min(c(scroll + scroll_pixels, max_scroll))
-#         smooth_scroll_table <- data.frame(timestamp = data_line$Timestamp:(data_line$Timestamp+smooth_scroll-1), delta_scroll = scroll - seq(0,scroll_delta, length.out=smooth_scroll))
-#       }
-#       else if (scroll_delta>0)
-#       {
-#         scroll_delta <- max(c(scroll - scroll_pixels, min_scroll))
-#         smooth_scroll_table <- data.frame(timestamp = data_line$Timestamp:(data_line$Timestamp+smooth_scroll-1), delta_scroll = scroll - seq(0,scroll_delta, length.out=smooth_scroll))
-#       }
-#     }
-#     else
-#     {
-#       smooth_scroll_table <- dplyr::filter(smooth_scroll_table, timestamp>=data_line$Timestamp)
-#       if (scroll_delta<0)
-#       {
-#         scroll_delta <- min(c(scroll - scroll_delta, max_scroll))
-#         smooth_scroll_table <- data.frame(timestamp = data_line$Timestamp:(data_line$Timestamp+smooth_scroll-1), delta_scroll = scroll - seq(0,scroll_delta, length.out=smooth_scroll))
-#       }
-#       else if (scroll_delta>0)
-#       {
-#         scroll_delta <- max(c(scroll - scroll_delta, min_scroll))
-#         smooth_scroll_table <- data.frame(timestamp = data_line$Timestamp:(data_line$Timestamp+smooth_scroll-1), delta_scroll = scroll - seq(0,scroll_delta, length.out=smooth_scroll))
-#       }
-#     }
-#   }
-#   return (smooth_scroll_table)
-# }

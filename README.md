@@ -3,11 +3,11 @@ An R package to correctly place eye-tracking fixation data on areas of scrollabl
 
 # ToDo list
 
--   Documentation for fixed areas
+-   Oxygen doc for fixed_areas_bundle
 -   Article limitations
 
 # Future features
 
--   "Webpage" tool from iMotions (more accurate)
+-   "Webpage" tool from iMotions (more accurate?)
 -   Other software
 -   More than fixations?
