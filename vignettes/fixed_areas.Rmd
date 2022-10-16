@@ -134,9 +134,9 @@ This time, the fixed_areas list comprises two bundles of mappings: the one that 
 
 The only thing left to do is to create a *rules* list, so that the package can know when to use which bundle.
 
-rules are functions that check, at each line of the .csv file, if conditions to use a bundle are met or not. In our case here, we would need a first rule asking if the user has not scrolled down a sufficient amount of pixels to shrink the header, in which case the first bundle of fixed areas should be used (and that is would cease to be used once this amount of pixels has been scrolled). And we would also need a second rule, asking the exact opposite for the second bundle. Finding the conditions changing the fixed areas may require a bit of experimenting on the field. In our website example, the header just retracts when more than 1000 pixels have been scrolled down, and expands again in the other case.
+A rule is a function that checks, at each line of the .csv file, if conditions to use a specific bundle are met or not. In our case here, we would need a first rule asking if the user has not scrolled down a sufficient amount of pixels to shrink the header, in which case the first bundle of fixed areas should be used, and not otherwise. We would also require a second rule, asking the exact opposite for the second bundle. Finding the conditions changing the fixed areas may require a bit of experimenting on the field. In our website example, the header just retracts when more than 1000 pixels have been scrolled down, and expands again in the other case.
 
-The *eye_scroll_correct* function calls all rule functions at every line of the .csv file, and pass them a lot of arguments to work on. Working on complex set of rules is possible, but in any case, it will require you to write your own functions. The scenario presented here is easy enough to be modified whatever you level of expertise in R is, and should solve the vast majority of the use-case scenarios.
+The *eye_scroll_correct* function calls all rule functions at every line of the .csv file, and pass them several arguments to work on. Working on complex sets of rules is possible if you have the programming knowledge to do so. In any case, it will require you to write your own functions. The scenario presented here is easy enough to be modified whatever your level of expertise in R is, and should be appropriate for the vast majority of the use-case scenarios.
 
 ```{r eval=FALSE}
 rule_scrolled_up <- function (data_line, array_fixed_areas, flag, scroll)
@@ -276,8 +276,8 @@ names(test_data) <- make.names(names(test_data))
 corrected_data <- eye_scroll_correct(eyes_data = test_data,
                                      timestamp_start = 8504,
                                      timestamp_stop = 70478,
-                                     image_height = 4377,
                                      image_width = 1920,
+                                     image_height = 4377,
                                      calibration = calibration,
                                      fixed_areas = fixed_areas,
                                      rules = rules)

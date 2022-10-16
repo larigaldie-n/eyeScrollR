@@ -28,6 +28,7 @@ reference:
   contents:
   - scroll_calibration_manual
   - scroll_calibration_auto
+  - fixed_areas_bundle
 - title: Helper anchor rule functions
   desc: |
     Functions to check which set(s) of immovable areas should be used or not

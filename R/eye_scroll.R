@@ -176,15 +176,15 @@ enforce_rules <- function(flags, fixed_areas, data_line)
 }
 
 # Check if a fixation point is inside a given fixed area
-resolve_fixed_box <- function(array_fixed_areas, x, y)
+resolve_fixed_box <- function(fixed_areas_bundle, x, y)
 {
-  for (i in 1:dim(array_fixed_areas)[3])
+  for (i in 1:dim(fixed_areas_bundle)[3])
   {
-    if(x >= array_fixed_areas[1,1,i] && x <= array_fixed_areas[3,1,i])
+    if(x >= fixed_areas_bundle[1,1,i] && x <= fixed_areas_bundle[3,1,i])
     {
-      if(y >= array_fixed_areas[2,1,i] && y <= array_fixed_areas[4,1,i])
+      if(y >= fixed_areas_bundle[2,1,i] && y <= fixed_areas_bundle[4,1,i])
       {
-        return (y + (array_fixed_areas[4,2,i] - array_fixed_areas[4,1,i]))
+        return (y + (fixed_areas_bundle[4,2,i] - fixed_areas_bundle[4,1,i]))
       }
     }
   }
@@ -229,6 +229,29 @@ shift_scroll <- function(event, data_line, scroll, min_scroll, max_scroll, scrol
   return (scroll)
 }
 
+#' @title Creates a bundle of fixed areas mappings
+#'
+#' @description Puts together several fixed areas mappings to make them all
+#' (de)activated by the same rule
+#'
+#' @param ... A varying number of pairs of coordinate vectors. The first of these
+#' pairs should always represent an area on the screen, and the second one an
+#' area on the unscrolled image. Each vector should take the form c(top_left_x,
+#' top_left_y, bottom_right_x, bottom_right_y)
+#'
+#' @return A bundle of fixed areas mappings, to be put in a list
+#' @examples
+#' \dontrun{
+#' top_fixed_area_screen <- c(0, 89, 1919, 276)
+#' top_fixed_area_image <- c(0, 0, 1919, 187)
+#' right_fixed_area_screen <- c(1632, 277, 1919, 936)
+#' right_fixed_area_image <- c(1632, 188, 1919, 847)
+#' area_bundle <- fixed_areas_bundle(top_fixed_area_screen,
+#'                                   top_fixed_area_image,
+#'                                   right_fixed_area_screen,
+#'                                   right_fixed_area_image)
+#' fixed_areas <- list(area_bundle)
+#' }
 #' @export
 fixed_areas_bundle <- function(...)
 {
@@ -247,49 +270,73 @@ fixed_areas_bundle <- function(...)
   return(array(unlist(data), dim=c(4,2,(length(data)/2))))
 }
 
-#' @title rule_true
+#' @title A rule that is always true
 #'
 #' @description Helper function to enforce fixed area rules (this one is always
-#'     true, meaning that this rule should always be enforced). NB: you should
-#'     never have to call this function yourself, but you can use it as a basis
-#'     to create your own rule. All arguments are automatically passed to any
-#'     rule function by eye_scroll_correct
+#'     true, meaning that this rule should always be enforced). This rule is the
+#'     default one for any fixed area bundle which has no rule attached to it.
+#'     All arguments are automatically passed to any rule function by
+#'     eye_scroll_correct
 #'
-#' @param data_line The current line in the .csv file
-#' @param array_fixed_areas The array of fixed areas linked to this rule
+#' @param data_line The current line in the .csv file. Includes all the original
+#' columns, along with a new "Timestamp.shifted" column (Timestamp - time_shit),
+#' along with "Corrected.X" and "Corrected.Y" columns, which are "Fixation.X"
+#' and "Fixation.Y" respectively shifted by top_left_x and top_left_y of the
+#' calibration stage
+#' @param fixed_areas_bundle The bundle of fixed areas linked to this rule
 #' @param flag A boolean that says if this rule is TRUE or FALSE at the moment
 #' @param scroll The total amount of pixels that have been scrolled down from
 #'     the top of the website at the moment
 #'
 #' @return A boolean saying if this rule should now be enforced or not
 #' @examples
+#' rule_true <- function (data_line, fixed_areas_bundle, flag, scroll)
+#' {
+#'   return (TRUE)
+#' }
 #' rules <- list(rule_before_scrolling, rule_after_scrolling, rule_true)
 #' @export
-rule_true <- function (data_line, array_fixed_areas, flag, scroll)
+rule_true <- function (data_line, fixed_areas_bundle, flag, scroll)
 {
   return (TRUE)
 }
 
-#' @title rule_before_scrolling
+#' @title Generic rule to activate a bundle before a certain amount of scrolled
+#' pixels
 #'
 #' @description Helper function to enforce fixed area rules (this one checks
 #'     if the total amount of pixels that have been scrolled down from the top
-#'     of the website is inferior to 30). NB: you should never
+#'     of the website is inferior to 30). NB: you should probably not
 #'     have to call this function yourself, but you can use it as a basis to
 #'     create your own rule. All arguments are automatically passed to any
 #'     rule function by eye_scroll_correct
 #'
-#' @param data_line The current line in the .csv file
-#' @param array_fixed_areas The array of fixed areas linked to this rule
+#' @param data_line The current line in the .csv file. Includes all the original
+#' columns, along with a new "Timestamp.shifted" column (Timestamp - time_shit),
+#' along with "Corrected.X" and "Corrected.Y" columns, which are "Fixation.X"
+#' and "Fixation.Y" respectively shifted by top_left_x and top_left_y of the
+#' calibration stage
+#' @param fixed_areas_bundle The array of fixed areas linked to this rule
 #' @param flag A boolean that says if this rule is TRUE or FALSE at the moment
 #' @param scroll The total amount of pixels that have been scrolled down from
 #'     the top of the website at the moment
 #'
 #' @return A boolean saying if this rule should now be enforced or not
 #' @examples
+#' rule_before_scrolling <- function (data_line, fixed_areas_bundle, flag, scroll)
+#' {
+#'   if (scroll < 30)
+#'   {
+#'     return (TRUE)
+#'   }
+#'   else
+#'   {
+#'     return(FALSE)
+#'   }
+#' }
 #' rules <- list(rule_before_scrolling, rule_after_scrolling, rule_true)
 #' @export
-rule_before_scrolling <- function (data_line, array_fixed_areas, flag, scroll)
+rule_before_scrolling <- function (data_line, fixed_areas_bundle, flag, scroll)
 {
   if (scroll < 30)
   {
@@ -301,26 +348,42 @@ rule_before_scrolling <- function (data_line, array_fixed_areas, flag, scroll)
   }
 }
 
-#' @title rule_after_scrolling
+#' @title Generic rule to activate a bundle after a certain amount of scrolled
+#' pixels
 #'
 #' @description Helper function to enforce fixed area rules (this one checks
 #'     if the total amount of pixels that have been scrolled down from the top
-#'     of the website is superior to 30). NB: you should never
+#'     of the website is superior to 30). NB: you should probably not
 #'     have to call this function yourself, but you can use it as a basis to
 #'     create your own rule. All arguments are automatically passed to any
 #'     rule function by eye_scroll_correct
 #'
-#' @param data_line The current line in the .csv file
-#' @param array_fixed_areas The array of fixed areas linked to this rule
+#' @param data_line The current line in the .csv file. Includes all the original
+#' columns, along with a new "Timestamp.shifted" column (Timestamp - time_shit),
+#' along with "Corrected.X" and "Corrected.Y" columns, which are "Fixation.X"
+#' and "Fixation.Y" respectively shifted by top_left_x and top_left_y of the
+#' calibration stage
+#' @param fixed_areas_bundle The array of fixed areas linked to this rule
 #' @param flag A boolean that says if this rule is TRUE or FALSE at the moment
 #' @param scroll The total amount of pixels that have been scrolled down from
 #'     the top of the website at the moment
 #'
 #' @return A boolean saying if this rule should now be enforced or not
 #' @examples
+#' rule_after_scrolling <- function (data_line, fixed_areas_bundle, flag, scroll)
+#' {
+#'   if (scroll >= 30)
+#'   {
+#'     return (TRUE)
+#'   }
+#'   else
+#'   {
+#'     return(FALSE)
+#'   }
+#' }
 #' rules <- list(rule_before_scrolling, rule_after_scrolling, rule_true)
 #' @export
-rule_after_scrolling <- function (data_line, array_fixed_areas, flag, scroll)
+rule_after_scrolling <- function (data_line, fixed_areas_bundle, flag, scroll)
 {
   if (scroll >= 30)
   {
@@ -427,8 +490,8 @@ scroll_calibration_auto <- function(calibration_image, scroll_pixels)
 #' @param eyes_data The dataset. Please note that it MUST include correctly named columns (see below)
 #' @param timestamp_start The starting timestamp from the dataset at which the participant was watching the webpage (INCLUDING the time_shift, if applicable)
 #' @param timestamp_stop The final timestamp from the dataset at which the participant was watching the webpage (INCLUDING the time_shift, if applicable)
-#' @param image_height The total height of the webpage image (in pixels)
 #' @param image_width The total width of the webpage image (in pixels)
+#' @param image_height The total height of the webpage image (in pixels)
 #' @param calibration A calibration list (see the \code{\link{scroll_calibration_auto}} or the \code{\link{scroll_calibration_manual}} functions)
 #' @param time_shift [Optional] A time shift parameter to synchronize the dataset with another source (e.g. if a screen recording started after timestamp 0 of the .csv). Default: 0
 #' @param starting_scroll [Optional] If the participant did not start watching the webpage from the top, you can indicate the y coordinate at which he started here (in pixels). Default: 0
@@ -463,7 +526,7 @@ scroll_calibration_auto <- function(calibration_image, scroll_pixels)
 
 #' @export
 #' @importFrom rlang .data
-eye_scroll_correct <- function (eyes_data, timestamp_start, timestamp_stop, image_height, image_width, calibration, time_shift=0, starting_scroll = 0, output_file = "", fixed_areas = list(), rules = list(), outside_image_is_na = TRUE, na.rm=TRUE)
+eye_scroll_correct <- function (eyes_data, timestamp_start, timestamp_stop, image_width, image_height, calibration, time_shift=0, starting_scroll = 0, output_file = "", fixed_areas = list(), rules = list(), outside_image_is_na = TRUE, na.rm=TRUE)
 {
   scroll_pixels <- calibration$scroll_pixels
   screen_width <- calibration$screen_width
@@ -540,7 +603,6 @@ eye_scroll_correct <- function (eyes_data, timestamp_start, timestamp_stop, imag
 #' @importFrom rlang .data
 generate_heatmap <- function(data, heatmap_image)
 {
-
   data$Corrected.Y <- dim(heatmap_image)[1] - data$Corrected.Y
   ggplot2::ggplot(data, ggplot2::aes(.data$Corrected.X, .data$Corrected.Y))  +
     ggplot2::annotation_raster(heatmap_image, xmin=-Inf, xmax=Inf, ymin=-Inf, ymax=Inf)+

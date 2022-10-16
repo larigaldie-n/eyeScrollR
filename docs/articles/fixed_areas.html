@@ -45,7 +45,7 @@
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
     <a class="dropdown-item" href="../articles/fixed_areas.html">Using eyeScrollR with fixed areas</a>
-    <a class="dropdown-item" href="../articles/limitations.html">limitations</a>
+    <a class="dropdown-item" href="../articles/limitations.html">Limitations</a>
   </div>
 </li>
       </ul>
@@ -142,7 +142,7 @@ following values:</p>
 <span><span class="va">bottom_right_fixed_area_screen</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1632</span>, <span class="fl">937</span>, <span class="fl">1919</span>, <span class="fl">1029</span><span class="op">)</span></span>
 <span><span class="va">bottom_right_fixed_area_image</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1632</span>, <span class="fl">4284</span>, <span class="fl">1919</span>, <span class="fl">4376</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">area_bundle</span> <span class="op">&lt;-</span> <span class="fu">fixed_areas_bundle</span><span class="op">(</span><span class="va">top_fixed_area_screen</span>,</span>
+<span><span class="va">area_bundle</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/fixed_areas_bundle.html">fixed_areas_bundle</a></span><span class="op">(</span><span class="va">top_fixed_area_screen</span>,</span>
 <span>                                  <span class="va">top_fixed_area_image</span>,</span>
 <span>                                  <span class="va">right_fixed_area_screen</span>,</span>
 <span>                                  <span class="va">right_fixed_area_image</span>,</span>
@@ -221,7 +221,7 @@ the exact same size.</p>
 <span><span class="va">bottom_right_fixed_area_bis_screen</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1632</span>, <span class="fl">937</span>, <span class="fl">1919</span>, <span class="fl">1029</span><span class="op">)</span></span>
 <span><span class="va">bottom_right_fixed_area_bis_image</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1632</span>, <span class="fl">4284</span>, <span class="fl">1919</span>, <span class="fl">4376</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">area_bundle_bis</span> <span class="op">&lt;-</span> <span class="fu">fixed_areas_bundle</span><span class="op">(</span><span class="va">top_fixed_area_bis_screen</span>,</span>
+<span><span class="va">area_bundle_bis</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/fixed_areas_bundle.html">fixed_areas_bundle</a></span><span class="op">(</span><span class="va">top_fixed_area_bis_screen</span>,</span>
 <span>                                  <span class="va">top_fixed_area_bis_image</span>,</span>
 <span>                                  <span class="va">right_fixed_area_bis_screen</span>,</span>
 <span>                                  <span class="va">right_fixed_area_bis_image</span>,</span>
@@ -234,23 +234,23 @@ the one that should be used BEFORE the user has scrolled down enough to
 shrink the top header, and the one that should be used AFTER.</p>
 <p>The only thing left to do is to create a <em>rules</em> list, so that
 the package can know when to use which bundle.</p>
-<p>rules are functions that check, at each line of the .csv file, if
-conditions to use a bundle are met or not. In our case here, we would
-need a first rule asking if the user has not scrolled down a sufficient
-amount of pixels to shrink the header, in which case the first bundle of
-fixed areas should be used (and that is would cease to be used once this
-amount of pixels has been scrolled). And we would also need a second
-rule, asking the exact opposite for the second bundle. Finding the
-conditions changing the fixed areas may require a bit of experimenting
-on the field. In our website example, the header just retracts when more
-than 1000 pixels have been scrolled down, and expands again in the other
-case.</p>
+<p>A rule is a function that checks, at each line of the .csv file, if
+conditions to use a specific bundle are met or not. In our case here, we
+would need a first rule asking if the user has not scrolled down a
+sufficient amount of pixels to shrink the header, in which case the
+first bundle of fixed areas should be used, and not otherwise. We would
+also require a second rule, asking the exact opposite for the second
+bundle. Finding the conditions changing the fixed areas may require a
+bit of experimenting on the field. In our website example, the header
+just retracts when more than 1000 pixels have been scrolled down, and
+expands again in the other case.</p>
 <p>The <em>eye_scroll_correct</em> function calls all rule functions at
-every line of the .csv file, and pass them a lot of arguments to work
-on. Working on complex set of rules is possible, but in any case, it
-will require you to write your own functions. The scenario presented
-here is easy enough to be modified whatever you level of expertise in R
-is, and should solve the vast majority of the use-case scenarios.</p>
+every line of the .csv file, and pass them several arguments to work on.
+Working on complex sets of rules is possible if you have the programming
+knowledge to do so. In any case, it will require you to write your own
+functions. The scenario presented here is easy enough to be modified
+whatever your level of expertise in R is, and should be appropriate for
+the vast majority of the use-case scenarios.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">rule_scrolled_up</span> <span class="op">&lt;-</span> <span class="kw">function</span> <span class="op">(</span><span class="va">data_line</span>, <span class="va">array_fixed_areas</span>, <span class="va">flag</span>, <span class="va">scroll</span><span class="op">)</span></span>
 <span><span class="op">{</span></span>
@@ -325,7 +325,7 @@ bundle of fixed areas. You can then just pass this list of rules to the
 <span><span class="va">bottom_right_fixed_area_screen</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1632</span>, <span class="fl">937</span>, <span class="fl">1919</span>, <span class="fl">1029</span><span class="op">)</span></span>
 <span><span class="va">bottom_right_fixed_area_image</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1632</span>, <span class="fl">4284</span>, <span class="fl">1919</span>, <span class="fl">4376</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">area_bundle</span> <span class="op">&lt;-</span> <span class="fu">fixed_areas_bundle</span><span class="op">(</span><span class="va">top_fixed_area_screen</span>,</span>
+<span><span class="va">area_bundle</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/fixed_areas_bundle.html">fixed_areas_bundle</a></span><span class="op">(</span><span class="va">top_fixed_area_screen</span>,</span>
 <span>                                  <span class="va">top_fixed_area_image</span>,</span>
 <span>                                  <span class="va">right_fixed_area_screen</span>,</span>
 <span>                                  <span class="va">right_fixed_area_image</span>,</span>
@@ -343,7 +343,7 @@ bundle of fixed areas. You can then just pass this list of rules to the
 <span><span class="va">bottom_right_fixed_area_bis_screen</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1632</span>, <span class="fl">937</span>, <span class="fl">1919</span>, <span class="fl">1029</span><span class="op">)</span></span>
 <span><span class="va">bottom_right_fixed_area_bis_image</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1632</span>, <span class="fl">4284</span>, <span class="fl">1919</span>, <span class="fl">4376</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">area_bundle_bis</span> <span class="op">&lt;-</span> <span class="fu">fixed_areas_bundle</span><span class="op">(</span><span class="va">top_fixed_area_bis_screen</span>,</span>
+<span><span class="va">area_bundle_bis</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/fixed_areas_bundle.html">fixed_areas_bundle</a></span><span class="op">(</span><span class="va">top_fixed_area_bis_screen</span>,</span>
 <span>                                      <span class="va">top_fixed_area_bis_image</span>,</span>
 <span>                                      <span class="va">right_fixed_area_bis_screen</span>,</span>
 <span>                                      <span class="va">right_fixed_area_bis_image</span>,</span>
@@ -393,8 +393,8 @@ bundle of fixed areas. You can then just pass this list of rules to the
 <span><span class="va">corrected_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/eye_scroll_correct.html">eye_scroll_correct</a></span><span class="op">(</span>eyes_data <span class="op">=</span> <span class="va">test_data</span>,</span>
 <span>                                     timestamp_start <span class="op">=</span> <span class="fl">8504</span>,</span>
 <span>                                     timestamp_stop <span class="op">=</span> <span class="fl">70478</span>,</span>
-<span>                                     image_height <span class="op">=</span> <span class="fl">4377</span>,</span>
 <span>                                     image_width <span class="op">=</span> <span class="fl">1920</span>,</span>
+<span>                                     image_height <span class="op">=</span> <span class="fl">4377</span>,</span>
 <span>                                     calibration <span class="op">=</span> <span class="va">calibration</span>,</span>
 <span>                                     fixed_areas <span class="op">=</span> <span class="va">fixed_areas</span>,</span>
 <span>                                     rules <span class="op">=</span> <span class="va">rules</span><span class="op">)</span></span>

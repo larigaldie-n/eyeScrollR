@@ -2,14 +2,18 @@
 % Please edit documentation in R/eye_scroll.R
 \name{rule_true}
 \alias{rule_true}
-\title{rule_true}
+\title{A rule that is always true}
 \usage{
-rule_true(data_line, array_fixed_areas, flag, scroll)
+rule_true(data_line, fixed_areas_bundle, flag, scroll)
 }
 \arguments{
-\item{data_line}{The current line in the .csv file}
+\item{data_line}{The current line in the .csv file. Includes all the original
+columns, along with a new "Timestamp.shifted" column (Timestamp - time_shit),
+along with "Corrected.X" and "Corrected.Y" columns, which are "Fixation.X"
+and "Fixation.Y" respectively shifted by top_left_x and top_left_y of the
+calibration stage}
 
-\item{array_fixed_areas}{The array of fixed areas linked to this rule}
+\item{fixed_areas_bundle}{The bundle of fixed areas linked to this rule}
 
 \item{flag}{A boolean that says if this rule is TRUE or FALSE at the moment}
 
@@ -21,11 +25,15 @@ A boolean saying if this rule should now be enforced or not
 }
 \description{
 Helper function to enforce fixed area rules (this one is always
-    true, meaning that this rule should always be enforced). NB: you should
-    never have to call this function yourself, but you can use it as a basis
-    to create your own rule. All arguments are automatically passed to any
-    rule function by eye_scroll_correct
+    true, meaning that this rule should always be enforced). This rule is the
+    default one for any fixed area bundle which has no rule attached to it.
+    All arguments are automatically passed to any rule function by
+    eye_scroll_correct
 }
 \examples{
+rule_true <- function (data_line, fixed_areas_bundle, flag, scroll)
+{
+  return (TRUE)
+}
 rules <- list(rule_before_scrolling, rule_after_scrolling, rule_true)
 }

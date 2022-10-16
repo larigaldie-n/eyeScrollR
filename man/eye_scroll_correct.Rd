@@ -8,8 +8,8 @@ eye_scroll_correct(
   eyes_data,
   timestamp_start,
   timestamp_stop,
-  image_height,
   image_width,
+  image_height,
   calibration,
   time_shift = 0,
   starting_scroll = 0,
@@ -27,9 +27,9 @@ eye_scroll_correct(
 
 \item{timestamp_stop}{The final timestamp from the dataset at which the participant was watching the webpage (INCLUDING the time_shift, if applicable)}
 
-\item{image_height}{The total height of the webpage image (in pixels)}
-
 \item{image_width}{The total width of the webpage image (in pixels)}
+
+\item{image_height}{The total height of the webpage image (in pixels)}
 
 \item{calibration}{A calibration list (see the \code{\link{scroll_calibration_auto}} or the \code{\link{scroll_calibration_manual}} functions)}
 
