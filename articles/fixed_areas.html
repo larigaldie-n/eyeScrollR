@@ -93,7 +93,7 @@
 Left: the screenshot image; Right: the unscrolled webpage image
 </p>
 </div>
-<p>Repeat the process for every fixed area you may encounter. All that is left to do now is to actually pass these coordinates in a form the package can recognize. In order to do that, you just need to create pairs of coordinate vectors, and pass these to the fixed_areas_bundle function as vectors with the form <em>c(top_left_x, top_left_y, bottom_right_x, bottom_right_y)</em>. For example, we measured the following values:</p>
+<p>Repeat the process for every fixed area you may encounter. All that is left to do now is to actually pass these coordinates in a form the package can recognize. In order to do that, you just need to create pairs of coordinate vectors, and pass these to the <em>fixed_areas_bundle</em> function as vectors with the form <em>c(top_left_x, top_left_y, bottom_right_x, bottom_right_y)</em>. For example, we measured the following values:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># These two are the top header</span></span>
 <span><span class="va">top_fixed_area_screen</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">89</span>, <span class="fl">1919</span>, <span class="fl">276</span><span class="op">)</span></span>
@@ -113,7 +113,7 @@ Left: the screenshot image; Right: the unscrolled webpage image
 <span>                                  <span class="va">bottom_right_fixed_area_image</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">fixed_areas</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">area_bundle</span><span class="op">)</span></span></code></pre></div>
-<p>It is imperative that you pass the arguments in ordered pairs of screen-to-image mappings, and that you put the result in a list (we will come to the reason why in the next section). Your rectangles MUST also have the exact same dimensions.</p>
+<p>It is imperative that you pass the arguments in ordered pairs of screen-to-image mappings, and that you put the result in a list (we will come to the reason why in the next section). Your rectangle pairs MUST also have the exact same dimensions.</p>
 <p>Once this is done, and provided that you already did the calibration procedure, simply pass the <em>fixed_areas</em> argument to the <em>eye_scroll_correct</em> function:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">corrected_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/eye_scroll_correct.html">eye_scroll_correct</a></span><span class="op">(</span>eyes_data <span class="op">=</span> <span class="va">test_data</span>,</span>
@@ -123,6 +123,7 @@ Left: the screenshot image; Right: the unscrolled webpage image
 <span>                                     image_height <span class="op">=</span> <span class="fl">4377</span>,</span>
 <span>                                     calibration <span class="op">=</span> <span class="va">calibration</span>,</span>
 <span>                                     fixed_areas <span class="op">=</span> <span class="va">fixed_areas</span><span class="op">)</span></span></code></pre></div>
+<p>This should be enough for simple situations with fixed areas that never change.</p>
 </div>
 <div class="section level2">
 <h2 id="the-rules-list">The rules list<a class="anchor" aria-label="anchor" href="#the-rules-list"></a>
@@ -136,9 +137,9 @@ Top: before the shrinking; Bottom: after the shrinking
 </p>
 </div>
 <p>The right area is a critical-case scenario, where the researcher will have to make a decision and may solve things creatively. Indeed, the size of this area once the header has shrunk is now bigger than the one we got on the captured unscrolled image. We can therefore no longer make a perfect mapping of the two areas. In some cases, this might mean that it is impossible to map everything in a single image, and you might consider splitting your participant’s data to have several images.</p>
-<p>However in this particular case, we can choose to ignore this, or even do some manual editing to the unscrolled image to expand the area! Indeed, the empty area below the one we are interested in is never reachable to an observer: there will always be something on the right of the page, and the long band of white is only an artifact of the screenshot plugin. As such, it is no problem to just make the following mapping:</p>
+<p>However in this particular case, we can choose to ignore this, or even do some manual editing to the unscrolled image to expand the area! Indeed, the empty area below the one we are interested in is otherwise never reachable to an observer: there will always be something on the right of the page, and the long band of white is only an artifact of the screenshot plugin. As such, it is no problem to just make the following mapping:</p>
 <p><img src="rules_ex_right.png" width="100%"></p>
-<p>In this situation, the bottom right coordinates of the fixed area on the unscrolled image can be calculated by making sure the two areas have the exact same size.</p>
+<p>In this situation, the bottom right coordinates of the fixed area on the unscrolled image can be calculated by making sure the two areas (the one on the screen and the one on the image) have the exact same size.</p>
 <p>In our case, we ended up with the following measures:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># These two are the top header</span></span>
@@ -159,7 +160,7 @@ Top: before the shrinking; Bottom: after the shrinking
 <span>                                  <span class="va">bottom_right_fixed_area_bis_image</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">fixed_areas</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">area_bundle</span>, <span class="va">area_bundle_bis</span><span class="op">)</span></span></code></pre></div>
-<p>This time, the fixed_areas list comprises two bundles of mappings: the one that should be used BEFORE the user has scrolled down enough to shrink the top header, and the one that should be used AFTER.</p>
+<p>This time, the <em>fixed_areas</em> list comprises two bundles of mappings: the one that should be used <strong>before</strong> the user has scrolled down enough to shrink the top header, and the one that should be used <strong>after</strong>.</p>
 <p>The only thing left to do is to create a <em>rules</em> list, so that the package can know when to use which bundle.</p>
 <p>A rule is a function that checks, at each line of the .csv file, if conditions to use a specific bundle are met or not. In our case here, we would need a first rule asking if the user has not scrolled down a sufficient amount of pixels to shrink the header, in which case the first bundle of fixed areas should be used, and not otherwise. We would also require a second rule, asking the exact opposite for the second bundle. Finding the conditions changing the fixed areas may require a bit of experimenting on the field. In our website example, the header just retracts when more than 1000 pixels have been scrolled down, and expands again in the other case.</p>
 <p>The <em>eye_scroll_correct</em> function calls all rule functions at every line of the .csv file, and pass them several arguments to work on. Working on complex sets of rules is possible if you have the programming knowledge to do so. In any case, it will require you to write your own functions. The scenario presented here is easy enough to be modified whatever your level of expertise in R is, and should be appropriate for the vast majority of the use-case scenarios.</p>
@@ -189,7 +190,8 @@ Top: before the shrinking; Bottom: after the shrinking
 <span><span class="op">}</span></span>
 <span></span>
 <span><span class="va">rules</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">rule_scrolled_up</span>, <span class="va">rule_scrolled_down</span><span class="op">)</span></span></code></pre></div>
-<p>The order of these rules must be the same as the order of the fixed areas bundles. In our case, the <em>rule_scrolled_up</em> rule will therefore make sure that the first bundle of fixed areas will be used when less than 1000 pixels have been scrolled down, and no longer be used should it not be the case. Similarly, the <em>rule_scrolled_down</em> rule will be associated with the second bundle of fixed areas. You can then just pass this list of rules to the <em>eye_scroll_correct</em> function:</p>
+<p>The order of these rules must be the same as the order of the fixed areas bundles. In our case, the <em>rule_scrolled_up</em> rule will therefore make sure that the first bundle of fixed areas will be used when less than 1000 pixels have been scrolled down, and no longer be used should it not be the case. Similarly, the <em>rule_scrolled_down</em> rule will be associated with the second bundle of fixed areas. You can copy and paste these functions and simply change the number <em>1000</em> in each of them to fit your needs if you are in a similar case.</p>
+<p>You can then just pass this list of rules to the <em>eye_scroll_correct</em> function:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">corrected_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/eye_scroll_correct.html">eye_scroll_correct</a></span><span class="op">(</span>eyes_data <span class="op">=</span> <span class="va">test_data</span>,</span>
 <span>                                     timestamp_start <span class="op">=</span> <span class="fl">3577</span>,</span>
