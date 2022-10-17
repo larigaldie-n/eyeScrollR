@@ -48,7 +48,7 @@ In a similar way as the manual calibration procedure, just open a screenshot of 
 knitr::include_graphics("fixed_areas_mapping.png")
 ```
 
-Repeat the process for every fixed area you may encounter. All that is left to do now is to actually pass these coordinates in a form the package can recognize. In order to do that, you just need to create pairs of coordinate vectors, and pass these to the fixed_areas_bundle function as vectors with the form *c(top_left_x, top_left_y, bottom_right_x, bottom_right_y)*. For example, we measured the following values:
+Repeat the process for every fixed area you may encounter. All that is left to do now is to actually pass these coordinates in a form the package can recognize. In order to do that, you just need to create pairs of coordinate vectors, and pass these to the *fixed_areas_bundle* function as vectors with the form *c(top_left_x, top_left_y, bottom_right_x, bottom_right_y)*. For example, we measured the following values:
 
 ```{r eval=FALSE}
 # These two are the top header
@@ -71,7 +71,7 @@ area_bundle <- fixed_areas_bundle(top_fixed_area_screen,
 fixed_areas <- list(area_bundle)
 ```
 
-It is imperative that you pass the arguments in ordered pairs of screen-to-image mappings, and that you put the result in a list (we will come to the reason why in the next section). Your rectangles MUST also have the exact same dimensions.
+It is imperative that you pass the arguments in ordered pairs of screen-to-image mappings, and that you put the result in a list (we will come to the reason why in the next section). Your rectangle pairs MUST also have the exact same dimensions.
 
 Once this is done, and provided that you already did the calibration procedure, simply pass the *fixed_areas* argument to the *eye_scroll_correct* function:
 
@@ -84,6 +84,8 @@ corrected_data <- eye_scroll_correct(eyes_data = test_data,
                                      calibration = calibration,
                                      fixed_areas = fixed_areas)
 ```
+
+This should be enough for simple situations with fixed areas that never change.
 
 # The rules list
 
@@ -99,13 +101,13 @@ knitr::include_graphics("rules_ex.png")
 
 The right area is a critical-case scenario, where the researcher will have to make a decision and may solve things creatively. Indeed, the size of this area once the header has shrunk is now bigger than the one we got on the captured unscrolled image. We can therefore no longer make a perfect mapping of the two areas. In some cases, this might mean that it is impossible to map everything in a single image, and you might consider splitting your participant's data to have several images.
 
-However in this particular case, we can choose to ignore this, or even do some manual editing to the unscrolled image to expand the area! Indeed, the empty area below the one we are interested in is never reachable to an observer: there will always be something on the right of the page, and the long band of white is only an artifact of the screenshot plugin. As such, it is no problem to just make the following mapping:
+However in this particular case, we can choose to ignore this, or even do some manual editing to the unscrolled image to expand the area! Indeed, the empty area below the one we are interested in is otherwise never reachable to an observer: there will always be something on the right of the page, and the long band of white is only an artifact of the screenshot plugin. As such, it is no problem to just make the following mapping:
 
 ```{r, echo=FALSE, out.width="100%"}
 knitr::include_graphics("rules_ex_right.png")
 ```
 
-In this situation, the bottom right coordinates of the fixed area on the unscrolled image can be calculated by making sure the two areas have the exact same size.
+In this situation, the bottom right coordinates of the fixed area on the unscrolled image can be calculated by making sure the two areas (the one on the screen and the one on the image) have the exact same size.
 
 In our case, we ended up with the following measures:
 
@@ -130,7 +132,7 @@ area_bundle_bis <- fixed_areas_bundle(top_fixed_area_bis_screen,
 fixed_areas <- list(area_bundle, area_bundle_bis)
 ```
 
-This time, the fixed_areas list comprises two bundles of mappings: the one that should be used BEFORE the user has scrolled down enough to shrink the top header, and the one that should be used AFTER.
+This time, the *fixed_areas* list comprises two bundles of mappings: the one that should be used **before** the user has scrolled down enough to shrink the top header, and the one that should be used **after**.
 
 The only thing left to do is to create a *rules* list, so that the package can know when to use which bundle.
 
@@ -166,7 +168,9 @@ rule_scrolled_down <- function (data_line, array_fixed_areas, flag, scroll)
 rules <- list(rule_scrolled_up, rule_scrolled_down)
 ```
 
-The order of these rules must be the same as the order of the fixed areas bundles. In our case, the *rule_scrolled_up* rule will therefore make sure that the first bundle of fixed areas will be used when less than 1000 pixels have been scrolled down, and no longer be used should it not be the case. Similarly, the *rule_scrolled_down* rule will be associated with the second bundle of fixed areas. You can then just pass this list of rules to the *eye_scroll_correct* function:
+The order of these rules must be the same as the order of the fixed areas bundles. In our case, the *rule_scrolled_up* rule will therefore make sure that the first bundle of fixed areas will be used when less than 1000 pixels have been scrolled down, and no longer be used should it not be the case. Similarly, the *rule_scrolled_down* rule will be associated with the second bundle of fixed areas. You can copy and paste these functions and simply change the number *1000* in each of them to fit your needs if you are in a similar case.
+
+You can then just pass this list of rules to the *eye_scroll_correct* function:
 
 ```{r eval=FALSE}
 corrected_data <- eye_scroll_correct(eyes_data = test_data,
