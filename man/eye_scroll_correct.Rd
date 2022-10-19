@@ -16,8 +16,7 @@ eye_scroll_correct(
   output_file = "",
   fixed_areas = list(),
   rules = list(),
-  outside_image_is_na = TRUE,
-  na.rm = TRUE
+  outside_image_is_na = TRUE
 )
 }
 \arguments{
@@ -44,8 +43,6 @@ eye_scroll_correct(
 \item{rules}{[Optional] A list of functions that can act as rules to activate/deactivate immovables areas in the webpage (e.g. a menu that disappears after X pixels have been scrolled) - See the Fixed Areas article for more information. Default: empty list}
 
 \item{outside_image_is_na}{[Optional] Indicates if values outside the AOI (e.g. the windows bar) should be set to NA or kept in the file/dataset. If set to FALSE, coordinates above/before the AOI will become negative. Default: TRUE}
-
-\item{na.rm}{[Optional] Indicates if lines with NA y values should be dropped in the final file/dataset. Default: TRUE}
 }
 \value{
 Returns the same dataset with added columns of corrected x, y and shifted timestamps (named "Corrected.X", "Corrected.Y", and "Timestamps.shifted")

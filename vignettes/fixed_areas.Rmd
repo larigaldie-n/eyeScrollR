@@ -16,7 +16,7 @@ knitr::opts_chunk$set(
 
 # The fixed_areas list
 
-Lots of website nowadays have areas that do not move with the rest of the scrolled areas. Typically those are navigation menus at the very top and/or on the right, and footers. The problem with those is that even if the page has been scrolled to the very bottom, gazing at the top menu means that, on the unscrolled webpage image, the gaze has suddenly moved from the very bottom of the page to the very top without scrolling back.
+Today, many websites have areas that do not move with the rest of the scrolled areas. Typically those are navigation menus at the very top and/or on the right, and footers. The problem with those is that even if the page has been scrolled to the very bottom, gazing at the top menu means that, on the unscrolled webpage image, the gaze has suddenly moved from the very bottom of the page to the very top without scrolling back.
 
 For instance, consider this website (which you can find [here](../test_page.html "test page")):
 
@@ -24,31 +24,31 @@ For instance, consider this website (which you can find [here](../test_page.html
 knitr::include_graphics("fixed_full.png")
 ```
 
-For the moment, let's just ignore the fact that the top area ends up shrinking at some point; we will come back to this later.
+For the moment, let us just ignore the fact that the top area ends up shrinking at some point; we will come back to this later.
 
-Areas at the top and on the right are all fixed, so if you scroll down a little, only some of the content is actually moving on the screen. The unscrolled webpage image may look like this (although the result may slightly differ depending on the plugin you are using to extract the image):
+The areas at the top and on the right are all fixed, so if you scroll down a bit, only some of the content is actually moving on the screen. The unscrolled webpage image may look like this (although the result may slightly differ depending on the plugin you are using to extract the image):
 
 ```{r, echo=FALSE, out.width="100%"}
 knitr::include_graphics("fixed_website.png")
 ```
 
-What we really want, is to instruct the program that no matter how far down we scrolled, there are areas on the screen that will always be mapped to the same area on the webpage image (while the rest may move around).
+What we really want is to instruct the program that no matter how far down we scrolled, there are areas on the screen that will always be mapped to the same area on the webpage image (while the rest may move around).
 
-In the below example, we show how slightly scrolling down (while fixating the same content) should only make the program apply a scroll correction to the fixation on the scrollable content (green dot), while redirecting the fixed areas to other fixed areas across the webpage image (red, blue and yellow dots). As such, fixations on the top right image after a few scrolls should result in the exact same heatmap as on the top left image, before any scroll were made.
+In the below example, we show how slightly scrolling down (while gazing at the same content) should only make the program apply a scroll correction to coordinates on the scrollable content (green dot), while redirecting the fixed areas to other fixed areas across the webpage image (red, blue, and yellow dots). As such, fixation on the top right image after a few scrolls should result in the exact same heatmap as on the top left image, before any scroll was made.
 
 ```{r, echo=FALSE, out.width="100%"}
 knitr::include_graphics("fixed_example_full.png")
 ```
 
-The way to achieve this in eyeScrollR is, as the rectangles in the above image suggested, to map a fixed relationship between areas from the screen to areas on the image. Fixations in the red rectangle on the screen should always map to fixations in the red rectangle on the image, the blue area on the screen should always map to blue rectangle on the image, and the yellow area on the screen should always map to yellow rectangle on the image.
+The way to achieve this in eyeScrollR is, as the rectangles in the above image suggested, to map a fixed relationship between areas from the screen to areas on the image. Gaze and fixation coordinates in the red rectangle on the screen should always be redirected to the red rectangle on the image, the blue area on the screen to the blue rectangle on the image, and the yellow area to the yellow rectangle on the image.
 
-In a similar way as the manual calibration procedure, just open a screenshot of your screen while browsing the website, and get the coordinates of the top left and bottom right pixels of any fixed area you want to map to your unscrolled image. Once this is done, you can do the same with the destination coordinates on the unscrolled image, as so:
+In a similar way as the manual calibration procedure, just open a screenshot of your screen while browsing the website, and get the coordinates of the top left and bottom right pixels of any fixed area you want to map to your unscrolled image. Once this is done, you can do the same with the destination coordinates on the unscrolled image, as in the following:
 
 ```{r, echo=FALSE, out.width="100%", fig.cap = "Left: the screenshot image; Right: the unscrolled webpage image"}
 knitr::include_graphics("fixed_areas_mapping.png")
 ```
 
-Repeat the process for every fixed area you may encounter. All that is left to do now is to actually pass these coordinates in a form the package can recognize. In order to do that, you just need to create pairs of coordinate vectors, and pass these to the *fixed_areas_bundle* function as vectors with the form *c(top_left_x, top_left_y, bottom_right_x, bottom_right_y)*. For example, we measured the following values:
+Repeat the process for every fixed area you may encounter. All that is left to do now is to actually pass these coordinates in a form that the package can recognize. In order to do that, you just need to create pairs of coordinate vectors and pass these to the *fixed_areas_bundle* function as vectors with the form *c(top_left_x, top_left_y, bottom_right_x, bottom_right_y)*. For example, we measured the following values:
 
 ```{r eval=FALSE}
 # These two are the top header
@@ -73,7 +73,7 @@ fixed_areas <- list(area_bundle)
 
 It is imperative that you pass the arguments in ordered pairs of screen-to-image mappings, and that you put the result in a list (we will come to the reason why in the next section). Your rectangle pairs MUST also have the exact same dimensions.
 
-Once this is done, and provided that you already did the calibration procedure, simply pass the *fixed_areas* argument to the *eye_scroll_correct* function:
+Once this is done, provided that you already did the calibration procedure, simply pass the *fixed_areas* argument to the *eye_scroll_correct* function:
 
 ```{r eval=FALSE}
 corrected_data <- eye_scroll_correct(eyes_data = test_data,
@@ -89,9 +89,9 @@ This should be enough for simple situations with fixed areas that never change.
 
 # The rules list
 
-The most complicated use-case scenario that eyeScrollR can handle is when those fixed areas have a somewhat dynamic behaviour. The most common example is a top menu bar that shrinks (or even disappears!) when a certain number of pixels have been scrolled down. In these situations, if a screen-to-image direct mapping is still meaningful across the different possible states of the webpage, it is possible to create several bundles of fixed areas mappings, and create rules to instruct the package which bundle should be used at what time.
+The most complicated use-case scenario that eyeScrollR can handle is when those fixed areas have a somewhat dynamic behaviour. The most common example is a top menu bar that shrinks (or even disappears!) when a certain number of pixels have been scrolled down. In these situations, if a screen-to-image direct mapping is still meaningful across the different possible states of the webpage, it is possible to create several bundles of fixed areas mappings and create rules to instruct the package which bundle should be used at what time.
 
-For instance, you could create a bundle of mappings to be used when a user has not scrolled down yet, and another one to be used only once they have.
+For instance, you could create a bundle of mappings to be used when a user has not scrolled down yet and another one to be used only once they have.
 
 The [example](../test_page.html "test page") we provide is a situation in which the screen-to-image mapping is still meaningful. Indeed, although the top area shrinks, what remains can still be perfectly mapped to the unscrolled image, as the whole area of the shrunken header still has perfect correspondance (as so the bottom right area):
 
@@ -99,15 +99,15 @@ The [example](../test_page.html "test page") we provide is a situation in which 
 knitr::include_graphics("rules_ex.png")
 ```
 
-The right area is a critical-case scenario, where the researcher will have to make a decision and may solve things creatively. Indeed, the size of this area once the header has shrunk is now bigger than the one we got on the captured unscrolled image. We can therefore no longer make a perfect mapping of the two areas. In some cases, this might mean that it is impossible to map everything in a single image, and you might consider splitting your participant's data to have several images.
+The right area is a critical-case scenario where the researcher will have to make a decision and may solve things creatively. Indeed, the size of this area once the header has shrunk is now larger than the one we got on the captured unscrolled image. Therefore, we can no longer make a perfect mapping of the two areas. In some cases, this might mean that it is impossible to map everything in a single image, and you might consider splitting your participant's data to have several images.
 
-However in this particular case, we can choose to ignore this, or even do some manual editing to the unscrolled image to expand the area! Indeed, the empty area below the one we are interested in is otherwise never reachable to an observer: there will always be something on the right of the page, and the long band of white is only an artifact of the screenshot plugin. As such, it is no problem to just make the following mapping:
+However, in this particular case, we can choose to ignore this, or even do some manual editing to the unscrolled image to expand the area! Indeed, the empty area below the one we are interested in is otherwise never reachable to an observer: there will always be something on the right of the page, and the long band of white is only an artifact of the screenshot plugin. As such, it is possible to just make the following mapping:
 
 ```{r, echo=FALSE, out.width="100%"}
 knitr::include_graphics("rules_ex_right.png")
 ```
 
-In this situation, the bottom right coordinates of the fixed area on the unscrolled image can be calculated by making sure the two areas (the one on the screen and the one on the image) have the exact same size.
+In this situation, the bottom-right coordinates of the fixed area on the unscrolled image can be calculated by making sure that the two areas (the one on the screen and the one on the image) have the exact same size.
 
 In our case, we ended up with the following measures:
 
@@ -136,9 +136,9 @@ This time, the *fixed_areas* list comprises two bundles of mappings: the one tha
 
 The only thing left to do is to create a *rules* list, so that the package can know when to use which bundle.
 
-A rule is a function that checks, at each line of the .csv file, if conditions to use a specific bundle are met or not. In our case here, we would need a first rule asking if the user has not scrolled down a sufficient amount of pixels to shrink the header, in which case the first bundle of fixed areas should be used, and not otherwise. We would also require a second rule, asking the exact opposite for the second bundle. Finding the conditions changing the fixed areas may require a bit of experimenting on the field. In our website example, the header just retracts when more than 1000 pixels have been scrolled down, and expands again in the other case.
+A rule is a function that checks, at each line of the .csv file, if conditions to use a specific bundle are met or not. In our case here, we would need a first rule asking if the user has not scrolled down a sufficient amount of pixels to shrink the header, in which case the first bundle of fixed areas should be used, and not otherwise. We would also require a second rule, asking the exact opposite for the second bundle. Finding the conditions that change the fixed areas may require some experimentation in the field. In our website example, the header just retracts when more than 1000 pixels have been scrolled down, and expands again in the other case.
 
-The *eye_scroll_correct* function calls all rule functions at every line of the .csv file, and pass them several arguments to work on. Working on complex sets of rules is possible if you have the programming knowledge to do so. In any case, it will require you to write your own functions. The scenario presented here is easy enough to be modified whatever your level of expertise in R is, and should be appropriate for the vast majority of the use-case scenarios.
+The *eye_scroll_correct* function calls all rule functions at every line of the .csv file and pass them several arguments to work on. Working on complex sets of rules is possible if you have the programming knowledge to do so. In any case, it will require you to write your own functions. The scenario presented here is easy enough to be modified whatever your level of expertise in R is and should be appropriate for the vast majority of the use-case scenarios.
 
 ```{r eval=FALSE}
 rule_scrolled_up <- function (data_line, array_fixed_areas, flag, scroll)
@@ -168,7 +168,7 @@ rule_scrolled_down <- function (data_line, array_fixed_areas, flag, scroll)
 rules <- list(rule_scrolled_up, rule_scrolled_down)
 ```
 
-The order of these rules must be the same as the order of the fixed areas bundles. In our case, the *rule_scrolled_up* rule will therefore make sure that the first bundle of fixed areas will be used when less than 1000 pixels have been scrolled down, and no longer be used should it not be the case. Similarly, the *rule_scrolled_down* rule will be associated with the second bundle of fixed areas. You can copy and paste these functions and simply change the number *1000* in each of them to fit your needs if you are in a similar case.
+The order of these rules must be the same as the order of the fixed areas bundles. In our case, the *rule_scrolled_up* rule will therefore make sure that the first bundle of fixed areas will be used when less than 1000 pixels have been scrolled down and no longer be used should it not be the case. Similarly, the *rule_scrolled_down* rule will be associated with the second bundle of fixed areas. You can copy and paste these functions and simply change the number *1000* in each of them to fit your needs if you are in a similar case.
 
 You can then just pass this list of rules to the *eye_scroll_correct* function:
 

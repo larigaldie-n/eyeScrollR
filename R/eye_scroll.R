@@ -158,14 +158,14 @@ check_calibration_line <- function(line, coordinate, reverse)
 
 # Checks which rules are true, and returns y coordinates of fixations if
 # it is inside a fixed area if its association rule its true
-enforce_rules <- function(flags, fixed_areas, data_line)
+enforce_rules <- function(flags, fixed_areas, data_line, columns_to_correct)
 {
   y <- NA
   for (flag_num in seq_len(length(flags)))
   {
     if (flags[flag_num])
     {
-      y <- resolve_fixed_box(fixed_areas[[flag_num]], data_line$Corrected.X, data_line$Corrected.Y)
+      y <- resolve_fixed_box(fixed_areas[[flag_num]], data_line[[columns_to_correct[1]]], data_line[[columns_to_correct[2]]])
       if (!is.na(y))
       {
         break
@@ -178,13 +178,16 @@ enforce_rules <- function(flags, fixed_areas, data_line)
 # Check if a fixation point is inside a given fixed area
 resolve_fixed_box <- function(fixed_areas_bundle, x, y)
 {
-  for (i in 1:dim(fixed_areas_bundle)[3])
+  if (!is.na(x) && !is.na(y))
   {
-    if(x >= fixed_areas_bundle[1,1,i] && x <= fixed_areas_bundle[3,1,i])
+    for (i in 1:dim(fixed_areas_bundle)[3])
     {
-      if(y >= fixed_areas_bundle[2,1,i] && y <= fixed_areas_bundle[4,1,i])
+      if(x >= fixed_areas_bundle[1,1,i] && x <= fixed_areas_bundle[3,1,i])
       {
-        return (y + (fixed_areas_bundle[4,2,i] - fixed_areas_bundle[4,1,i]))
+        if(y >= fixed_areas_bundle[2,1,i] && y <= fixed_areas_bundle[4,1,i])
+        {
+          return (y + (fixed_areas_bundle[4,2,i] - fixed_areas_bundle[4,1,i]))
+        }
       }
     }
   }
@@ -499,7 +502,6 @@ scroll_calibration_auto <- function(calibration_image, scroll_pixels)
 #' @param fixed_areas [Optional] A list of potentially immovable areas inside the webpage (e.g. fixed menus in a website) - see the Fixed Areas article for more information. Default: empty list
 #' @param rules [Optional] A list of functions that can act as rules to activate/deactivate immovables areas in the webpage (e.g. a menu that disappears after X pixels have been scrolled) - See the Fixed Areas article for more information. Default: empty list
 #' @param outside_image_is_na [Optional] Indicates if values outside the AOI (e.g. the windows bar) should be set to NA or kept in the file/dataset. If set to FALSE, coordinates above/before the AOI will become negative. Default: TRUE
-#' @param na.rm [Optional] Indicates if lines with NA y values should be dropped in the final file/dataset. Default: TRUE
 #'
 #' @details
 #' \strong{The Dataset} \cr\cr
@@ -526,7 +528,7 @@ scroll_calibration_auto <- function(calibration_image, scroll_pixels)
 
 #' @export
 #' @importFrom rlang .data
-eye_scroll_correct <- function (eyes_data, timestamp_start, timestamp_stop, image_width, image_height, calibration, time_shift=0, starting_scroll = 0, output_file = "", fixed_areas = list(), rules = list(), outside_image_is_na = TRUE, na.rm=TRUE)
+eye_scroll_correct <- function (eyes_data, timestamp_start, timestamp_stop, image_width, image_height, calibration, time_shift=0, starting_scroll = 0, output_file = "", fixed_areas = list(), rules = list(), outside_image_is_na = TRUE)
 {
   scroll_pixels <- calibration$scroll_pixels
   screen_width <- calibration$screen_width
@@ -544,6 +546,23 @@ eye_scroll_correct <- function (eyes_data, timestamp_start, timestamp_stop, imag
   corrected_y <- c()
   scroll_vector <- c()
   min_scroll <- 0
+  columns_to_correct <- c()
+  corrected_columns <- dplyr::tibble(.rows = dim(eyes_data)[1])
+  if("Gaze.X" %in% names(eyes_data) && "Gaze.Y" %in% names(eyes_data))
+  {
+    columns_to_correct <- append(columns_to_correct, "Gaze.X")
+    columns_to_correct <- append(columns_to_correct, "Gaze.Y")
+  }
+  if("Fixation.X" %in% names(eyes_data) && "Fixation.Y" %in% names(eyes_data))
+  {
+    columns_to_correct <- append(columns_to_correct, "Fixation.X")
+    columns_to_correct <- append(columns_to_correct, "Fixation.Y")
+  }
+  if(length(columns_to_correct) == 0)
+  {
+    stop("Please input a dataset with either Gaze, Fixation or both data, with column names Gaze.X, Gaze.Y, Fixation.X and Fixation.Y")
+  }
+
   rules <- check_fixed_areas_rules(fixed_areas, rules)
   flags <- c(rep(TRUE, length(rules)))
   for (i in 1:length(fixed_areas))
@@ -551,8 +570,12 @@ eye_scroll_correct <- function (eyes_data, timestamp_start, timestamp_stop, imag
     fixed_areas[[i]] <- fixed_areas[[i]] - c(top_left_x,top_left_y,top_left_x,top_left_y, 0, 0, 0, 0)
   }
   max_scroll <- image_height - (bottom_right_y - top_left_y + 2) # +2 because bottom_right_y and top_left_y are coordinates
-  eyes_data$Corrected.Y <- vapply(eyes_data$Fixation.Y, shift_image_by_dimension, shift_before = top_left_y, shift_after = shift_bottom, screen_dimension = screen_height, outside_image_is_na = outside_image_is_na, FUN.VALUE = 1.0)
-  eyes_data$Corrected.X <- vapply(eyes_data$Fixation.X, shift_image_by_dimension, shift_before = top_left_x, shift_after = shift_right, screen_dimension = screen_width, outside_image_is_na = outside_image_is_na, FUN.VALUE = 1.0)
+
+  for (i in seq(1,length(columns_to_correct), 2))
+  {
+    corrected_columns[columns_to_correct[i]] <- vapply(eyes_data[[columns_to_correct[i]]], shift_image_by_dimension, shift_before = top_left_x, shift_after = shift_right, screen_dimension = screen_width, outside_image_is_na = outside_image_is_na, FUN.VALUE = 1.0)
+    corrected_columns[columns_to_correct[i+1]] <- vapply(eyes_data[[columns_to_correct[i+1]]], shift_image_by_dimension, shift_before = top_left_y, shift_after = shift_bottom, screen_dimension = screen_height, outside_image_is_na = outside_image_is_na, FUN.VALUE = 1.0)
+  }
 
   for (line in 1:dim(eyes_data)[1])
   {
@@ -560,26 +583,26 @@ eye_scroll_correct <- function (eyes_data, timestamp_start, timestamp_stop, imag
     scroll <- shift_scroll(event, eyes_data[line ,], scroll, min_scroll, max_scroll, scroll_pixels, top_left_x, top_left_y, bottom_right_x, bottom_right_y)
     scroll_vector[line] <- scroll
     flags <- check_rules_true(rules, eyes_data[line, ], flags, fixed_areas, scroll)
-    if (!is.na(eyes_data[line, ]$Corrected.Y))
+
+    for (i in seq(1,length(columns_to_correct), 2))
     {
-      corrected_y[line] <- enforce_rules(flags, fixed_areas, eyes_data[line, ])
-      if (is.na(corrected_y[line]))
+      corrected_y <- enforce_rules(flags, fixed_areas, corrected_columns[line, ], columns_to_correct[i:(i+1)])
+      if (is.na(corrected_y))
       {
-        corrected_y[line] <- eyes_data[line, ]$Corrected.Y+scroll
+        corrected_columns[line, columns_to_correct[i+1]] <- corrected_columns[[line, columns_to_correct[i+1]]] + scroll
       }
-    }
-    else
-    {
-      corrected_y[line] <- NA
+      else
+      {
+        corrected_columns[line, columns_to_correct[i+1]] <- corrected_y
+      }
     }
   }
 
-  eyes_data$Corrected.Y <- corrected_y
-  eyes_data$Scroll <- scroll_vector
-  if (na.rm)
+  for(name in names(corrected_columns))
   {
-    eyes_data <- eyes_data[stats::complete.cases(eyes_data[, 'Corrected.Y']),]
+    eyes_data[paste("Corrected.",name, sep="")] <- corrected_columns[name]
   }
+  eyes_data$Scroll <- scroll_vector
   if (output_file != "")
   {
     utils::write.csv(eyes_data, file = output_file, row.names = FALSE, na="")
@@ -606,8 +629,9 @@ eye_scroll_correct <- function (eyes_data, timestamp_start, timestamp_stop, imag
 #' @importFrom rlang .data
 generate_heatmap <- function(data, heatmap_image)
 {
-  data$Corrected.Y <- dim(heatmap_image)[1] - data$Corrected.Y
-  ggplot2::ggplot(data, ggplot2::aes(.data$Corrected.X, .data$Corrected.Y))  +
+  data <- data[stats::complete.cases(data[, 'Corrected.Fixation.Y']),]
+  data$Corrected.Fixation.Y <- dim(heatmap_image)[1] - data$Corrected.Fixation.Y
+  ggplot2::ggplot(data, ggplot2::aes(.data$Corrected.Fixation.X, .data$Corrected.Fixation.Y))  +
     ggplot2::annotation_raster(heatmap_image, xmin=-Inf, xmax=Inf, ymin=-Inf, ymax=Inf)+
     ggplot2::stat_density2d(geom = "polygon", ggplot2::aes(fill=.data$..level.., alpha = 0.15)) +
     ggplot2::geom_point(size=1)+
