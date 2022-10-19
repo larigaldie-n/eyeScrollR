@@ -542,6 +542,7 @@ eye_scroll_correct <- function (eyes_data, timestamp_start, timestamp_stop, imag
   eyes_data <- dplyr::filter(eyes_data, .data$Timestamp.shifted > timestamp_start, .data$Timestamp.shifted < timestamp_stop)
   scroll <- starting_scroll
   corrected_y <- c()
+  scroll_vector <- c()
   min_scroll <- 0
   rules <- check_fixed_areas_rules(fixed_areas, rules)
   flags <- c(rep(TRUE, length(rules)))
@@ -557,6 +558,7 @@ eye_scroll_correct <- function (eyes_data, timestamp_start, timestamp_stop, imag
   {
     # prepare_smooth_scroll(event, eyes_data[line ,], smooth_scroll, smooth_scroll_table, scroll, min_scroll, max_scroll)
     scroll <- shift_scroll(event, eyes_data[line ,], scroll, min_scroll, max_scroll, scroll_pixels, top_left_x, top_left_y, bottom_right_x, bottom_right_y)
+    scroll_vector[line] <- scroll
     flags <- check_rules_true(rules, eyes_data[line, ], flags, fixed_areas, scroll)
     if (!is.na(eyes_data[line, ]$Corrected.Y))
     {
@@ -573,6 +575,7 @@ eye_scroll_correct <- function (eyes_data, timestamp_start, timestamp_stop, imag
   }
 
   eyes_data$Corrected.Y <- corrected_y
+  eyes_data$Scroll <- scroll_vector
   if (na.rm)
   {
     eyes_data <- eyes_data[stats::complete.cases(eyes_data[, 'Corrected.Y']),]
