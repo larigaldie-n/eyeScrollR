@@ -505,15 +505,18 @@ scroll_calibration_auto <- function(calibration_image, scroll_pixels)
 #'
 #' @details
 #' \strong{The Dataset} \cr\cr
-#' The dataset MUST include correctly named columns, which are:
 #' \itemize{
-#' \item A "Fixation.X" column with the x coordinate of fixation points
-#' \item A "Fixation.Y" column with the y coordinate of fixation points
+#' The dataset must include correctly named columns, which are:
 #' \item A "Data" column, with user-generated events (such as keystrokes or browser changes)
 #' \item A "Timestamp" column with the timestamps for each fixation point and event
+#' \item A "Gaze.X" column with the x coordinate of gaze
+#' \item A "Gaze.Y" column with the y coordinate of gaze
+#' \item A "Fixation.X" column with the x coordinate of fixation points
+#' \item A "Fixation.Y" column with the y coordinate of fixation points
 #' }
+#' Data and Timestamp columns are mandatory, but you may choose to only include Gaze data or Fixation data (or both)
 #'
-#' @return Returns the same dataset with added columns of corrected x, y and shifted timestamps (named "Corrected.X", "Corrected.Y", and "Timestamps.shifted")
+#' @return Returns the same dataset with added columns for corrected coordinates ("Corrected.Gaze.X", "Corrected.Gaze.Y", "Corrected.Fixation.X" and "Corrected.Fixation.Y"), shifted timestamps ("Timestamp.shifted"), and the amount of pixels scrolled down ("Scrolled")
 #' @examples
 #' \dontrun{
 #' library(eyeScrollR)
