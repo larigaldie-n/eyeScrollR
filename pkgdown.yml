@@ -1,11 +1,11 @@
-pandoc: 2.14.2
+pandoc: 2.19.2
 pkgdown: 2.0.6
 pkgdown_sha: ~
 articles:
   eyeScrollR: eyeScrollR.html
   fixed_areas: fixed_areas.html
   limitations: limitations.html
-last_built: 2022-10-21T13:49Z
+last_built: 2022-10-26T13:55Z
 urls:
   reference: https://larigaldie-n.github.io/eyeScrollR/reference
   article: https://larigaldie-n.github.io/eyeScrollR/articles
