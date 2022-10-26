@@ -125,11 +125,12 @@ to fit in a webpage scrolled vertically by the participant</p>
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     
 
-<p>Returns the same dataset with added columns for corrected coordinates ("Corrected.Gaze.X", "Corrected.Gaze.Y", "Corrected.Fixation.X" and "Corrected.Fixation.Y"), shifted timestamps ("Timestamp.shifted"), and the amount of pixels scrolled down ("Scrolled")</p>
+<p>Returns the same dataset with added columns for corrected coordinates ("Corrected.Gaze.X", "Corrected.Gaze.Y", "Corrected.Fixation.X" and "Corrected.Fixation.Y"), shifted timestamps ("Timestamp.Shifted"), and the amount of pixels scrolled down ("Scrolled")</p>
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
-    <p><strong>The Dataset</strong> <br><br></p><ul><li><p>A "Data" column, with user-generated events (such as keystrokes or browser changes)</p></li>
+    <p><strong>The Dataset</strong> <br><br>
+The dataset must include correctly named columns, which are:</p><ul><li><p>A "Data" column, with user-generated events (such as keystrokes or browser changes)</p></li>
 <li><p>A "Timestamp" column with the timestamps for each fixation point and event</p></li>
 <li><p>A "Gaze.X" column with the x coordinate of gaze</p></li>
 <li><p>A "Gaze.Y" column with the y coordinate of gaze</p></li>
