@@ -9,7 +9,7 @@ rule_after_scrolling(data_line, fixed_areas_bundle, flag, scroll)
 }
 \arguments{
 \item{data_line}{The current line in the .csv file. Includes all the original
-columns, along with a new "Timestamp.shifted" column (Timestamp - time_shit),
+columns, along with a new "Timestamp.Shifted" column (Timestamp - time_shit),
 along with "Corrected.X" and "Corrected.Y" columns, which are "Fixation.X"
 and "Fixation.Y" respectively shifted by top_left_x and top_left_y of the
 calibration stage}

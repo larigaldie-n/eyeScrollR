@@ -214,9 +214,22 @@ shift_scroll <- function(event, data_line, scroll, min_scroll, max_scroll, scrol
   if (grepl(event, data_line$Data, fixed=TRUE))
   {
     event_list <- unlist(strsplit(data_line$Data, ";", fixed=TRUE))
-    event_loc_x <- strtoi(unlist(strsplit(event_list[2], ":", fixed = TRUE))[2])
-    event_loc_y <- strtoi(unlist(strsplit(event_list[3], ":", fixed = TRUE))[2])
-    scroll_delta <- strtoi(unlist(strsplit(event_list[5], ":", fixed = TRUE))[2])
+    for (i in 1:length(event_list))
+    {
+      if (grepl("X:", event_list[i], fixed=TRUE))
+      {
+        event_loc_x <- strtoi(unlist(strsplit(event_list[i], ":", fixed = TRUE))[2])
+      }
+      else if (grepl("Y:", event_list[i], fixed=TRUE))
+      {
+        event_loc_y <- strtoi(unlist(strsplit(event_list[i], ":", fixed = TRUE))[2])
+      }
+      else if (grepl("ScrollDelta:", event_list[i], fixed=TRUE))
+      {
+        scroll_delta <- strtoi(unlist(strsplit(event_list[i], ":", fixed = TRUE))[2])
+      }
+    }
+
     if (event_loc_x >= top_left_x && event_loc_y >= top_left_y && event_loc_x <= bottom_right_x && event_loc_y <= bottom_right_y)
     {
       if (scroll_delta<0)
@@ -282,7 +295,7 @@ fixed_areas_bundle <- function(...)
 #'     eye_scroll_correct
 #'
 #' @param data_line The current line in the .csv file. Includes all the original
-#' columns, along with a new "Timestamp.shifted" column (Timestamp - time_shit),
+#' columns, along with a new "Timestamp.Shifted" column (Timestamp - time_shit),
 #' along with "Corrected.X" and "Corrected.Y" columns, which are "Fixation.X"
 #' and "Fixation.Y" respectively shifted by top_left_x and top_left_y of the
 #' calibration stage
@@ -315,7 +328,7 @@ rule_true <- function (data_line, fixed_areas_bundle, flag, scroll)
 #'     rule function by eye_scroll_correct
 #'
 #' @param data_line The current line in the .csv file. Includes all the original
-#' columns, along with a new "Timestamp.shifted" column (Timestamp - time_shit),
+#' columns, along with a new "Timestamp.Shifted" column (Timestamp - time_shit),
 #' along with "Corrected.X" and "Corrected.Y" columns, which are "Fixation.X"
 #' and "Fixation.Y" respectively shifted by top_left_x and top_left_y of the
 #' calibration stage
@@ -362,7 +375,7 @@ rule_before_scrolling <- function (data_line, fixed_areas_bundle, flag, scroll)
 #'     rule function by eye_scroll_correct
 #'
 #' @param data_line The current line in the .csv file. Includes all the original
-#' columns, along with a new "Timestamp.shifted" column (Timestamp - time_shit),
+#' columns, along with a new "Timestamp.Shifted" column (Timestamp - time_shit),
 #' along with "Corrected.X" and "Corrected.Y" columns, which are "Fixation.X"
 #' and "Fixation.Y" respectively shifted by top_left_x and top_left_y of the
 #' calibration stage
@@ -505,8 +518,8 @@ scroll_calibration_auto <- function(calibration_image, scroll_pixels)
 #'
 #' @details
 #' \strong{The Dataset} \cr\cr
-#' \itemize{
 #' The dataset must include correctly named columns, which are:
+#' \itemize{
 #' \item A "Data" column, with user-generated events (such as keystrokes or browser changes)
 #' \item A "Timestamp" column with the timestamps for each fixation point and event
 #' \item A "Gaze.X" column with the x coordinate of gaze
@@ -516,7 +529,7 @@ scroll_calibration_auto <- function(calibration_image, scroll_pixels)
 #' }
 #' Data and Timestamp columns are mandatory, but you may choose to only include Gaze data or Fixation data (or both)
 #'
-#' @return Returns the same dataset with added columns for corrected coordinates ("Corrected.Gaze.X", "Corrected.Gaze.Y", "Corrected.Fixation.X" and "Corrected.Fixation.Y"), shifted timestamps ("Timestamp.shifted"), and the amount of pixels scrolled down ("Scrolled")
+#' @return Returns the same dataset with added columns for corrected coordinates ("Corrected.Gaze.X", "Corrected.Gaze.Y", "Corrected.Fixation.X" and "Corrected.Fixation.Y"), shifted timestamps ("Timestamp.Shifted"), and the amount of pixels scrolled down ("Scrolled")
 #' @examples
 #' \dontrun{
 #' library(eyeScrollR)
@@ -543,10 +556,9 @@ eye_scroll_correct <- function (eyes_data, timestamp_start, timestamp_stop, imag
   shift_bottom <- calibration$shift_bottom
   shift_right <- calibration$shift_right
   event <- "WM_MOUSEWHEEL"
-  eyes_data$Timestamp.shifted <- eyes_data$Timestamp - time_shift
-  eyes_data <- dplyr::filter(eyes_data, .data$Timestamp.shifted > timestamp_start, .data$Timestamp.shifted < timestamp_stop)
+  eyes_data$Timestamp.Shifted <- eyes_data$Timestamp - time_shift
+  eyes_data <- dplyr::filter(eyes_data, .data$Timestamp.Shifted >= timestamp_start, .data$Timestamp.Shifted <= timestamp_stop)
   scroll <- starting_scroll
-  corrected_y <- c()
   scroll_vector <- c()
   min_scroll <- 0
   columns_to_correct <- c()
