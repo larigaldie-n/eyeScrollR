@@ -299,7 +299,7 @@ server <- function(input, output, session) {
             }
             else
             {
-              argument_list_rules <- paste(argument_list_rules, str_split(function_to_print, pattern = " ")[1], sep = ", ")
+              argument_list_rules <- paste(argument_list_rules, str_split(function_to_print, pattern = " ")[[1]][1], sep = ", ")
             }
 
           }
