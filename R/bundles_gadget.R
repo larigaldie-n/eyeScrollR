@@ -79,6 +79,7 @@ ui <- fluidPage(
   ),
   hr(),
   wellPanel(verbatimTextOutput("code")),
+  actionButton("done_gadget", label = "Done"),
   tags$script(
     "$(document).on('click', 'button', function(e) {
  e.stopPropagation()
@@ -249,7 +250,10 @@ server <- function(input, output, session) {
       }
 
     }
-
+    else
+    {
+      stopApp()
+    }
   })
 
   output$code <- renderText({
