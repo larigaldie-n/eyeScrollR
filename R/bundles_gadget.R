@@ -1,3 +1,4 @@
+
 #' @title Run a fixed areas bundle gadget
 #'
 #' @description Automatically generates code for fixed areas bundle and rules
@@ -65,16 +66,14 @@ print_custom <- function ()
 
 # Define UI ----
 ui <- fluidPage(
-  titlePanel("Fixed area bundle creator"),
-
+  titlePanel("Fixed areas bundle creator"),
   tags$div(
     id = 'bundles'),
-
   fluidRow(column(
-    6,
+    3,
     actionButton("add_bundle", label = "Add new Bundle")),
     column(
-      6,
+      3,
       actionButton("remove_bundle", label = "Remove Bundle"))
   ),
   hr(),
@@ -92,7 +91,6 @@ ui <- fluidPage(
     e.target.id + '_' + BUTTON_CLICK_COUNT);
 });"
   )
-
 )
 
 # Define server logic ----
@@ -178,7 +176,6 @@ server <- function(input, output, session) {
             )
           )
         )
-
       }
       else if (add_or_remove == 'remove')
       {
@@ -190,7 +187,6 @@ server <- function(input, output, session) {
         }
       }
     }
-
     else if (fixed_or_bundle == 'bundle')
     {
       if (add_or_remove == 'add')
@@ -207,8 +203,6 @@ server <- function(input, output, session) {
                      tags$div(
                        id = paste0("fixed_", values$n_bundles,"_", values$n_fixed_areas[values$n_bundles])
                      )),
-
-
             fluidRow(column(
               3,
               actionButton(paste0("add_fixed_", values$n_bundles,"_1"), label = "Add fixed area in Bundle")
@@ -218,14 +212,14 @@ server <- function(input, output, session) {
               actionButton(paste0("remove_fixed_", values$n_bundles,"_1"), label = "Remove fixed area in Bundle")
             )),
             fluidRow(column(12,
-                            h2(
+                            h3(
                               paste0("Rule for Bundle ", values$n_bundles)
                             )),
                      column(
                        12,
                        selectInput(
                          paste0("select_", values$n_bundles),
-                         label = h3("Type of rule"),
+                         label = h4("Type of rule"),
                          choices = list(
                            "Always True" = 1,
                            "True when Scrolled < value" = 2,
@@ -235,7 +229,6 @@ server <- function(input, output, session) {
                          selected = 1
                        )
                      ))
-
           )
         )
       }
@@ -258,8 +251,6 @@ server <- function(input, output, session) {
 
   output$code <- renderText({
     text <- ""
-
-
     if(values$n_bundles > 0)
     {
       argument_list_bundles <- ""
@@ -285,7 +276,6 @@ server <- function(input, output, session) {
             text <- paste0(paste0(text, "bundle_", bundle, "_fixed_area_", fixed_area,"_image <- ", "c(", input[[paste0("num_image_", bundle,"_", fixed_area,"_1")]], ", ", input[[paste0("num_image_", bundle,"_", fixed_area,"_2")]], ", ", input[[paste0("num_image_", bundle,"_", fixed_area,"_3")]], ", ", input[[paste0("num_image_", bundle,"_", fixed_area,"_4")]], ")\n"))
           }
           text <- paste0(text, "\n")
-
           text <- paste0(text, "## Rule for bundle ", bundle, "\n")
           if (!is.null(input[[paste0("select_", bundle)]]))
           {
@@ -307,7 +297,6 @@ server <- function(input, output, session) {
             }
 
           }
-
           text <- paste0(text, "areas_bundle_", bundle, " <- ", "fixed_areas_bundle(", argument_bundle_creation, ")\n\n")
           if (argument_list_bundles == "")
           {
@@ -322,14 +311,10 @@ server <- function(input, output, session) {
       text <- paste0(text, "fixed_areas <- list(", argument_list_bundles, ")\n")
       text <- paste0(text, "rules <- list(", argument_list_rules, ")")
     }
-
-
     return(text)
   })
-
 }
 
 # Run the app ----
 runGadget(ui, server)
-
 }
