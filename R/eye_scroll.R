@@ -580,7 +580,7 @@ eye_scroll_correct <- function (eyes_data, timestamp_start, timestamp_stop, imag
 
   rules <- check_fixed_areas_rules(fixed_areas, rules)
   flags <- c(rep(TRUE, length(rules)))
-  for (i in 1:length(fixed_areas))
+  for (i in seq_len(length(fixed_areas)))
   {
     fixed_areas[[i]] <- fixed_areas[[i]] - c(top_left_x,top_left_y,top_left_x,top_left_y, 0, 0, 0, 0)
   }
