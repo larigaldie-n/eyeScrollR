@@ -304,7 +304,7 @@ server <- function(input, output, session) {
           }
           else
           {
-            argument_list_bundles <- paste(argument_list_bundles, "areas_bundle_", bundle, sep = ", ")
+            argument_list_bundles <- paste(argument_list_bundles, paste("areas_bundle_", bundle, sep=""), sep = ", ")
           }
         }
       }
