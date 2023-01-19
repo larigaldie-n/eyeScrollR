@@ -1,0 +1,19 @@
+citHeader("To cite eyeScrollR in publications use:")
+
+citEntry(
+  entry    = "Manual",
+  title    = "eyeScrollR: An Open-Source and User-Friendly R package to Gaze-Map Eye Tracking Data on Scrollable Webpages",
+  author   = personList(person(given = "Nathanael", family = "Larigaldie", email = "larigaldie.n@gmail.com"),
+  person(given = "Anna", family = "Dreneva"), person(given = "Jacob", family = "Orquin", middle = "L.")),
+  # journal  = " ",
+  year     = "2023",
+  # volume   = " ",
+  # number   = " ",
+  # pages    = " ",
+  organization = "Aarhus University",
+  address = "Aarhus, Denmark",
+  url      = "https://github.com/larigaldie-n/eyeScrollR",
+  textVersion = paste(
+
+  )
+)
