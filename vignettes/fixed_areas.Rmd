@@ -170,7 +170,21 @@ rules <- list(rule_scrolled_up, rule_scrolled_down)
 
 The order of these rules must be the same as the order of the fixed areas bundles. In our case, the *rule_scrolled_up* rule will therefore make sure that the first bundle of fixed areas will be used when less than 1000 pixels have been scrolled down and no longer be used should it not be the case. Similarly, the *rule_scrolled_down* rule will be associated with the second bundle of fixed areas. You can copy and paste these functions and simply change the number *1000* in each of them to fit your needs if you are in a similar case.
 
-You can then just pass this list of rules to the *eye_scroll_correct* function:
+If this all feels a bit overwhelming, don't worry: we've got you covered. Instead of writing everything by hand, you can just use the bundle creator gadget by running the following code:
+
+```{r eval=FALSE}
+bundles_gadget()
+```
+
+This gadget simplifies the process by letting you focus on *what* you are doing instead of *how*. You can add/remove fixed areas bundles with a simple click, fill in the fixed areas coordinates, and select which (common) rule you need for each bundle:
+
+```{r, echo=FALSE, out.width="100%"}
+knitr::include_graphics("gadget.png")
+```
+
+This will output some code that you can copy & paste, and the only thing left you have to do is modify the rules to suit your needs. Just don't forget to click "done" once you are finished!
+
+You can then just pass the list of fixed areas and the list of rules to the *eye_scroll_correct* function:
 
 ```{r eval=FALSE}
 corrected_data <- eye_scroll_correct(eyes_data = test_data,

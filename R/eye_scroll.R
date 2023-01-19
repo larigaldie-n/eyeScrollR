@@ -11,7 +11,7 @@ check_fixed_areas_rules <- function(fixed_areas, rules)
     {
       stop("fixed_areas must be an empty list or a list of arrays")
     }
-    else if (dim(fixed_area)[1]!=4 || dim(fixed_area)[2]!=2)
+    else if (dim(fixed_area)[1] != 4 || dim(fixed_area)[2] != 2)
     {
       stop("fixed_areas arrays must be 4x2 matrices of coordinates")
     }
@@ -19,9 +19,12 @@ check_fixed_areas_rules <- function(fixed_areas, rules)
     {
       for (i in 1:dim(fixed_area)[3])
       {
-        if ((fixed_area[3,1,i] - fixed_area[1,1,i] != fixed_area[3,2,i] - fixed_area[1,2,i]) || (fixed_area[4,1,i] - fixed_area[2,1,i] != fixed_area[4,2,i] - fixed_area[2,2,i]))
+        if ((fixed_area[3, 1, i] - fixed_area[1, 1, i] != fixed_area[3, 2, i] - fixed_area[1, 2, i]) ||
+            (fixed_area[4, 1, i] - fixed_area[2, 1, i] != fixed_area[4, 2, i] - fixed_area[2, 2, i]))
         {
-          stop("origin (screen) and destination (image) fixed_areas rectangles must be the same size")
+          stop(
+            "origin (screen) and destination (image) fixed_areas rectangles must be the same size"
+          )
         }
       }
     }
@@ -32,7 +35,7 @@ check_fixed_areas_rules <- function(fixed_areas, rules)
   }
   for (rule in rules)
   {
-    if (typeof(rule)!="closure")
+    if (typeof(rule) != "closure")
     {
       stop("rules must be an empty list or a list of functions")
     }
@@ -49,40 +52,46 @@ check_fixed_areas_rules <- function(fixed_areas, rules)
 }
 
 # Checks if each rule in the rules list is true or false
-check_rules_true <- function(rules, data_line, flags, fixed_areas, scroll)
-{
-  for (rule_num in seq_len(length(rules)))
+check_rules_true <-
+  function(rules,
+           data_line,
+           flags,
+           fixed_areas,
+           scroll)
   {
-    flags[rule_num] <- rules[[rule_num]](data_line, fixed_areas[[rule_num]], flags[rule_num], scroll)
+    for (rule_num in seq_len(length(rules)))
+    {
+      flags[rule_num] <-
+        rules[[rule_num]](data_line, fixed_areas[[rule_num]], flags[rule_num], scroll)
+    }
+    return(flags)
   }
-  return(flags)
-}
 
 # Checks if a calibration line has been found
 check_calibration_line <- function(line, coordinate, reverse)
 {
-  red <- c(1,0,0)
-  green <- c(0,1,0)
-  blue <- c(0,0,1)
+  red <- c(1, 0, 0)
+  green <- c(0, 1, 0)
+  blue <- c(0, 0, 1)
   color <- "red"
-  if(reverse == FALSE)
+  if (reverse == FALSE)
   {
-    if(coordinate>1)
+    if (coordinate > 1)
     {
-      if(all(line[coordinate-1,] == red))
+      if (all(line[coordinate - 1,] == red))
       {
         return(FALSE)
       }
     }
-    while(coordinate+1<dim(line)[1])
+    while (coordinate + 1 < dim(line)[1])
     {
-      if(color == "red")
+      if (color == "red")
       {
-        if(all(line[coordinate+1,] == red))
+        if (all(line[coordinate + 1,] == red))
         {
           color <- "red"
         }
-        else if (all(line[coordinate+1,] == green))
+        else if (all(line[coordinate + 1,] == green))
         {
           color <- "green"
         }
@@ -93,11 +102,11 @@ check_calibration_line <- function(line, coordinate, reverse)
       }
       else if (color == "green")
       {
-        if(all(line[coordinate+1,] == green))
+        if (all(line[coordinate + 1,] == green))
         {
           color <- "green"
         }
-        else if (all(line [coordinate+1,] == blue))
+        else if (all(line [coordinate + 1,] == blue))
         {
           return(TRUE)
         }
@@ -111,22 +120,22 @@ check_calibration_line <- function(line, coordinate, reverse)
   }
   else
   {
-    if(coordinate<dim(line)[1])
+    if (coordinate < dim(line)[1])
     {
-      if(all(line[coordinate+1,] == red))
+      if (all(line[coordinate + 1,] == red))
       {
         return(FALSE)
       }
     }
-    while(coordinate-1>0)
+    while (coordinate - 1 > 0)
     {
-      if(color == "red")
+      if (color == "red")
       {
-        if(all(line[coordinate-1,] == red))
+        if (all(line[coordinate - 1,] == red))
         {
           color <- "red"
         }
-        else if (all(line[coordinate-1,] == green))
+        else if (all(line[coordinate - 1,] == green))
         {
           color <- "green"
         }
@@ -135,13 +144,13 @@ check_calibration_line <- function(line, coordinate, reverse)
           return(FALSE)
         }
       }
-      else if (color =="green")
+      else if (color == "green")
       {
-        if(all(line[coordinate-1,] == green))
+        if (all(line[coordinate - 1,] == green))
         {
           color <- "green"
         }
-        else if (all(line [coordinate-1,] == blue))
+        else if (all(line [coordinate - 1,] == blue))
         {
           return(TRUE)
         }
@@ -158,22 +167,27 @@ check_calibration_line <- function(line, coordinate, reverse)
 
 # Checks which rules are true, and returns y coordinates of fixations if
 # it is inside a fixed area if its association rule its true
-enforce_rules <- function(flags, fixed_areas, data_line, columns_to_correct)
-{
-  y <- NA
-  for (flag_num in seq_len(length(flags)))
+enforce_rules <-
+  function(flags,
+           fixed_areas,
+           data_line,
+           columns_to_correct)
   {
-    if (flags[flag_num])
+    y <- NA
+    for (flag_num in seq_len(length(flags)))
     {
-      y <- resolve_fixed_box(fixed_areas[[flag_num]], data_line[[columns_to_correct[1]]], data_line[[columns_to_correct[2]]])
-      if (!is.na(y))
+      if (flags[flag_num])
       {
-        break
+        y <-
+          resolve_fixed_box(fixed_areas[[flag_num]], data_line[[columns_to_correct[1]]], data_line[[columns_to_correct[2]]])
+        if (!is.na(y))
+        {
+          break
+        }
       }
     }
+    return(y)
   }
-  return(y)
-}
 
 # Check if a fixation point is inside a given fixed area
 resolve_fixed_box <- function(fixed_areas_bundle, x, y)
@@ -182,11 +196,13 @@ resolve_fixed_box <- function(fixed_areas_bundle, x, y)
   {
     for (i in 1:dim(fixed_areas_bundle)[3])
     {
-      if(x >= fixed_areas_bundle[1,1,i] && x <= fixed_areas_bundle[3,1,i])
+      if (x >= fixed_areas_bundle[1, 1, i] &&
+          x <= fixed_areas_bundle[3, 1, i])
       {
-        if(y >= fixed_areas_bundle[2,1,i] && y <= fixed_areas_bundle[4,1,i])
+        if (y >= fixed_areas_bundle[2, 1, i] &&
+            y <= fixed_areas_bundle[4, 1, i])
         {
-          return (y + (fixed_areas_bundle[4,2,i] - fixed_areas_bundle[4,1,i]))
+          return (y + (fixed_areas_bundle[4, 2, i] - fixed_areas_bundle[4, 1, i]))
         }
       }
     }
@@ -196,54 +212,80 @@ resolve_fixed_box <- function(fixed_areas_bundle, x, y)
 
 # Shifts the original coordinate (on one dimension) to fit the image coordinate
 # and returns NA to any coordinate outside the image according to outside_image_is_na
-shift_image_by_dimension <- function(coordinate, shift_before, shift_after, screen_dimension, outside_image_is_na)
-{
-  if (is.na(coordinate) || (outside_image_is_na && (coordinate < shift_before || coordinate > (screen_dimension - shift_after))))
+shift_image_by_dimension <-
+  function(coordinate,
+           shift_before,
+           shift_after,
+           screen_dimension,
+           outside_image_is_na)
   {
-    return(NA)
+    if (is.na(coordinate) ||
+        (outside_image_is_na &&
+         (
+           coordinate < shift_before ||
+           coordinate > (screen_dimension - shift_after)
+         )))
+    {
+      return(NA)
+    }
+    else
+    {
+      return(coordinate - shift_before)
+    }
   }
-  else
-  {
-    return(coordinate - shift_before)
-  }
-}
 
 # Gets the Data message, and updates the scroll delta according to it
-shift_scroll <- function(event, data_line, scroll, min_scroll, max_scroll, scroll_pixels, top_left_x, top_left_y, bottom_right_x, bottom_right_y)
-{
-  if (grepl(event, data_line$Data, fixed=TRUE))
+shift_scroll <-
+  function(event,
+           data_line,
+           scroll,
+           min_scroll,
+           max_scroll,
+           scroll_pixels,
+           top_left_x,
+           top_left_y,
+           bottom_right_x,
+           bottom_right_y)
   {
-    event_list <- unlist(strsplit(data_line$Data, ";", fixed=TRUE))
-    for (i in 1:length(event_list))
+    if (grepl(event, data_line$Data, fixed = TRUE))
     {
-      if (grepl("X:", event_list[i], fixed=TRUE))
+      event_list <- unlist(strsplit(data_line$Data, ";", fixed = TRUE))
+      for (i in seq_len(length(event_list)))
       {
-        event_loc_x <- strtoi(unlist(strsplit(event_list[i], ":", fixed = TRUE))[2])
+        if (grepl("X:", event_list[i], fixed = TRUE))
+        {
+          event_loc_x <-
+            strtoi(unlist(strsplit(event_list[i], ":", fixed = TRUE))[2])
+        }
+        else if (grepl("Y:", event_list[i], fixed = TRUE))
+        {
+          event_loc_y <-
+            strtoi(unlist(strsplit(event_list[i], ":", fixed = TRUE))[2])
+        }
+        else if (grepl("ScrollDelta:", event_list[i], fixed = TRUE))
+        {
+          scroll_delta <-
+            strtoi(unlist(strsplit(event_list[i], ":", fixed = TRUE))[2])
+        }
       }
-      else if (grepl("Y:", event_list[i], fixed=TRUE))
-      {
-        event_loc_y <- strtoi(unlist(strsplit(event_list[i], ":", fixed = TRUE))[2])
-      }
-      else if (grepl("ScrollDelta:", event_list[i], fixed=TRUE))
-      {
-        scroll_delta <- strtoi(unlist(strsplit(event_list[i], ":", fixed = TRUE))[2])
-      }
-    }
 
-    if (event_loc_x >= top_left_x && event_loc_y >= top_left_y && event_loc_x <= bottom_right_x && event_loc_y <= bottom_right_y)
-    {
-      if (scroll_delta<0)
+      if (event_loc_x >= top_left_x &&
+          event_loc_y >= top_left_y &&
+          event_loc_x <= bottom_right_x &&
+          event_loc_y <= bottom_right_y)
       {
-        scroll <- min(c(scroll + scroll_pixels, max_scroll))
-      }
-      else if (scroll_delta>0)
-      {
-        scroll <- max(c(scroll - scroll_pixels, min_scroll))
+        if (scroll_delta < 0)
+        {
+          scroll <- min(c(scroll + scroll_pixels, max_scroll))
+        }
+        else if (scroll_delta > 0)
+        {
+          scroll <- max(c(scroll - scroll_pixels, min_scroll))
+        }
       }
     }
+    return (scroll)
   }
-  return (scroll)
-}
 
 #' @title Creates a bundle of fixed areas mappings
 #'
@@ -272,18 +314,22 @@ shift_scroll <- function(event, data_line, scroll, min_scroll, max_scroll, scrol
 fixed_areas_bundle <- function(...)
 {
   data <- list(...)
-  if(length(data)==0 || length(data)%%2 !=0)
+  if (length(data) == 0 || length(data) %% 2 != 0)
   {
     stop("You must pass screen-to-image mapping pairs of coordinate vectors to this function")
   }
-  for (i in 1:length(data))
+  for (i in seq_len(length(data)))
   {
-    if(!is.vector(data[[i]]) || length(data[[i]])!=4)
+    if (!is.vector(data[[i]]) || length(data[[i]]) != 4)
     {
-      stop("Every argument should be a coordinate vector in the form: c(top_left_x, top_left_y, bottom_right_x, bottom_right_y)")
+      stop(
+        "Every argument should be a coordinate vector in the form: c(top_left_x, top_left_y, bottom_right_x, bottom_right_y)"
+      )
     }
   }
-  return(array(unlist(data), dim=c(4,2,(length(data)/2))))
+  return(array(unlist(data), dim = c(4, 2, (length(
+    data
+  ) / 2))))
 }
 
 #' @title A rule that is always true
@@ -312,7 +358,10 @@ fixed_areas_bundle <- function(...)
 #' }
 #' rules <- list(rule_before_scrolling, rule_after_scrolling, rule_true)
 #' @export
-rule_true <- function (data_line, fixed_areas_bundle, flag, scroll)
+rule_true <- function (data_line,
+                       fixed_areas_bundle,
+                       flag,
+                       scroll)
 {
   return (TRUE)
 }
@@ -352,17 +401,21 @@ rule_true <- function (data_line, fixed_areas_bundle, flag, scroll)
 #' }
 #' rules <- list(rule_before_scrolling, rule_after_scrolling, rule_true)
 #' @export
-rule_before_scrolling <- function (data_line, fixed_areas_bundle, flag, scroll)
-{
-  if (scroll < 30)
+rule_before_scrolling <-
+  function (data_line,
+            fixed_areas_bundle,
+            flag,
+            scroll)
   {
-    return (TRUE)
+    if (scroll < 30)
+    {
+      return (TRUE)
+    }
+    else
+    {
+      return(FALSE)
+    }
   }
-  else
-  {
-    return(FALSE)
-  }
-}
 
 #' @title Generic rule to activate a bundle after a certain amount of scrolled
 #' pixels
@@ -399,17 +452,21 @@ rule_before_scrolling <- function (data_line, fixed_areas_bundle, flag, scroll)
 #' }
 #' rules <- list(rule_before_scrolling, rule_after_scrolling, rule_true)
 #' @export
-rule_after_scrolling <- function (data_line, fixed_areas_bundle, flag, scroll)
-{
-  if (scroll >= 30)
+rule_after_scrolling <-
+  function (data_line,
+            fixed_areas_bundle,
+            flag,
+            scroll)
   {
-    return (TRUE)
+    if (scroll >= 30)
+    {
+      return (TRUE)
+    }
+    else
+    {
+      return(FALSE)
+    }
   }
-  else
-  {
-    return(FALSE)
-  }
-}
 
 #' @title Manual calibration
 #'
@@ -429,13 +486,31 @@ rule_after_scrolling <- function (data_line, fixed_areas_bundle, flag, scroll)
 #' @examples
 #' calibration <- scroll_calibration_manual(1920, 1080, 88, 0, 40, 0, 100)
 #' @export
-scroll_calibration_manual <- function(screen_width, screen_height, top_left_x, top_left_y, bottom_right_x, bottom_right_y, scroll_pixels)
-{
-  shift_right <- screen_width - bottom_right_x - 1
-  shift_bottom <- screen_height - bottom_right_y - 1
-  l <- list(screen_width = screen_width, screen_height = screen_height, top_left_x = top_left_x, top_left_y = top_left_y, bottom_right_x = bottom_right_x, bottom_right_y = bottom_right_y, shift_right = shift_right, shift_bottom = shift_bottom, scroll_pixels = scroll_pixels)
-  return(l)
-}
+scroll_calibration_manual <-
+  function(screen_width,
+           screen_height,
+           top_left_x,
+           top_left_y,
+           bottom_right_x,
+           bottom_right_y,
+           scroll_pixels)
+  {
+    shift_right <- screen_width - bottom_right_x - 1
+    shift_bottom <- screen_height - bottom_right_y - 1
+    l <-
+      list(
+        screen_width = screen_width,
+        screen_height = screen_height,
+        top_left_x = top_left_x,
+        top_left_y = top_left_y,
+        bottom_right_x = bottom_right_x,
+        bottom_right_y = bottom_right_y,
+        shift_right = shift_right,
+        shift_bottom = shift_bottom,
+        scroll_pixels = scroll_pixels
+      )
+    return(l)
+  }
 
 #' @title Automatic calibration
 #'
@@ -454,49 +529,79 @@ scroll_calibration_manual <- function(screen_width, screen_height, top_left_x, t
 #' calibration <- scroll_calibration_auto(calibration_image = img, scroll_pixels = 100)
 #' }
 #' @export
-scroll_calibration_auto <- function(calibration_image, scroll_pixels)
-{
-  red <- c(1,0,0)
-  green <- c(0,1,0)
-  blue <- c(0,0,1)
-  screen_width <- dim(calibration_image)[2]
-  screen_height <- dim(calibration_image)[1]
-  calibration_image <- calibration_image[,,-c(4)]
-
-  for (height in 1:dim(calibration_image)[1])
+scroll_calibration_auto <-
+  function(calibration_image, scroll_pixels)
   {
-    for (width in 1:dim(calibration_image)[2])
+    red <- c(1, 0, 0)
+    green <- c(0, 1, 0)
+    blue <- c(0, 0, 1)
+    screen_width <- dim(calibration_image)[2]
+    screen_height <- dim(calibration_image)[1]
+    calibration_image <- calibration_image[, ,-c(4)]
+
+    for (height in 1:dim(calibration_image)[1])
     {
-      if (all(calibration_image[height,width,] == red))
+      for (width in 1:dim(calibration_image)[2])
       {
-        if (check_calibration_line(calibration_image[height,,], width, FALSE) && check_calibration_line(calibration_image[,width,], height, FALSE))
+        if (all(calibration_image[height, width,] == red))
         {
-          top_left_x <- width - 1
-          top_left_y <- height - 1
-        }
-        else if(check_calibration_line(calibration_image[height,,], width, TRUE) && check_calibration_line(calibration_image[,width,], height, TRUE))
-        {
-          bottom_right_x <- width - 1
-          bottom_right_y <- height - 1
+          if (check_calibration_line(calibration_image[height, ,], width, FALSE) &&
+              check_calibration_line(calibration_image[, width,], height, FALSE))
+          {
+            top_left_x <- width - 1
+            top_left_y <- height - 1
+          }
+          else if (check_calibration_line(calibration_image[height, ,], width, TRUE) &&
+                   check_calibration_line(calibration_image[, width,], height, TRUE))
+          {
+            bottom_right_x <- width - 1
+            bottom_right_y <- height - 1
+          }
         }
       }
     }
-  }
-  if (!exists("top_left_x") || !exists("bottom_right_x"))
-  {
-    stop("Could not calibrate. Either the image does not include the calibration
+    if (!exists("top_left_x") || !exists("bottom_right_x"))
+    {
+      stop(
+        "Could not calibrate. Either the image does not include the calibration
           webpage, or your should calibrate by hand using the
-          scroll_calibration_manual function.")
+          scroll_calibration_manual function."
+      )
+    }
+    shift_right <- screen_width - bottom_right_x - 1
+    shift_bottom <- screen_height - bottom_right_y - 1
+    cat(
+      paste(
+        "Screen width: ",
+        screen_width,
+        ", Screen height: ",
+        screen_height,
+        ",\nTop left x: ",
+        top_left_x,
+        ", Top left y: ",
+        top_left_y,
+        ",\nBottom right x: ",
+        bottom_right_x,
+        ", Bottom right y: ",
+        bottom_right_y,
+        "\n",
+        sep = ""
+      )
+    )
+    l <-
+      list(
+        screen_width = screen_width,
+        screen_height = screen_height,
+        top_left_x = top_left_x,
+        top_left_y = top_left_y,
+        bottom_right_x = bottom_right_x,
+        bottom_right_y = bottom_right_y,
+        shift_right = shift_right,
+        shift_bottom = shift_bottom,
+        scroll_pixels = scroll_pixels
+      )
+    return(l)
   }
-  shift_right <- screen_width - bottom_right_x - 1
-  shift_bottom <- screen_height - bottom_right_y - 1
-  cat(paste("Screen width: ", screen_width, ", Screen height: ", screen_height,
-        ",\nTop left x: ", top_left_x, ", Top left y: ", top_left_y,
-        ",\nBottom right x: ", bottom_right_x, ", Bottom right y: ", bottom_right_y,
-        "\n", sep=""))
-  l <- list(screen_width = screen_width, screen_height = screen_height, top_left_x = top_left_x, top_left_y = top_left_y, bottom_right_x = bottom_right_x, bottom_right_y = bottom_right_y, shift_right = shift_right, shift_bottom = shift_bottom, scroll_pixels = scroll_pixels)
-  return(l)
-}
 
 #' @title Corrects eye-tracking coordinate data
 #'
@@ -544,86 +649,149 @@ scroll_calibration_auto <- function(calibration_image, scroll_pixels)
 
 #' @export
 #' @importFrom rlang .data
-eye_scroll_correct <- function (eyes_data, timestamp_start, timestamp_stop, image_width, image_height, calibration, time_shift=0, starting_scroll = 0, output_file = "", fixed_areas = list(), rules = list(), outside_image_is_na = TRUE)
-{
-  scroll_pixels <- calibration$scroll_pixels
-  screen_width <- calibration$screen_width
-  screen_height <- calibration$screen_height
-  top_left_y <- calibration$top_left_y
-  bottom_right_x <- calibration$bottom_right_x
-  bottom_right_y <- calibration$bottom_right_y
-  top_left_x <- calibration$top_left_x
-  shift_bottom <- calibration$shift_bottom
-  shift_right <- calibration$shift_right
-  event <- "WM_MOUSEWHEEL"
-  eyes_data$Timestamp.Shifted <- eyes_data$Timestamp - time_shift
-  eyes_data <- dplyr::filter(eyes_data, .data$Timestamp.Shifted >= timestamp_start, .data$Timestamp.Shifted <= timestamp_stop)
-  scroll <- starting_scroll
-  scroll_vector <- c()
-  min_scroll <- 0
-  columns_to_correct <- c()
-  corrected_columns <- dplyr::tibble(.rows = dim(eyes_data)[1])
-  if("Gaze.X" %in% names(eyes_data) && "Gaze.Y" %in% names(eyes_data))
+eye_scroll_correct <-
+  function (eyes_data,
+            timestamp_start,
+            timestamp_stop,
+            image_width,
+            image_height,
+            calibration,
+            time_shift = 0,
+            starting_scroll = 0,
+            output_file = "",
+            fixed_areas = list(),
+            rules = list(),
+            outside_image_is_na = TRUE)
   {
-    columns_to_correct <- append(columns_to_correct, "Gaze.X")
-    columns_to_correct <- append(columns_to_correct, "Gaze.Y")
-  }
-  if("Fixation.X" %in% names(eyes_data) && "Fixation.Y" %in% names(eyes_data))
-  {
-    columns_to_correct <- append(columns_to_correct, "Fixation.X")
-    columns_to_correct <- append(columns_to_correct, "Fixation.Y")
-  }
-  if(length(columns_to_correct) == 0)
-  {
-    stop("Please input a dataset with either Gaze, Fixation or both data, with column names Gaze.X, Gaze.Y, Fixation.X and Fixation.Y")
-  }
-
-  rules <- check_fixed_areas_rules(fixed_areas, rules)
-  flags <- c(rep(TRUE, length(rules)))
-  for (i in seq_len(length(fixed_areas)))
-  {
-    fixed_areas[[i]] <- fixed_areas[[i]] - c(top_left_x,top_left_y,top_left_x,top_left_y, 0, 0, 0, 0)
-  }
-  max_scroll <- image_height - (bottom_right_y - top_left_y + 2) # +2 because bottom_right_y and top_left_y are coordinates
-
-  for (i in seq(1,length(columns_to_correct), 2))
-  {
-    corrected_columns[columns_to_correct[i]] <- vapply(eyes_data[[columns_to_correct[i]]], shift_image_by_dimension, shift_before = top_left_x, shift_after = shift_right, screen_dimension = screen_width, outside_image_is_na = outside_image_is_na, FUN.VALUE = 1.0)
-    corrected_columns[columns_to_correct[i+1]] <- vapply(eyes_data[[columns_to_correct[i+1]]], shift_image_by_dimension, shift_before = top_left_y, shift_after = shift_bottom, screen_dimension = screen_height, outside_image_is_na = outside_image_is_na, FUN.VALUE = 1.0)
-  }
-
-  for (line in 1:dim(eyes_data)[1])
-  {
-    # prepare_smooth_scroll(event, eyes_data[line ,], smooth_scroll, smooth_scroll_table, scroll, min_scroll, max_scroll)
-    scroll <- shift_scroll(event, eyes_data[line ,], scroll, min_scroll, max_scroll, scroll_pixels, top_left_x, top_left_y, bottom_right_x, bottom_right_y)
-    scroll_vector[line] <- scroll
-    flags <- check_rules_true(rules, eyes_data[line, ], flags, fixed_areas, scroll)
-
-    for (i in seq(1,length(columns_to_correct), 2))
+    scroll_pixels <- calibration$scroll_pixels
+    screen_width <- calibration$screen_width
+    screen_height <- calibration$screen_height
+    top_left_y <- calibration$top_left_y
+    bottom_right_x <- calibration$bottom_right_x
+    bottom_right_y <- calibration$bottom_right_y
+    top_left_x <- calibration$top_left_x
+    shift_bottom <- calibration$shift_bottom
+    shift_right <- calibration$shift_right
+    event <- "WM_MOUSEWHEEL"
+    eyes_data$Timestamp.Shifted <- eyes_data$Timestamp - time_shift
+    eyes_data <-
+      dplyr::filter(
+        eyes_data,
+        .data$Timestamp.Shifted >= timestamp_start,
+        .data$Timestamp.Shifted <= timestamp_stop
+      )
+    scroll <- starting_scroll
+    scroll_vector <- c()
+    min_scroll <- 0
+    columns_to_correct <- c()
+    corrected_columns <- dplyr::tibble(.rows = dim(eyes_data)[1])
+    if ("Gaze.X" %in% names(eyes_data) &&
+        "Gaze.Y" %in% names(eyes_data))
     {
-      corrected_y <- enforce_rules(flags, fixed_areas, corrected_columns[line, ], columns_to_correct[i:(i+1)])
-      if (is.na(corrected_y))
+      columns_to_correct <- append(columns_to_correct, "Gaze.X")
+      columns_to_correct <- append(columns_to_correct, "Gaze.Y")
+    }
+    if ("Fixation.X" %in% names(eyes_data) &&
+        "Fixation.Y" %in% names(eyes_data))
+    {
+      columns_to_correct <- append(columns_to_correct, "Fixation.X")
+      columns_to_correct <- append(columns_to_correct, "Fixation.Y")
+    }
+    if (length(columns_to_correct) == 0)
+    {
+      stop(
+        "Please input a dataset with either Gaze, Fixation or both data, with column names Gaze.X, Gaze.Y, Fixation.X and Fixation.Y"
+      )
+    }
+
+    rules <- check_fixed_areas_rules(fixed_areas, rules)
+    flags <- c(rep(TRUE, length(rules)))
+    for (i in seq_len(length(fixed_areas)))
+    {
+      fixed_areas[[i]] <-
+        fixed_areas[[i]] - c(top_left_x, top_left_y, top_left_x, top_left_y, 0, 0, 0, 0)
+    }
+    max_scroll <-
+      image_height - (bottom_right_y - top_left_y + 2) # +2 because bottom_right_y and top_left_y are coordinates
+
+    for (i in seq(1, length(columns_to_correct), 2))
+    {
+      corrected_columns[columns_to_correct[i]] <-
+        vapply(
+          eyes_data[[columns_to_correct[i]]],
+          shift_image_by_dimension,
+          shift_before = top_left_x,
+          shift_after = shift_right,
+          screen_dimension = screen_width,
+          outside_image_is_na = outside_image_is_na,
+          FUN.VALUE = 1.0
+        )
+      corrected_columns[columns_to_correct[i + 1]] <-
+        vapply(
+          eyes_data[[columns_to_correct[i + 1]]],
+          shift_image_by_dimension,
+          shift_before = top_left_y,
+          shift_after = shift_bottom,
+          screen_dimension = screen_height,
+          outside_image_is_na = outside_image_is_na,
+          FUN.VALUE = 1.0
+        )
+    }
+
+    for (line in 1:dim(eyes_data)[1])
+    {
+      # prepare_smooth_scroll(event, eyes_data[line ,], smooth_scroll, smooth_scroll_table, scroll, min_scroll, max_scroll)
+      scroll <-
+        shift_scroll(
+          event,
+          eyes_data[line ,],
+          scroll,
+          min_scroll,
+          max_scroll,
+          scroll_pixels,
+          top_left_x,
+          top_left_y,
+          bottom_right_x,
+          bottom_right_y
+        )
+      scroll_vector[line] <- scroll
+      flags <-
+        check_rules_true(rules, eyes_data[line, ], flags, fixed_areas, scroll)
+
+      for (i in seq(1, length(columns_to_correct), 2))
       {
-        corrected_columns[line, columns_to_correct[i+1]] <- corrected_columns[[line, columns_to_correct[i+1]]] + scroll
-      }
-      else
-      {
-        corrected_columns[line, columns_to_correct[i+1]] <- corrected_y
+        corrected_y <-
+          enforce_rules(flags,
+                        fixed_areas,
+                        corrected_columns[line, ],
+                        columns_to_correct[i:(i + 1)])
+        if (is.na(corrected_y))
+        {
+          corrected_columns[line, columns_to_correct[i + 1]] <-
+            corrected_columns[[line, columns_to_correct[i + 1]]] + scroll
+        }
+        else
+        {
+          corrected_columns[line, columns_to_correct[i + 1]] <- corrected_y
+        }
       }
     }
-  }
 
-  for(name in names(corrected_columns))
-  {
-    eyes_data[paste("Corrected.",name, sep="")] <- corrected_columns[name]
+    for (name in names(corrected_columns))
+    {
+      eyes_data[paste("Corrected.", name, sep = "")] <-
+        corrected_columns[name]
+    }
+    eyes_data$Scroll <- scroll_vector
+    if (output_file != "")
+    {
+      utils::write.csv(eyes_data,
+                       file = output_file,
+                       row.names = FALSE,
+                       na = "")
+    }
+    return(eyes_data)
   }
-  eyes_data$Scroll <- scroll_vector
-  if (output_file != "")
-  {
-    utils::write.csv(eyes_data, file = output_file, row.names = FALSE, na="")
-  }
-  return(eyes_data)
-}
 
 #' @title Creates generic heatmap
 #'
@@ -644,14 +812,25 @@ eye_scroll_correct <- function (eyes_data, timestamp_start, timestamp_stop, imag
 #' @importFrom rlang .data
 generate_heatmap <- function(data, heatmap_image)
 {
-  data <- data[stats::complete.cases(data[, 'Corrected.Fixation.Y']),]
-  data$Corrected.Fixation.Y <- dim(heatmap_image)[1] - data$Corrected.Fixation.Y
-  ggplot2::ggplot(data, ggplot2::aes(.data$Corrected.Fixation.X, .data$Corrected.Fixation.Y))  +
-    ggplot2::annotation_raster(heatmap_image, xmin=-Inf, xmax=Inf, ymin=-Inf, ymax=Inf)+
-    ggplot2::stat_density2d(geom = "polygon", ggplot2::aes(fill=.data$..level.., alpha = 0.15)) +
-    ggplot2::geom_point(size=1)+
-    ggplot2::scale_fill_gradient(low="green", high="red") +
-    ggplot2::scale_x_continuous(limits=c(0,dim(heatmap_image)[2]),expand=c(0,0))+
-    ggplot2::scale_y_continuous(limits=c(0,dim(heatmap_image)[1]),expand=c(0,0))+
+  data <-
+    data[stats::complete.cases(data[, 'Corrected.Fixation.Y']),]
+  data$Corrected.Fixation.Y <-
+    dim(heatmap_image)[1] - data$Corrected.Fixation.Y
+  ggplot2::ggplot(data,
+                  ggplot2::aes(.data$Corrected.Fixation.X, .data$Corrected.Fixation.Y))  +
+    ggplot2::annotation_raster(
+      heatmap_image,
+      xmin = -Inf,
+      xmax = Inf,
+      ymin = -Inf,
+      ymax = Inf
+    ) +
+    ggplot2::stat_density2d(geom = "polygon", ggplot2::aes(fill = .data$..level.., alpha = 0.15)) +
+    ggplot2::geom_point(size = 1) +
+    ggplot2::scale_fill_gradient(low = "green", high = "red") +
+    ggplot2::scale_x_continuous(limits = c(0, dim(heatmap_image)[2]), expand =
+                                  c(0, 0)) +
+    ggplot2::scale_y_continuous(limits = c(0, dim(heatmap_image)[1]), expand =
+                                  c(0, 0)) +
     ggplot2::coord_fixed()
 }
