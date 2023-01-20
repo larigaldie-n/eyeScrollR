@@ -290,9 +290,23 @@ rule will be associated with the second bundle of fixed areas. You can
 copy and paste these functions and simply change the number
 <em>1000</em> in each of them to fit your needs if you are in a similar
 case.</p>
-<p>You can then just pass this list of rules to the
-<em>eye_scroll_correct</em> function:</p>
+<p>If this all feels a bit overwhelming, don’t worry: we’ve got you
+covered. Instead of writing everything by hand, you can just use the
+bundle creator gadget by running the following code:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/bundles_gadget.html">bundles_gadget</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<p>This gadget simplifies the process by letting you focus on
+<em>what</em> you are doing instead of <em>how</em>. You can add/remove
+fixed areas bundles with a simple click, fill in the fixed areas
+coordinates, and select which (common) rule you need for each
+bundle:</p>
+<p><img src="gadget.png" width="100%"></p>
+<p>This will output some code that you can copy &amp; paste, and the
+only thing left you have to do is modify the rules to suit your needs.
+Just don’t forget to click “done” once you are finished!</p>
+<p>You can then just pass the list of fixed areas and the list of rules
+to the <em>eye_scroll_correct</em> function:</p>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">corrected_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/eye_scroll_correct.html">eye_scroll_correct</a></span><span class="op">(</span>eyes_data <span class="op">=</span> <span class="va">test_data</span>,</span>
 <span>                                     timestamp_start <span class="op">=</span> <span class="fl">3577</span>,</span>
 <span>                                     timestamp_stop <span class="op">=</span> <span class="fl">30864</span>,</span>
@@ -305,7 +319,7 @@ case.</p>
 <div class="section level2">
 <h2 id="a-complete-commented-code-for-our-example">A complete, commented code for our example<a class="anchor" aria-label="anchor" href="#a-complete-commented-code-for-our-example"></a>
 </h2>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://larigaldie-n.github.io/eyeScrollR/">eyeScrollR</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="http://www.rforge.net/png/" class="external-link">png</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://readr.tidyverse.org" class="external-link">readr</a></span><span class="op">)</span></span>
