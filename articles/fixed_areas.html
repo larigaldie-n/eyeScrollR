@@ -81,16 +81,15 @@
 scrolled areas. Typically those are navigation menus at the very top
 and/or on the right, and footers. The problem with those is that even if
 the page has been scrolled to the very bottom, gazing at the top menu
-means that, on the unscrolled webpage image, the gaze has suddenly moved
-from the very bottom of the page to the very top without scrolling
-back.</p>
+means that, on the full webpage image, the gaze has suddenly moved from
+the very bottom of the page to the very top without scrolling back.</p>
 <p>For instance, consider this website (which you can find <a href="../test_page.html" title="test page">here</a>):</p>
 <p><img src="fixed_full.png" width="100%"></p>
 <p>For the moment, let us just ignore the fact that the top area ends up
 shrinking at some point; we will come back to this later.</p>
 <p>The areas at the top and on the right are all fixed, so if you scroll
 down a bit, only some of the content is actually moving on the screen.
-The unscrolled webpage image may look like this (although the result may
+The full webpage image may look like this (although the result may
 slightly differ depending on the plugin you are using to extract the
 image):</p>
 <p><img src="fixed_website.png" width="100%"></p>
@@ -116,12 +115,12 @@ the image.</p>
 <p>In a similar way as the manual calibration procedure, just open a
 screenshot of your screen while browsing the website, and get the
 coordinates of the top left and bottom right pixels of any fixed area
-you want to map to your unscrolled image. Once this is done, you can do
-the same with the destination coordinates on the unscrolled image, as in
+you want to map to your full page image. Once this is done, you can do
+the same with the destination coordinates on the full page image, as in
 the following:</p>
 <div class="figure">
-<img src="fixed_areas_mapping.png" alt="Left: the screenshot image; Right: the unscrolled webpage image" width="100%"><p class="caption">
-Left: the screenshot image; Right: the unscrolled webpage image
+<img src="fixed_areas_mapping.png" alt="Left: the screenshot image; Right: the full webpage image" width="100%"><p class="caption">
+Left: the screenshot image; Right: the full webpage image
 </p>
 </div>
 <p>Repeat the process for every fixed area you may encounter. All that
@@ -185,7 +184,7 @@ have.</p>
 <p>The <a href="../test_page.html" title="test page">example</a> we
 provide is a situation in which the screen-to-image mapping is still
 meaningful. Indeed, although the top area shrinks, what remains can
-still be perfectly mapped to the unscrolled image, as the whole area of
+still be perfectly mapped to the full page image, as the whole area of
 the shrunken header still has perfect correspondance (as so the bottom
 right area):</p>
 <div class="figure">
@@ -196,12 +195,12 @@ Top: before the shrinking; Bottom: after the shrinking
 <p>The right area is a critical-case scenario where the researcher will
 have to make a decision and may solve things creatively. Indeed, the
 size of this area once the header has shrunk is now larger than the one
-we got on the captured unscrolled image. Therefore, we can no longer
-make a perfect mapping of the two areas. In some cases, this might mean
-that it is impossible to map everything in a single image, and you might
+we got on the captured full page image. Therefore, we can no longer make
+a perfect mapping of the two areas. In some cases, this might mean that
+it is impossible to map everything in a single image, and you might
 consider splitting your participant’s data to have several images.</p>
 <p>However, in this particular case, we can choose to ignore this, or
-even do some manual editing to the unscrolled image to expand the area!
+even do some manual editing to the full page image to expand the area!
 Indeed, the empty area below the one we are interested in is otherwise
 never reachable to an observer: there will always be something on the
 right of the page, and the long band of white is only an artifact of the
@@ -209,7 +208,7 @@ screenshot plugin. As such, it is possible to just make the following
 mapping:</p>
 <p><img src="rules_ex_right.png" width="100%"></p>
 <p>In this situation, the bottom-right coordinates of the fixed area on
-the unscrolled image can be calculated by making sure that the two areas
+the full page image can be calculated by making sure that the two areas
 (the one on the screen and the one on the image) have the exact same
 size.</p>
 <p>In our case, we ended up with the following measures:</p>
@@ -420,7 +419,7 @@ to the <em>eye_scroll_correct</em> function:</p>
 <span>                                     fixed_areas <span class="op">=</span> <span class="va">fixed_areas</span>,</span>
 <span>                                     rules <span class="op">=</span> <span class="va">rules</span><span class="op">)</span></span>
 <span></span>
-<span><span class="co"># Read the unscrolled image</span></span>
+<span><span class="co"># Read the full page image</span></span>
 <span><span class="va">heatmap_image</span> <span class="op">&lt;-</span> <span class="fu">readPNG</span><span class="op">(</span><span class="st">"fixed_website.png"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Output the heatmap</span></span>
