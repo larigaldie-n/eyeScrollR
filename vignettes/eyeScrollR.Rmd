@@ -45,7 +45,7 @@ knitr::include_graphics("example_eyeScrollR_small_vertical.png")
 
 Although red fixation spots do indeed match the same content in both situations, green fixations spots don't; and any analysis on the content being fixated should convert those screen coordinates to the "content coordinates".
 
-In other words, if we unscrolled the content of the screen to a single long image, we would like the fixations to be correctly placed on it, as so:
+In other words, if we unrolled the content of the screen to a single long image, we would like the fixations to be correctly placed on it, as so:
 
 ```{r, echo=FALSE, out.width="100%"}
 knitr::include_graphics("example_eyeScrollR_vertical_full.png")
@@ -68,7 +68,7 @@ In Firefox browsers, a few free extensions can easily be found to hide the scrol
 
 ## Anticipate the necessary information & material
 
-eyeScrollR is mainly designed to work on "unscrolled" images of websites. Those can be automatically captured through various free or paid extensions for Chromium/Firefox browsers (and probably more), or manually constructed/modified if necessary. The resulting image should be an unscrolled image, with an horizontal size equal to that of your browser viewing area and a vertical size equal to the total length of the webpage. Procuring this image is left to the reader's preferences.
+eyeScrollR is mainly designed to work on full page images of websites. Those can be automatically captured through various free or paid extensions for Chromium/Firefox browsers (and probably more), or manually constructed/modified if necessary. The resulting image should be a full page image, with an horizontal size equal to that of your browser viewing area and a vertical size equal to the total length of the webpage. Procuring this image is left to the reader's preferences.
 
 Once you have this image, all you need are a few measurements on the monitor used for the experiment, an eye-tracking dataset *including the participant's mouse inputs and fixation coordinates*, and you are all set.
 
@@ -128,7 +128,7 @@ calibration <- scroll_calibration_manual(screen_width = 1920, screen_height = 10
 
 ## Get some data, and the website image
 
-The next step is to get an unscrolled image of the website. As mentioned earlier, there are several ways to achieve this and many browser extensions are available. In our case, we ended up with this simple image:
+The next step is to get a full page image of the website. As mentioned earlier, there are several ways to achieve this and many browser extensions are available. In our case, we ended up with this simple image:
 
 
 ```{r, echo=FALSE, out.width="100%"}

@@ -15,7 +15,7 @@ generate_heatmap(data, heatmap_image)
 A plot with the image and the heatmap
 }
 \description{
-Creates a heatmap based on the dataset and the unscrolled webpage image
+Creates a heatmap based on the dataset and the full page image
 }
 \examples{
 \dontrun{

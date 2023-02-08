@@ -16,7 +16,7 @@ knitr::opts_chunk$set(
 
 # The fixed_areas list
 
-Today, many websites have areas that do not move with the rest of the scrolled areas. Typically those are navigation menus at the very top and/or on the right, and footers. The problem with those is that even if the page has been scrolled to the very bottom, gazing at the top menu means that, on the unscrolled webpage image, the gaze has suddenly moved from the very bottom of the page to the very top without scrolling back.
+Today, many websites have areas that do not move with the rest of the scrolled areas. Typically those are navigation menus at the very top and/or on the right, and footers. The problem with those is that even if the page has been scrolled to the very bottom, gazing at the top menu means that, on the full webpage image, the gaze has suddenly moved from the very bottom of the page to the very top without scrolling back.
 
 For instance, consider this website (which you can find [here](../test_page.html "test page")):
 
@@ -26,7 +26,7 @@ knitr::include_graphics("fixed_full.png")
 
 For the moment, let us just ignore the fact that the top area ends up shrinking at some point; we will come back to this later.
 
-The areas at the top and on the right are all fixed, so if you scroll down a bit, only some of the content is actually moving on the screen. The unscrolled webpage image may look like this (although the result may slightly differ depending on the plugin you are using to extract the image):
+The areas at the top and on the right are all fixed, so if you scroll down a bit, only some of the content is actually moving on the screen. The full webpage image may look like this (although the result may slightly differ depending on the plugin you are using to extract the image):
 
 ```{r, echo=FALSE, out.width="100%"}
 knitr::include_graphics("fixed_website.png")
@@ -42,9 +42,9 @@ knitr::include_graphics("fixed_example_full.png")
 
 The way to achieve this in eyeScrollR is, as the rectangles in the above image suggested, to map a fixed relationship between areas from the screen to areas on the image. Gaze and fixation coordinates in the red rectangle on the screen should always be redirected to the red rectangle on the image, the blue area on the screen to the blue rectangle on the image, and the yellow area to the yellow rectangle on the image.
 
-In a similar way as the manual calibration procedure, just open a screenshot of your screen while browsing the website, and get the coordinates of the top left and bottom right pixels of any fixed area you want to map to your unscrolled image. Once this is done, you can do the same with the destination coordinates on the unscrolled image, as in the following:
+In a similar way as the manual calibration procedure, just open a screenshot of your screen while browsing the website, and get the coordinates of the top left and bottom right pixels of any fixed area you want to map to your full page image. Once this is done, you can do the same with the destination coordinates on the full page image, as in the following:
 
-```{r, echo=FALSE, out.width="100%", fig.cap = "Left: the screenshot image; Right: the unscrolled webpage image"}
+```{r, echo=FALSE, out.width="100%", fig.cap = "Left: the screenshot image; Right: the full webpage image"}
 knitr::include_graphics("fixed_areas_mapping.png")
 ```
 
@@ -93,21 +93,21 @@ The most complicated use-case scenario that eyeScrollR can handle is when those 
 
 For instance, you could create a bundle of mappings to be used when a user has not scrolled down yet and another one to be used only once they have.
 
-The [example](../test_page.html "test page") we provide is a situation in which the screen-to-image mapping is still meaningful. Indeed, although the top area shrinks, what remains can still be perfectly mapped to the unscrolled image, as the whole area of the shrunken header still has perfect correspondance (as so the bottom right area):
+The [example](../test_page.html "test page") we provide is a situation in which the screen-to-image mapping is still meaningful. Indeed, although the top area shrinks, what remains can still be perfectly mapped to the full page image, as the whole area of the shrunken header still has perfect correspondance (as so the bottom right area):
 
 ```{r, echo=FALSE, out.width="100%", fig.cap = "Top: before the shrinking; Bottom: after the shrinking"}
 knitr::include_graphics("rules_ex.png")
 ```
 
-The right area is a critical-case scenario where the researcher will have to make a decision and may solve things creatively. Indeed, the size of this area once the header has shrunk is now larger than the one we got on the captured unscrolled image. Therefore, we can no longer make a perfect mapping of the two areas. In some cases, this might mean that it is impossible to map everything in a single image, and you might consider splitting your participant's data to have several images.
+The right area is a critical-case scenario where the researcher will have to make a decision and may solve things creatively. Indeed, the size of this area once the header has shrunk is now larger than the one we got on the captured full page image. Therefore, we can no longer make a perfect mapping of the two areas. In some cases, this might mean that it is impossible to map everything in a single image, and you might consider splitting your participant's data to have several images.
 
-However, in this particular case, we can choose to ignore this, or even do some manual editing to the unscrolled image to expand the area! Indeed, the empty area below the one we are interested in is otherwise never reachable to an observer: there will always be something on the right of the page, and the long band of white is only an artifact of the screenshot plugin. As such, it is possible to just make the following mapping:
+However, in this particular case, we can choose to ignore this, or even do some manual editing to the full page image to expand the area! Indeed, the empty area below the one we are interested in is otherwise never reachable to an observer: there will always be something on the right of the page, and the long band of white is only an artifact of the screenshot plugin. As such, it is possible to just make the following mapping:
 
 ```{r, echo=FALSE, out.width="100%"}
 knitr::include_graphics("rules_ex_right.png")
 ```
 
-In this situation, the bottom-right coordinates of the fixed area on the unscrolled image can be calculated by making sure that the two areas (the one on the screen and the one on the image) have the exact same size.
+In this situation, the bottom-right coordinates of the fixed area on the full page image can be calculated by making sure that the two areas (the one on the screen and the one on the image) have the exact same size.
 
 In our case, we ended up with the following measures:
 
@@ -300,7 +300,7 @@ corrected_data <- eye_scroll_correct(eyes_data = test_data,
                                      fixed_areas = fixed_areas,
                                      rules = rules)
 
-# Read the unscrolled image
+# Read the full page image
 heatmap_image <- readPNG("fixed_website.png")
 
 # Output the heatmap

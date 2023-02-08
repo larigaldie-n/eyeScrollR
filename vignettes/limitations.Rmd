@@ -24,7 +24,7 @@ Native support for other software is planned, but not guaranteed, at the moment.
 
 iMotions allows users to record websites instead of screens. This gives access to more user-generated events through browser messages and should theoretically give more accurate scroll corrections.
 
-However, browsers run through iMotions do **not** include plugins and custom settings (much like running in private navigation), which can be indispensable for most. as such, even though eyeScrollR functions can be run on data using the website recordings, it will not use the browser-generated events. It is recommended to simply use the whole screen recording procedure.
+However, browsers run through iMotions do **not** include plugins and custom settings (much like running in private navigation), which can be indispensable for most. as such, even though eyeScrollR functions can be run on data using the website recordings, it will not use the browser-generated events. It is recommended to simply use the screen recording procedure.
 
 # Keypresses and scrollbars
 

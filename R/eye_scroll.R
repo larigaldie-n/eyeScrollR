@@ -795,7 +795,7 @@ eye_scroll_correct <-
 
 #' @title Creates generic heatmap
 #'
-#' @description Creates a heatmap based on the dataset and the unscrolled webpage image
+#' @description Creates a heatmap based on the dataset and the full page image
 #'
 #' @param data The dataset output by the \code{\link{eye_scroll_correct}} function
 #' @param heatmap_image The unscrolled webpage image on which to apply the heatmap
