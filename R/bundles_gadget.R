@@ -162,7 +162,7 @@ bundles_gadget <- function() {
                       values$n_fixed_areas[n_bundle],
                       "_3"
                     ),
-                    label = h5("Bottom left X"),
+                    label = h5("Bottom right X"),
                     value = 0
                   )
                 ),
@@ -176,7 +176,7 @@ bundles_gadget <- function() {
                       values$n_fixed_areas[n_bundle],
                       "_4"
                     ),
-                    label = h5("Bottom left Y"),
+                    label = h5("Bottom right Y"),
                     value = 0
                   )
                 )
@@ -223,7 +223,7 @@ bundles_gadget <- function() {
                       values$n_fixed_areas[n_bundle],
                       "_3"
                     ),
-                    label = h5("Bottom left X"),
+                    label = h5("Bottom right X"),
                     value = 0
                   )
                 ),
@@ -237,7 +237,7 @@ bundles_gadget <- function() {
                       values$n_fixed_areas[n_bundle],
                       "_4"
                     ),
-                    label = h5("Bottom left Y"),
+                    label = h5("Bottom right Y"),
                     value = 0
                   )
                 )
