@@ -90,45 +90,45 @@
  
 <body>
     <div id="immovable-header">
-      <div id="header-text-t">I won't move as you scroll down<br><br>
-      <span id="header-text">But at some point, I will shrink</span>
+      <div id="header-text-t">Fixed area 1<br><br>
+      <!-- <span id="header-text">But at some point, I will shrink</span> -->
     </div>
     </div>
 
     <div id="first-text">
-        <h1>This content moves</h1><br>
+        <h1>Regular content</h1><br>
     </div>
 
     <div id="second-text">
-        <h1>This content moves</h1><br>
+        <h1>Regular content</h1><br>
     </div>
 
     <div id="third-text">
-        <h1>This content moves</h1><br>
+        <h1>Regular content</h1><br>
     </div>
 
     <div id="fourth-text">
-        <h1>This content moves</h1><br>
+        <h1>Regular content</h1><br>
     </div>
     <div id="immovable-box-right">
-        I won't move, but I will follow the shrinkage from the top header
+        Fixed area 2
     </div>
     <div id="immovable-box-bottom-right">
-        I won't move (but I won't follow the shrinkage either)
+        Fixed area 3
     </div>
     <script type="text/javascript">
-    // When the user scrolls down 500px from the top of the document, resize the header's font size
+    // When the user scrolls down 1000px from the top of the document, resize the header's font size
     window.onscroll = function() {scrollFunction()};
 
     function scrollFunction() {
     if (document.body.scrollTop > 1000 || document.documentElement.scrollTop > 1000) {
         document.getElementById("immovable-header").style.height = "10%";
-        document.getElementById("header-text").innerText = "";
+        // document.getElementById("header-text").innerText = "";
         document.getElementById("immovable-box-right").style.top = "10%";
         document.getElementById("immovable-box-right").style.height = "80%";  
     } else {
         document.getElementById("immovable-header").style.height = "20%";
-        document.getElementById("header-text").innerText = "But at some point, I will shrink";
+        // document.getElementById("header-text").innerText = "But at some point, I will shrink";
         document.getElementById("immovable-box-right").style.top = "20%";
         document.getElementById("immovable-box-right").style.height = "70%"; 
     }
