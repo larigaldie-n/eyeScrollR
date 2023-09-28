@@ -14,21 +14,9 @@ knitr::opts_chunk$set(
 )
 ```
 
-# Software
-
-Currently, eyeScrollR has only been tested with .csv outputs from the iMotions software. However, as long as the user manages to convert its own .csv file to the same format, this package should be perfectly capable of performing its task.
-
-Native support for other software is planned, but not guaranteed, at the moment.
-
-# Browser-generated events
-
-iMotions allows users to record websites instead of screens. This gives access to more user-generated events through browser messages and should theoretically give more accurate scroll corrections.
-
-However, browsers run through iMotions do **not** include plugins and custom settings (much like running in private navigation), which can be indispensable for most. as such, even though eyeScrollR functions can be run on data using the website recordings, it will not use the browser-generated events. It is recommended to simply use the screen recording procedure.
-
 # Keypresses and scrollbars
 
-eyeScrollR mainly works by catching the MOUSEWHEEL key event and correcting the gaze and fixation coordinates accordingly. However, the mouse wheel is not the only way to scroll up/down on a website, and the researcher should ALWAYS make sure that participants did not, for instance, press a space bar or the page down key (when outside of an input field). These events are **not** handled by the package and will therefore not be considered at all.
+eyeScrollR mainly works by catching the MOUSEWHEEL key event and correcting the gaze and fixation coordinates accordingly. However, the mouse wheel is not the only way to scroll up/down on a website, and the researcher should ALWAYS make sure that participants did not, for instance, press a space bar or the page down key (when outside of an input field). These events are **not** handled by the package at the moment and will therefore not be considered at all.
 
 Similarly, participants should also be discouraged from using the side scrollbar (if it could not be completely disabled) for the same reason.
 

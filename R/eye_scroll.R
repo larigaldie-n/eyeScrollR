@@ -619,7 +619,9 @@ scroll_calibration_auto <-
 #' @param output_file [Optional] The name of the output .csv file. If an empty string, will just return the data without creating a file. Default: empty string
 #' @param fixed_areas [Optional] A list of potentially immovable areas inside the webpage (e.g. fixed menus in a website) - see the Fixed Areas article for more information. Default: empty list
 #' @param rules [Optional] A list of functions that can act as rules to activate/deactivate immovables areas in the webpage (e.g. a menu that disappears after X pixels have been scrolled) - See the Fixed Areas article for more information. Default: empty list
+#' @param scroll_lag [Optional] Determines the lag (in milliseconds) between the scroll message and the scroll correction. Default: 0 (WARNING: NOT IMPLENTED YET)
 #' @param outside_image_is_na [Optional] Indicates if values outside the AOI (e.g. the windows bar) should be set to NA or kept in the file/dataset. If set to FALSE, coordinates above/before the AOI will become negative. Default: TRUE
+#' @param progression_bar [Optional] Indicates if the function should display a progression bar. Default: TRUE
 #'
 #' @details
 #' \strong{The Dataset} \cr\cr
@@ -661,7 +663,9 @@ eye_scroll_correct <-
             output_file = "",
             fixed_areas = list(),
             rules = list(),
-            outside_image_is_na = TRUE)
+            scroll_lag = 0,
+            outside_image_is_na = TRUE,
+            progression_bar = TRUE)
   {
     scroll_pixels <- calibration$scroll_pixels
     screen_width <- calibration$screen_width
@@ -703,6 +707,10 @@ eye_scroll_correct <-
         "Please input a dataset with either Gaze, Fixation or both data, with column names Gaze.X, Gaze.Y, Fixation.X and Fixation.Y"
       )
     }
+    if (progression_bar == TRUE)
+    {
+      pb <- utils::txtProgressBar(min = 0, max = nrow(eyes_data), style = 3, width = 50, char = "=")
+    }
 
     rules <- check_fixed_areas_rules(fixed_areas, rules)
     flags <- c(rep(TRUE, length(rules)))
@@ -741,19 +749,46 @@ eye_scroll_correct <-
     for (line in 1:dim(eyes_data)[1])
     {
       # prepare_smooth_scroll(event, eyes_data[line ,], smooth_scroll, smooth_scroll_table, scroll, min_scroll, max_scroll)
-      scroll <-
-        shift_scroll(
-          event,
-          eyes_data[line ,],
-          scroll,
-          min_scroll,
-          max_scroll,
-          scroll_pixels,
-          top_left_x,
-          top_left_y,
-          bottom_right_x,
-          bottom_right_y
-        )
+      if (scroll_lag <= 0)
+      {
+        scroll <-
+          shift_scroll(
+            event,
+            eyes_data[line ,],
+            scroll,
+            min_scroll,
+            max_scroll,
+            scroll_pixels,
+            top_left_x,
+            top_left_y,
+            bottom_right_x,
+            bottom_right_y
+          )
+      }
+      else
+      {
+        ### TODO
+        ### Check if 1st member of list has a timestamp <= current timestamp
+        ### If so, change scroll to be the one in the list, and pop it out
+        scroll_new <-
+          shift_scroll(
+            event,
+            eyes_data[line ,],
+            scroll, # Has to always be the most recent one (last one on the list, if it exists)
+            min_scroll,
+            max_scroll,
+            scroll_pixels,
+            top_left_x,
+            top_left_y,
+            bottom_right_x,
+            bottom_right_y
+          )
+        if (scroll_new != scroll) # Same : have to compare to the last one on the list, not the current scroll
+        {
+
+        }
+      }
+
       scroll_vector[line] <- scroll
       flags <-
         check_rules_true(rules, eyes_data[line, ], flags, fixed_areas, scroll)
@@ -774,6 +809,10 @@ eye_scroll_correct <-
         {
           corrected_columns[line, columns_to_correct[i + 1]] <- corrected_y
         }
+      }
+      if(progression_bar == TRUE)
+      {
+        utils::setTxtProgressBar(pb, line)
       }
     }
 
