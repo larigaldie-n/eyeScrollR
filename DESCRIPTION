@@ -1,7 +1,7 @@
 Package: eyeScrollR
 Type: Package
 Title: Correctly place eye-tracking fixation data on areas of scrollable websites
-Version: 1.0.0
+Version: 1.0.1
 Authors@R: c(person("Nathanael", "Larigaldie", email="larigaldie.n@gmail.com",
     role = c("aut", "cre")))
 Maintainer: Nathanael Larigaldie <larigaldie.n@gmail.com>
@@ -14,17 +14,19 @@ Description: Eye-tracking software usually outputs fixation coordinates from
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
+Depends: R (>= 4.0.0)
 Suggests: 
     knitr,
     rmarkdown,
     testthat (>= 3.0.0)
 Config/testthat/edition: 3
-RoxygenNote: 7.2.1
+RoxygenNote: 7.2.3
 Imports:
-    dplyr,
-    ggplot2,
-    rlang,
-    stringr,
-    shiny
+    dplyr (>= 1.1.1),
+    ggplot2 (>= 3.4.2),
+    rlang (>= 1.1.0),
+    stringr (>= 1.5.0),
+    shiny (>= 1.7.4),
+    utils (>= 4.2.3)
 URL: https://larigaldie-n.github.io/eyeScrollR/
 VignetteBuilder: knitr
