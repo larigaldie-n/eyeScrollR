@@ -26,7 +26,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">eyeScrollR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.1</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -75,29 +75,6 @@
     
     
 <div class="section level2">
-<h2 id="software">Software<a class="anchor" aria-label="anchor" href="#software"></a>
-</h2>
-<p>Currently, eyeScrollR has only been tested with .csv outputs from the
-iMotions software. However, as long as the user manages to convert its
-own .csv file to the same format, this package should be perfectly
-capable of performing its task.</p>
-<p>Native support for other software is planned, but not guaranteed, at
-the moment.</p>
-</div>
-<div class="section level2">
-<h2 id="browser-generated-events">Browser-generated events<a class="anchor" aria-label="anchor" href="#browser-generated-events"></a>
-</h2>
-<p>iMotions allows users to record websites instead of screens. This
-gives access to more user-generated events through browser messages and
-should theoretically give more accurate scroll corrections.</p>
-<p>However, browsers run through iMotions do <strong>not</strong>
-include plugins and custom settings (much like running in private
-navigation), which can be indispensable for most. as such, even though
-eyeScrollR functions can be run on data using the website recordings, it
-will not use the browser-generated events. It is recommended to simply
-use the screen recording procedure.</p>
-</div>
-<div class="section level2">
 <h2 id="keypresses-and-scrollbars">Keypresses and scrollbars<a class="anchor" aria-label="anchor" href="#keypresses-and-scrollbars"></a>
 </h2>
 <p>eyeScrollR mainly works by catching the MOUSEWHEEL key event and
@@ -106,7 +83,7 @@ mouse wheel is not the only way to scroll up/down on a website, and the
 researcher should ALWAYS make sure that participants did not, for
 instance, press a space bar or the page down key (when outside of an
 input field). These events are <strong>not</strong> handled by the
-package and will therefore not be considered at all.</p>
+package at the moment and will therefore not be considered at all.</p>
 <p>Similarly, participants should also be discouraged from using the
 side scrollbar (if it could not be completely disabled) for the same
 reason.</p>
@@ -122,8 +99,7 @@ is more than highly recommended that any user checks if coordinates
 correspond to individual recordings of participants before publishing
 any data.</p>
 </div>
-  </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
-    </nav></aside>
+  </main>
 </div>
 
 

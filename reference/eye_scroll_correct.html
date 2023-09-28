@@ -12,7 +12,7 @@ to fit in a webpage scrolled vertically by the participant"><!-- mathjax --><scr
     
     <a class="navbar-brand me-2" href="../index.html">eyeScrollR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.1</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -67,7 +67,9 @@ to fit in a webpage scrolled vertically by the participant</p>
 <span>  output_file <span class="op">=</span> <span class="st">""</span>,</span>
 <span>  fixed_areas <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span>,</span>
 <span>  rules <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span>,</span>
-<span>  outside_image_is_na <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span>  scroll_lag <span class="op">=</span> <span class="fl">0</span>,</span>
+<span>  outside_image_is_na <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  progression_bar <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -117,8 +119,16 @@ to fit in a webpage scrolled vertically by the participant</p>
 <dd><p>[Optional] A list of functions that can act as rules to activate/deactivate immovables areas in the webpage (e.g. a menu that disappears after X pixels have been scrolled) - See the Fixed Areas article for more information. Default: empty list</p></dd>
 
 
+<dt>scroll_lag</dt>
+<dd><p>[Optional] Determines the lag (in milliseconds) between the scroll message and the scroll correction. Default: 0 (WARNING: NOT IMPLENTED YET)</p></dd>
+
+
 <dt>outside_image_is_na</dt>
 <dd><p>[Optional] Indicates if values outside the AOI (e.g. the windows bar) should be set to NA or kept in the file/dataset. If set to FALSE, coordinates above/before the AOI will become negative. Default: TRUE</p></dd>
+
+
+<dt>progression_bar</dt>
+<dd><p>[Optional] Indicates if the function should display a progression bar. Default: TRUE</p></dd>
 
 </dl></div>
     <div class="section level2">
