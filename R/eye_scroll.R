@@ -663,7 +663,7 @@ eye_scroll_correct <-
             output_file = "",
             fixed_areas = list(),
             rules = list(),
-            scroll_lag = 0,
+            scroll_lag = (1/120)*1000,
             outside_image_is_na = TRUE,
             progression_bar = TRUE)
   {
@@ -686,6 +686,8 @@ eye_scroll_correct <-
       )
     scroll <- starting_scroll
     scroll_vector <- c()
+    future_scrolls <- c()
+    future_scrolls_timestamps <- c()
     min_scroll <- 0
     columns_to_correct <- c()
     corrected_columns <- dplyr::tibble(.rows = dim(eyes_data)[1])
@@ -748,7 +750,6 @@ eye_scroll_correct <-
 
     for (line in 1:dim(eyes_data)[1])
     {
-      # prepare_smooth_scroll(event, eyes_data[line ,], smooth_scroll, smooth_scroll_table, scroll, min_scroll, max_scroll)
       if (scroll_lag <= 0)
       {
         scroll <-
@@ -767,14 +768,24 @@ eye_scroll_correct <-
       }
       else
       {
-        ### TODO
-        ### Check if 1st member of list has a timestamp <= current timestamp
-        ### If so, change scroll to be the one in the list, and pop it out
+        if(length(future_scrolls)>0)
+        {
+          last_scroll <- future_scrolls[length(future_scrolls)]
+          if(future_scrolls_timestamp[1] <= eyes_data[line ,]$Timestamp.Shifted)
+          {
+            future_scrolls <- future_scrolls[-1]
+            future_scrolls_timestamp <- future_scrolls_timestamp[-1]
+          }
+        }
+        else
+        {
+          last_scroll <- scroll
+        }
         scroll_new <-
           shift_scroll(
             event,
             eyes_data[line ,],
-            scroll, # Has to always be the most recent one (last one on the list, if it exists)
+            last_scroll,
             min_scroll,
             max_scroll,
             scroll_pixels,
@@ -783,9 +794,10 @@ eye_scroll_correct <-
             bottom_right_x,
             bottom_right_y
           )
-        if (scroll_new != scroll) # Same : have to compare to the last one on the list, not the current scroll
+        if (scroll_new != last_scroll)
         {
-
+          future_scrolls[length(future_scrolls) + 1] <- scroll_new
+          future_scrolls_timestamp[length(future_scrolls_timestamps) + 1] <- eyes_data[line ,]$Timestamp.Shifted + scroll_lag
         }
       }
 

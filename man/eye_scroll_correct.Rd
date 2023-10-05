@@ -16,7 +16,7 @@ eye_scroll_correct(
   output_file = "",
   fixed_areas = list(),
   rules = list(),
-  scroll_lag = 0,
+  scroll_lag = (1/120) * 1000,
   outside_image_is_na = TRUE,
   progression_bar = TRUE
 )
