@@ -18,5 +18,5 @@ An R package to correctly place eye-tracking gaze & fixation data on areas of sc
 ```{r}
 install_packages("devtools")
 library(devtools)
-install_github("https://larigaldie-n.github.io/eyeScrollR")
+install_github("larigaldie-n/eyeScrollR")
 ```
