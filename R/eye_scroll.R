@@ -771,8 +771,9 @@ eye_scroll_correct <-
         if(length(future_scrolls)>0)
         {
           last_scroll <- future_scrolls[length(future_scrolls)]
-          if(future_scrolls_timestamp[1] <= eyes_data[line ,]$Timestamp.Shifted)
+          while(length(future_scrolls) > 0 && future_scrolls_timestamp[1] <= eyes_data[line ,]$Timestamp.Shifted)
           {
+            scroll <- future_scrolls[1]
             future_scrolls <- future_scrolls[-1]
             future_scrolls_timestamp <- future_scrolls_timestamp[-1]
           }
