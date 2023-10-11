@@ -687,7 +687,7 @@ eye_scroll_correct <-
     scroll <- starting_scroll
     scroll_vector <- c()
     future_scrolls <- c()
-    future_scrolls_timestamps <- c()
+    future_scrolls_timestamp <- c()
     min_scroll <- 0
     columns_to_correct <- c()
     corrected_columns <- dplyr::tibble(.rows = dim(eyes_data)[1])
