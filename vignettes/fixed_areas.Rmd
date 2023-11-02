@@ -1,5 +1,7 @@
 ---
 title: "Using eyeScrollR with fixed areas"
+author: "Nathanael Larigaldie"
+date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Using eyeScrollR with fixed areas}
@@ -16,7 +18,7 @@ knitr::opts_chunk$set(
 
 # The fixed_areas list
 
-Today, many websites have areas that do not move with the rest of the scrolled areas. Typically those are navigation menus at the very top and/or on the right, and footers. The problem with those is that even if the page has been scrolled to the very bottom, gazing at the top menu means that, on the full webpage image, the gaze has suddenly moved from the very bottom of the page to the very top without scrolling back.
+Nowadays, many websites have areas that do not move with the rest of the scrolled areas. Typically those are navigation menus at the very top and/or on the right, and footers. The problem with those is that even if the page has been scrolled to the very bottom, gazing at the top menu means that, on the full webpage image, the gaze has suddenly moved from the very bottom of the page to the very top without scrolling back.
 
 For instance, consider this website (which you can find [here](../test_page.html "test page")):
 
@@ -71,7 +73,7 @@ area_bundle <- fixed_areas_bundle(top_fixed_area_screen,
 fixed_areas <- list(area_bundle)
 ```
 
-It is imperative that you pass the arguments in ordered pairs of screen-to-image mappings, and that you put the result in a list (we will come to the reason why in the next section). Your rectangle pairs MUST also have the exact same dimensions.
+It is imperative to pass the arguments in ordered pairs of screen-to-image mappings, and that you put the result in a list (we will come to the reason why in the next section). The rectangle pairs must also have the exact same dimensions in order to maintain the 1:1 mapping process. If this feels like a long piece of code to write: keep on reading, as a much simplified way to come up with all this code is explained later in this tutorial. All these explanations are here to make sure you understand how the mapping process works.
 
 Once this is done, provided that you already did the calibration procedure, simply pass the *fixed_areas* argument to the *eye_scroll_correct* function:
 
@@ -89,11 +91,11 @@ This should be enough for simple situations with fixed areas that never change.
 
 # The rules list
 
-The most complicated use-case scenario that eyeScrollR can handle is when those fixed areas have a somewhat dynamic behaviour. The most common example is a top menu bar that shrinks (or even disappears!) when a certain number of pixels have been scrolled down. In these situations, if a screen-to-image direct mapping is still meaningful across the different possible states of the webpage, it is possible to create several bundles of fixed areas mappings and create rules to instruct the package which bundle should be used at what time.
+The most complicated use-case scenario that eyeScrollR can handle is when those fixed areas have a somewhat dynamic behavior. The most common example is a top menu bar that shrinks (or even disappears!) when a certain number of pixels have been scrolled down. In these situations, if a screen-to-image direct mapping is still meaningful across the different possible states of the webpage, it is possible to create several bundles of fixed areas mappings and create rules to instruct the package which bundle should be used at what time.
 
 For instance, you could create a bundle of mappings to be used when a user has not scrolled down yet and another one to be used only once they have.
 
-The [example](../test_page.html "test page") we provide is a situation in which the screen-to-image mapping is still meaningful. Indeed, although the top area shrinks, what remains can still be perfectly mapped to the full page image, as the whole area of the shrunken header still has perfect correspondance (as so the bottom right area):
+The [example](../test_page.html "test page") we provide is a situation in which the screen-to-image mapping is still meaningful. Indeed, although the top area shrinks, what remains can still be perfectly mapped to the full page image, as the whole area of the shrunken header still has perfect correspondence (as so the bottom right area):
 
 ```{r, echo=FALSE, out.width="100%", fig.cap = "Top: before the shrinking; Bottom: after the shrinking"}
 knitr::include_graphics("rules_ex.png")
@@ -194,7 +196,8 @@ corrected_data <- eye_scroll_correct(eyes_data = test_data,
                                      image_height = 4377,
                                      calibration = calibration,
                                      fixed_areas = fixed_areas,
-                                     rules = rules)
+                                     rules = rules,
+                                     scroll_lag = (1/120)*1000)
 ```
 
 # A complete, commented code for our example
@@ -202,12 +205,12 @@ corrected_data <- eye_scroll_correct(eyes_data = test_data,
 ```{r eval=FALSE}
 library(eyeScrollR)
 library(png)
-library(readr)
+library(tidyverse)
 
 ################################################################################
 # General settings
 # Same for every data file for a given webpage
-# (aka "do this only once per webpage, then stop thinking about it")
+# (Do this once per webpage)
 ################################################################################
 
 ### Automatic calibration
@@ -287,8 +290,7 @@ rules <- list(rule_scrolled_up, rule_scrolled_down)
 # Participant-specific code
 ################################################################################
 # Read data, and make sure labels are alright
-test_data <- read_csv("fixed_areas.csv", comment = "#")
-names(test_data) <- make.names(names(test_data))
+test_data <- read_csv("fixed_areas.csv")
 
 # Apply the scroll corrections
 corrected_data <- eye_scroll_correct(eyes_data = test_data,
@@ -298,7 +300,8 @@ corrected_data <- eye_scroll_correct(eyes_data = test_data,
                                      image_height = 4377,
                                      calibration = calibration,
                                      fixed_areas = fixed_areas,
-                                     rules = rules)
+                                     rules = rules,
+                                     scroll_lag = (1/120)*1000)
 
 # Read the full page image
 heatmap_image <- readPNG("fixed_website.png")

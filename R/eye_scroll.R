@@ -1,3 +1,5 @@
+# Written by Nathanael Larigaldie
+
 # Checks if the fixed_areas and rules lists are correctly formed
 check_fixed_areas_rules <- function(fixed_areas, rules)
 {
@@ -619,7 +621,7 @@ scroll_calibration_auto <-
 #' @param output_file [Optional] The name of the output .csv file. If an empty string, will just return the data without creating a file. Default: empty string
 #' @param fixed_areas [Optional] A list of potentially immovable areas inside the webpage (e.g. fixed menus in a website) - see the Fixed Areas article for more information. Default: empty list
 #' @param rules [Optional] A list of functions that can act as rules to activate/deactivate immovables areas in the webpage (e.g. a menu that disappears after X pixels have been scrolled) - See the Fixed Areas article for more information. Default: empty list
-#' @param scroll_lag [Optional, EXPERIMENTAL] Determines the lag (in milliseconds) between the scroll message and the scroll correction. Default: 0 (WARNING: NOT IMPLENTED YET)
+#' @param scroll_lag [Optional] Determines the lag (in milliseconds) between the scroll message and the scroll correction, to account for input lag. See the related publication for more information. Default: 0
 #' @param outside_image_is_na [Optional] Indicates if values outside the AOI (e.g. the windows bar) should be set to NA or kept in the file/dataset. If set to FALSE, coordinates above/before the AOI will become negative. Default: TRUE
 #' @param progression_bar [Optional] Indicates if the function should display a progression bar. Default: TRUE
 #'
@@ -636,7 +638,7 @@ scroll_calibration_auto <-
 #' }
 #' Data and Timestamp columns are mandatory, but you may choose to only include Gaze data or Fixation data (or both)
 #'
-#' @return Returns the same dataset with added columns for corrected coordinates ("Corrected.Gaze.X", "Corrected.Gaze.Y", "Corrected.Fixation.X" and "Corrected.Fixation.Y"), shifted timestamps ("Timestamp.Shifted"), and the amount of pixels scrolled down ("Scrolled")
+#' @return Returns the same dataset with added columns for corrected coordinates ("Corrected.Gaze.X", "Corrected.Gaze.Y", "Corrected.Fixation.X" and "Corrected.Fixation.Y"), shifted timestamps ("Timestamp.Shifted"), and the amount of pixels scrolled down ("Scroll")
 #' @examples
 #' \dontrun{
 #' library(eyeScrollR)

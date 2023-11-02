@@ -1,3 +1,5 @@
+# Written by Nathanael Larigaldie
+
 #' @title Run a fixed areas bundle gadget
 #'
 #' @description Automatically generates code for fixed areas bundle and rules

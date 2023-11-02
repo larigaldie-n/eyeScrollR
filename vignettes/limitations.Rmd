@@ -1,5 +1,7 @@
 ---
 title: "Limitations"
+author: "Nathanael Larigaldie"
+date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Limitations}
@@ -16,10 +18,10 @@ knitr::opts_chunk$set(
 
 # Keypresses and scrollbars
 
-eyeScrollR mainly works by catching the MOUSEWHEEL key event and correcting the gaze and fixation coordinates accordingly. However, the mouse wheel is not the only way to scroll up/down on a website, and the researcher should ALWAYS make sure that participants did not, for instance, press a space bar or the page down key (when outside of an input field). These events are **not** handled by the package at the moment and will therefore not be considered at all.
+eyeScrollR mainly works by catching the MOUSEWHEEL key events and correcting the gaze and fixation coordinates accordingly. However, the mouse wheel is not the only way to scroll up/down on a website, and the researcher should ALWAYS make sure that participants did not, for instance, press a space bar or the page down key (when outside of an input field). These events are **not** handled by the package at the moment and will therefore not be considered at all.
 
 Similarly, participants should also be discouraged from using the side scrollbar (if it could not be completely disabled) for the same reason.
 
-Finally, some websites have scrollbars inside subcomponents. In this situation, using the mousewheel while pointing at this area will scroll down the subcomponent, but not the whole page. However, eyeScrollR will still interpret the event as a scroll down for the entire page. There are, however, no other choices than to either refrain from using this package in such settings or manually remove these scrolling events from the .csv file.
+Finally, some websites have scrollbars inside subcomponents. In this situation, using the mouse wheel while pointing at this area will scroll down the subcomponent, but not the whole page. However, eyeScrollR will still interpret the event as a scroll down for the entire page. There are, however, no other choices than to either refrain from using this package in such settings or manually remove these scrolling events from the .csv file.
 
-Please note that eyeScrollR is still very new. As a consequence, it is more than highly recommended that any user checks if coordinates correspond to individual recordings of participants before publishing any data.
+Please note that eyeScrollR is still very new. Although every effort has been put to make sure is it bug-free, it is recommended that users check if final data sets correspond to their expectations before publishing any data.
