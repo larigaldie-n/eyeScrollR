@@ -1,5 +1,5 @@
 # eyeScrollR
-An R package to correctly place eye-tracking gaze & fixation data on areas of scrollable websites, and simplify the creation of heatmaps on longer-than-screen images.
+An R package to correctly place eye-tracking gaze & fixation data on scrollable web pages
 
 ### [Github repo](https://github.com/larigaldie-n/eyeScrollR)
 
