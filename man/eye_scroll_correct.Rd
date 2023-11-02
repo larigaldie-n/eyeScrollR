@@ -44,14 +44,14 @@ eye_scroll_correct(
 
 \item{rules}{[Optional] A list of functions that can act as rules to activate/deactivate immovables areas in the webpage (e.g. a menu that disappears after X pixels have been scrolled) - See the Fixed Areas article for more information. Default: empty list}
 
-\item{scroll_lag}{[Optional, EXPERIMENTAL] Determines the lag (in milliseconds) between the scroll message and the scroll correction. Default: 0 (WARNING: NOT IMPLENTED YET)}
+\item{scroll_lag}{[Optional] Determines the lag (in milliseconds) between the scroll message and the scroll correction, to account for input lag. See the related publication for more information. Default: 0}
 
 \item{outside_image_is_na}{[Optional] Indicates if values outside the AOI (e.g. the windows bar) should be set to NA or kept in the file/dataset. If set to FALSE, coordinates above/before the AOI will become negative. Default: TRUE}
 
 \item{progression_bar}{[Optional] Indicates if the function should display a progression bar. Default: TRUE}
 }
 \value{
-Returns the same dataset with added columns for corrected coordinates ("Corrected.Gaze.X", "Corrected.Gaze.Y", "Corrected.Fixation.X" and "Corrected.Fixation.Y"), shifted timestamps ("Timestamp.Shifted"), and the amount of pixels scrolled down ("Scrolled")
+Returns the same dataset with added columns for corrected coordinates ("Corrected.Gaze.X", "Corrected.Gaze.Y", "Corrected.Fixation.X" and "Corrected.Fixation.Y"), shifted timestamps ("Timestamp.Shifted"), and the amount of pixels scrolled down ("Scroll")
 }
 \description{
 The core function that corrects the eye-tracking coordinate data
