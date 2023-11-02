@@ -66,7 +66,10 @@
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="" class="logo" alt=""><h1>Using eyeScrollR with fixed areas</h1>
+                        <h4 data-toc-skip class="author">Nathanael
+Larigaldie</h4>
             
+            <h4 data-toc-skip class="date">2023-11-02</h4>
       
       
       <div class="d-none name"><code>fixed_areas.Rmd</code></div>
@@ -77,8 +80,8 @@
 <div class="section level2">
 <h2 id="the-fixed_areas-list">The fixed_areas list<a class="anchor" aria-label="anchor" href="#the-fixed_areas-list"></a>
 </h2>
-<p>Today, many websites have areas that do not move with the rest of the
-scrolled areas. Typically those are navigation menus at the very top
+<p>Nowadays, many websites have areas that do not move with the rest of
+the scrolled areas. Typically those are navigation menus at the very top
 and/or on the right, and footers. The problem with those is that even if
 the page has been scrolled to the very bottom, gazing at the top menu
 means that, on the full webpage image, the gaze has suddenly moved from
@@ -149,10 +152,14 @@ example, we measured the following values:</p>
 <span>                                  <span class="va">bottom_right_fixed_area_image</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">fixed_areas</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">area_bundle</span><span class="op">)</span></span></code></pre></div>
-<p>It is imperative that you pass the arguments in ordered pairs of
+<p>It is imperative to pass the arguments in ordered pairs of
 screen-to-image mappings, and that you put the result in a list (we will
-come to the reason why in the next section). Your rectangle pairs MUST
-also have the exact same dimensions.</p>
+come to the reason why in the next section). The rectangle pairs must
+also have the exact same dimensions in order to maintain the 1:1 mapping
+process. If this feels like a long piece of code to write: keep on
+reading, as a much simplified way to come up with all this code is
+explained later in this tutorial. All these explanations are here to
+make sure you understand how the mapping process works.</p>
 <p>Once this is done, provided that you already did the calibration
 procedure, simply pass the <em>fixed_areas</em> argument to the
 <em>eye_scroll_correct</em> function:</p>
@@ -171,9 +178,9 @@ never change.</p>
 <h2 id="the-rules-list">The rules list<a class="anchor" aria-label="anchor" href="#the-rules-list"></a>
 </h2>
 <p>The most complicated use-case scenario that eyeScrollR can handle is
-when those fixed areas have a somewhat dynamic behaviour. The most
-common example is a top menu bar that shrinks (or even disappears!) when
-a certain number of pixels have been scrolled down. In these situations,
+when those fixed areas have a somewhat dynamic behavior. The most common
+example is a top menu bar that shrinks (or even disappears!) when a
+certain number of pixels have been scrolled down. In these situations,
 if a screen-to-image direct mapping is still meaningful across the
 different possible states of the webpage, it is possible to create
 several bundles of fixed areas mappings and create rules to instruct the
@@ -185,7 +192,7 @@ have.</p>
 provide is a situation in which the screen-to-image mapping is still
 meaningful. Indeed, although the top area shrinks, what remains can
 still be perfectly mapped to the full page image, as the whole area of
-the shrunken header still has perfect correspondance (as so the bottom
+the shrunken header still has perfect correspondence (as so the bottom
 right area):</p>
 <div class="figure">
 <img src="rules_ex.png" alt="Top: before the shrinking; Bottom: after the shrinking" width="100%"><p class="caption">
@@ -313,7 +320,8 @@ to the <em>eye_scroll_correct</em> function:</p>
 <span>                                     image_height <span class="op">=</span> <span class="fl">4377</span>,</span>
 <span>                                     calibration <span class="op">=</span> <span class="va">calibration</span>,</span>
 <span>                                     fixed_areas <span class="op">=</span> <span class="va">fixed_areas</span>,</span>
-<span>                                     rules <span class="op">=</span> <span class="va">rules</span><span class="op">)</span></span></code></pre></div>
+<span>                                     rules <span class="op">=</span> <span class="va">rules</span>,</span>
+<span>                                     scroll_lag <span class="op">=</span> <span class="op">(</span><span class="fl">1</span><span class="op">/</span><span class="fl">120</span><span class="op">)</span><span class="op">*</span><span class="fl">1000</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="a-complete-commented-code-for-our-example">A complete, commented code for our example<a class="anchor" aria-label="anchor" href="#a-complete-commented-code-for-our-example"></a>
@@ -321,12 +329,12 @@ to the <em>eye_scroll_correct</em> function:</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://larigaldie-n.github.io/eyeScrollR/">eyeScrollR</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="http://www.rforge.net/png/" class="external-link">png</a></span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://readr.tidyverse.org" class="external-link">readr</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyverse.tidyverse.org" class="external-link">tidyverse</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="co">################################################################################</span></span>
 <span><span class="co"># General settings</span></span>
 <span><span class="co"># Same for every data file for a given webpage</span></span>
-<span><span class="co"># (aka "do this only once per webpage, then stop thinking about it")</span></span>
+<span><span class="co"># (Do this once per webpage)</span></span>
 <span><span class="co">################################################################################</span></span>
 <span></span>
 <span><span class="co">### Automatic calibration</span></span>
@@ -406,8 +414,7 @@ to the <em>eye_scroll_correct</em> function:</p>
 <span><span class="co"># Participant-specific code</span></span>
 <span><span class="co">################################################################################</span></span>
 <span><span class="co"># Read data, and make sure labels are alright</span></span>
-<span><span class="va">test_data</span> <span class="op">&lt;-</span> <span class="fu">read_csv</span><span class="op">(</span><span class="st">"fixed_areas.csv"</span>, comment <span class="op">=</span> <span class="st">"#"</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">test_data</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/make.names.html" class="external-link">make.names</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">test_data</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">test_data</span> <span class="op">&lt;-</span> <span class="fu">read_csv</span><span class="op">(</span><span class="st">"fixed_areas.csv"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Apply the scroll corrections</span></span>
 <span><span class="va">corrected_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/eye_scroll_correct.html">eye_scroll_correct</a></span><span class="op">(</span>eyes_data <span class="op">=</span> <span class="va">test_data</span>,</span>
@@ -417,7 +424,8 @@ to the <em>eye_scroll_correct</em> function:</p>
 <span>                                     image_height <span class="op">=</span> <span class="fl">4377</span>,</span>
 <span>                                     calibration <span class="op">=</span> <span class="va">calibration</span>,</span>
 <span>                                     fixed_areas <span class="op">=</span> <span class="va">fixed_areas</span>,</span>
-<span>                                     rules <span class="op">=</span> <span class="va">rules</span><span class="op">)</span></span>
+<span>                                     rules <span class="op">=</span> <span class="va">rules</span>,</span>
+<span>                                     scroll_lag <span class="op">=</span> <span class="op">(</span><span class="fl">1</span><span class="op">/</span><span class="fl">120</span><span class="op">)</span><span class="op">*</span><span class="fl">1000</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Read the full page image</span></span>
 <span><span class="va">heatmap_image</span> <span class="op">&lt;-</span> <span class="fu">readPNG</span><span class="op">(</span><span class="st">"fixed_website.png"</span><span class="op">)</span></span>

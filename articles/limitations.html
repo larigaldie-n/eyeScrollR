@@ -66,7 +66,10 @@
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="" class="logo" alt=""><h1>Limitations</h1>
+                        <h4 data-toc-skip class="author">Nathanael
+Larigaldie</h4>
             
+            <h4 data-toc-skip class="date">2023-11-02</h4>
       
       
       <div class="d-none name"><code>limitations.Rmd</code></div>
@@ -77,7 +80,7 @@
 <div class="section level2">
 <h2 id="keypresses-and-scrollbars">Keypresses and scrollbars<a class="anchor" aria-label="anchor" href="#keypresses-and-scrollbars"></a>
 </h2>
-<p>eyeScrollR mainly works by catching the MOUSEWHEEL key event and
+<p>eyeScrollR mainly works by catching the MOUSEWHEEL key events and
 correcting the gaze and fixation coordinates accordingly. However, the
 mouse wheel is not the only way to scroll up/down on a website, and the
 researcher should ALWAYS make sure that participants did not, for
@@ -88,18 +91,19 @@ package at the moment and will therefore not be considered at all.</p>
 side scrollbar (if it could not be completely disabled) for the same
 reason.</p>
 <p>Finally, some websites have scrollbars inside subcomponents. In this
-situation, using the mousewheel while pointing at this area will scroll
+situation, using the mouse wheel while pointing at this area will scroll
 down the subcomponent, but not the whole page. However, eyeScrollR will
 still interpret the event as a scroll down for the entire page. There
 are, however, no other choices than to either refrain from using this
 package in such settings or manually remove these scrolling events from
 the .csv file.</p>
-<p>Please note that eyeScrollR is still very new. As a consequence, it
-is more than highly recommended that any user checks if coordinates
-correspond to individual recordings of participants before publishing
-any data.</p>
+<p>Please note that eyeScrollR is still very new. Although every effort
+has been put to make sure is it bug-free, it is recommended that users
+check if final data sets correspond to their expectations before
+publishing any data.</p>
 </div>
-  </main>
+  </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
+    </nav></aside>
 </div>
 
 
