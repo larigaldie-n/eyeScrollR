@@ -2,7 +2,7 @@
 
 #' @title Get possible scroll_lag arguments
 #'
-#' @description Returns a list of suggested scroll_lag arguments under 100ms
+#' @description Returns a list of suggested scroll_lag arguments under 50ms
 #' as a function of monitor refresh rate and the next frame rank
 #'
 #' @param refresh_rate The refresh rate of the monitor
@@ -34,12 +34,12 @@ get_scroll_lag <- function(refresh_rate = 60, n_frame = 0)
   {
     n_frame <- 1
     while((scr_lag = 0.5 * (1 / refresh_rate) * 1000 +
-           (n_frame - 1) * (1 / refresh_rate) * 1000) < 100)
+           (n_frame - 1) * (1 / refresh_rate) * 1000) <= 50)
     {
       scroll_lag[length(scroll_lag) + 1] <- scr_lag
       n_frame <- n_frame + 1
     }
-    reply <- paste0("Suggested scroll_lag under 100ms with a ", refresh_rate,
+    reply <- paste0("Suggested scroll_lag under 50ms with a ", refresh_rate,
                     "Hz monitor:\n",
                     "-----------------------------------------------------",
                     "\n", "next frame: ", round(scroll_lag[1], 3), "\n")
