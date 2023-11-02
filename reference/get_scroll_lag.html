@@ -80,7 +80,7 @@ as a function of monitor refresh rate and the next frame rank</p>
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># Display all suggested scroll_lag arguments for a 120Hz monitor:</span></span></span>
 <span class="r-in"><span><span class="fu">get_scroll_lag</span><span class="op">(</span>refresh_rate <span class="op">=</span> <span class="fl">120</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Suggested scroll_lag under 100ms with a 120Hz monitor:</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Suggested scroll_lag under 50ms with a 120Hz monitor:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> -----------------------------------------------------</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> next frame: 4.167</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2 frames: 12.5</span>
@@ -88,12 +88,6 @@ as a function of monitor refresh rate and the next frame rank</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 4 frames: 29.167</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 5 frames: 37.5</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 6 frames: 45.833</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 7 frames: 54.167</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 8 frames: 62.5</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 9 frames: 70.833</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 10 frames: 79.167</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 11 frames: 87.5</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 12 frames: 95.833</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Get the scroll_lag argument assuming that, on average, changes will be</span></span></span>
 <span class="r-in"><span><span class="co"># displayed after 3 monitor frames on a 60Hz monitor:</span></span></span>
