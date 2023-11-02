@@ -30,6 +30,7 @@ reference:
   - scroll_calibration_auto
   - fixed_areas_bundle
   - bundles_gadget
+  - get_scroll_lag
 - title: Helper functions
   desc: |
     Functions to check which set(s) of immovable areas should be used or not
