@@ -9,15 +9,16 @@ get_scroll_lag(refresh_rate = 60, n_frame = 0)
 \arguments{
 \item{refresh_rate}{The refresh rate of the monitor}
 
-\item{n_frame}{The next frame rank (e.g. n=1 for the next frame)}
+\item{n_frame}{The frame rank at which the change is assumed to happen on
+average (e.g. n = 1 for the next frame). In general, n = 2 is recommended}
 }
 \value{
 Either prints a list of different possible scroll_lag arguments under
 100ms, or returns the exact scroll_lag for the specified n_frame
 }
 \description{
-Returns a list of suggested scroll_lag arguments under 100ms
-as a function of monitor refresh rate and the next frame rank
+Returns a list of suggested scroll_lag arguments under 50ms
+as a function of monitor refresh rate and the next frame rank.
 }
 \examples{
 # Display all suggested scroll_lag arguments for a 120Hz monitor:

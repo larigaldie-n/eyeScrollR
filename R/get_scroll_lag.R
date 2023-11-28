@@ -3,11 +3,11 @@
 #' @title Get possible scroll_lag arguments
 #'
 #' @description Returns a list of suggested scroll_lag arguments under 50ms
-#' as a function of monitor refresh rate and the next frame rank
+#' as a function of monitor refresh rate and the next frame rank.
 #'
 #' @param refresh_rate The refresh rate of the monitor
 #' @param n_frame The frame rank at which the change is assumed to happen on
-#' average (e.g. n=1 for the next frame)
+#' average (e.g. n = 1 for the next frame). In general, n = 2 is recommended
 #'
 #' @return Either prints a list of different possible scroll_lag arguments under
 #' 100ms, or returns the exact scroll_lag for the specified n_frame
