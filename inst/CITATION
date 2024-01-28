@@ -12,6 +12,6 @@ citEntry(
   # pages    = " ",
   url      = "https://github.com/larigaldie-n/eyeScrollR",
   textVersion = paste(
-  Larigaldie, N., Dreneva, A., & Orquin, J. L. (2024). eyeScrollR: A software method for reproducible mapping of eye tracking data from scrollable web pages. https://doi.org/10.31234/osf.io/ymubw
+  "Larigaldie, N., Dreneva, A., & Orquin, J. L. (2024). eyeScrollR: A software method for reproducible mapping of eye tracking data from scrollable web pages. https://doi.org/10.31234/osf.io/ymubw"
   )
 )

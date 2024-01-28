@@ -13,6 +13,10 @@ An R package to correctly place eye-tracking gaze & fixation data on scrollable 
 
 <br>
 
+### [Preprint](https://osf.io/preprints/psyarxiv/ymubw)
+
+<br>
+
 ### Installing eyeScrollR
 
 ```{r}
