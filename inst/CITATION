@@ -2,16 +2,16 @@ citHeader("To cite eyeScrollR in publications use:")
 
 citEntry(
   entry    = "Manual",
-  title    = "eyeScrollR: A software method for reproducible mapping of eye tracking data from scrollable web pages",
+  title    = "eyeScrollR: A software method for reproducible mapping of eye-tracking data from scrollable web pages",
   author   = personList(person(given = "Nathanael", family = "Larigaldie", email = "larigaldie.n@gmail.com"),
   person(given = "Anna", family = "Dreneva"), person(given = "Jacob", family = "Orquin", middle = "L.")),
-  # journal  = "Behavior Research Methods",
+  journal  = "Behavior Research Methods",
   year     = "2024",
   # volume   = " ",
   # number   = " ",
   # pages    = " ",
-  url      = "https://github.com/larigaldie-n/eyeScrollR",
+  url      = "https://doi.org/10.3758/s13428-024-02343-1",
   textVersion = paste(
-  "Larigaldie, N., Dreneva, A., & Orquin, J. L. (2024). eyeScrollR: A software method for reproducible mapping of eye tracking data from scrollable web pages. https://doi.org/10.31234/osf.io/ymubw"
+  "Larigaldie, N., Dreneva, A., & Orquin, J. L. (2024). eyeScrollR: A software method for reproducible mapping of eye-tracking data from scrollable web pages. Behavior Research Methods. https://doi.org/10.3758/s13428-024-02343-1"
   )
 )
