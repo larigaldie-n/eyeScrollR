@@ -13,7 +13,7 @@ An R package to correctly place eye-tracking gaze & fixation data on scrollable 
 
 <br>
 
-### [Preprint](https://osf.io/preprints/psyarxiv/ymubw)
+### [Article (Behavior Research Methods)](https://link.springer.com/article/10.3758/s13428-024-02343-1)
 
 <br>
 
